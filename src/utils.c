@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2024/12/04 18:24:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:32:41 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,14 @@ int	count_lst(t_token *lst)
 		lst = lst->next;
 	}
 	return (count);
+}
+
+void	free_ast(t_ast *ast)
+{
+	if (ast->left)
+		free_ast(ast->left);
+	if (ast->right)
+		free_ast(ast->right);
+	if (ast)
+		free(ast);
 }

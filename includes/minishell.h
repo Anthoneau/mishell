@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 14:36:53 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:34:04 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ typedef struct s_ast
 	char			*content;
 	int				type;
 	int				explored;
+	int				error;
 	struct s_ast	*top;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -50,6 +51,7 @@ typedef struct s_ast
 
 void	ft_exit(char *str, int exit_code);
 void	free_token(t_token **token);
+void	free_ast(t_ast *ast);
 t_token	*lexer(char *inpt);
 void	new_token(char	*content, int type, t_token **lst, long *i);
 void	create_word(char *inpt, long *i, t_token **token);

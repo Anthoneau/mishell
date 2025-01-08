@@ -6,37 +6,18 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 14:28:41 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:30:28 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	init_token_var(t_token *token, int type)
+void	init_token_var(t_token *token, int type, t_token *current, t_token **lst)
 {
 	token->type = type;
 	token->next = NULL;
 	token->prev = NULL;
 	token->explored = 0;
-}
-
-void	new_token(char	*content, int type, t_token **lst, long *i)
-{
-	t_token	*token;
-	t_token	*current;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-	{
-		*i = -1;
-		return ;
-	}
-	if (content)
-		token->content = ft_strdup(content);
-	else
-		token->content = NULL;
-	init_token_var(token, type);
-	current = NULL;
 	if (!*lst)
 		*lst = token;
 	else
@@ -47,6 +28,32 @@ void	new_token(char	*content, int type, t_token **lst, long *i)
 		current->next = token;
 		token->prev = current;
 	}
+}
+
+void	new_token(char	*content, int type, t_token **lst, long *i)
+{
+	t_token	*token;
+	t_token	*current;
+
+	token = malloc(sizeof(t_token));
+	if (!token)
+	{
+		*i = -10;
+		return ;
+	}
+	if (content)
+	{
+		token->content = ft_strdup(content);
+		if (!token->content)
+		{
+			*i = -10;
+			return ;
+		}
+	}
+	else
+		token->content = NULL;
+	current = NULL;
+	init_token_var(token, type, current, lst);
 }
 
 void	is_redir(char *inpt, long *i, t_token **token)
@@ -112,7 +119,7 @@ t_token	*lexer(char *inpt)
 		return (ft_putstr_fd("Error with quotes\n", 2), NULL);
 	while (inpt[i])
 	{
-		if (i == -1)
+		if (i < 0)
 			return (free_token(&token), NULL);
 		// printf("i = %ld\n", i);
 		// printf("inpt[i] == [%c], il reste [%s]\n", inpt[i], inpt + i);

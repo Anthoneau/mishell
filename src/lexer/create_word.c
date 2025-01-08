@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 14:37:41 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/08 16:32:47 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*word_in_delimitation(char *inpt, char c, long *flag)
 	new = malloc(i);
 	if (!new)
 	{
-		*flag = -1;
+		*flag = -10;
 		return (NULL);
 	}
 	i = 0;
@@ -51,7 +51,7 @@ void	create_word(char *inpt, long *i, t_token **token)
 			word = word_in_delimitation(inpt + *i, '\'', i);
 		else if (inpt[*i] == '"')
 			word = word_in_delimitation(inpt + *i, '"', i);
-		if (*i == -1)
+		if (*i < 0)
 			return ;
 		*i += ft_strlen(word) + 2;
 		// printf("word apres word in quotes : %s\n\n", word);
@@ -60,7 +60,7 @@ void	create_word(char *inpt, long *i, t_token **token)
 	{
 		// printf("y a pas de quotes\n");
 		word =  word_in_delimitation(inpt + *i, ' ', i);
-		if (*i == -1)
+		if (*i < 0)
 			return ;
 		// printf("i avant ft_strlen: %ld\nft_strlen en question : %ld\n", *i, ft_strlen(word));
 		*i += ft_strlen(word) + 1;

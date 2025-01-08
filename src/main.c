@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2024/12/06 15:13:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:34:15 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,17 +93,20 @@ int	main(int ac, char **av, char **env)
 		if (*inpt && !ft_isspace(inpt))
 		{
 			token = lexer(inpt);
-			display_token(&token);
-			sleep(1);
-			ast = create_ast(&token, NULL, 0);
-			printf("create_ast fonctionne !\nretour au main\n");
-			printf("on dessine l'ast total\n");
-			sleep(2);
-			draw_ast(ast, 0);
-			sleep(10);
-			// link_ast(&ast);
-			free_token(&token);
-			add_history(inpt);
+			if (token)
+			{
+				display_token(&token);
+				sleep(1);
+				ast = create_ast(&token, NULL, 0);
+				printf("create_ast fonctionne !\nretour au main\n");
+				printf("on dessine l'ast total\n");
+				sleep(2);
+				draw_ast(ast, 0);
+				sleep(10);
+				free_token(&token);
+				free_ast(ast);
+				add_history(inpt);
+			}
 		}
 		free(inpt);
 	}
