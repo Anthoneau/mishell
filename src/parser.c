@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 17:23:11 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:38:30 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,12 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 		display_node_ast(node, 1);
 	}
 	if (node->error == 1)
+	{
+		if (node->content)
+			free(node->content);
+		free(node);
 		return (NULL);
+	}
 	printf("-------------------------------\n\n");
 	return (node);
 }
@@ -346,7 +351,6 @@ t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored)
 		sleep(1);
 		printf("-------------------------------\n\n");
 		node = pipe_node(tokens, check);
-		if (!node || node->error == 1)
 	}
 	else if ((check = search_type(tokens, current, 2, after_explored)))
 	{

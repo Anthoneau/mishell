@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 17:34:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/08 17:41:03 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_token
 	char			*content;
 	int				type;
 	int				explored;
+	int				error;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
