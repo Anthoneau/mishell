@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/09 11:25:16 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/09 18:42:08 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@ int	count_lst(t_token *lst)
 	return (count);
 }
 
+void	free_error_node(t_ast *node)
+{
+	if (node && node->content)
+		free(node->content);
+	if (node)
+		free(node);
+}
+
 void	free_ast(t_ast *ast)
 {
 	if (ast && ast->left)
@@ -61,5 +69,34 @@ void	free_ast(t_ast *ast)
 	if (ast && ast->right)
 		free_ast(ast->right);
 	if (ast)
-		free(ast);
+		free_error_node(ast);
+}
+
+void	ft_strcat(char *src, char *dst)
+{
+	size_t	i;
+	size_t	j;
+
+	if (!src)
+		return ;
+	i = 0;
+	j = ft_strlen(dst);
+	if (j > 0)
+	{
+		dst[j] = ' ';
+		j++;
+	}
+	//printf("strlen(dst) = %ld\ndst[j] = %c\n", j, dst[j]);
+	//printf("src = %s\n", src);
+	while (src[i])
+	{
+		//printf("on remplace [%c] par [%c]\n", dst[j], src[i]);
+		dst[j] = src[i];
+		//printf("dst[j] = %c\n", dst[j]);
+		//printf("dst = %s\n", dst);
+		j++;
+		i++;
+	}
+	dst[j] = '\0';
+	//printf("dst = %s\n", dst);
 }
