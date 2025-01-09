@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 17:41:03 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/09 11:10:38 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ typedef struct s_ast
 	char			*content;
 	int				type;
 	int				explored;
-	int				error;
 	struct s_ast	*top;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -56,7 +55,7 @@ void	free_ast(t_ast *ast);
 t_token	*lexer(char *inpt);
 void	new_token(char	*content, int type, t_token **lst, long *i);
 void	create_word(char *inpt, long *i, t_token **token);
-t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored);
+t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error);
 int		count_lst(t_token *lst);
 
 //DISPLAY

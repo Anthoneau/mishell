@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 16:30:28 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/09 11:46:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,25 +115,35 @@ t_token	*lexer(char *inpt)
 
 	i = 0;
 	token = NULL;
+	//printf("check quotes\n");
 	if (!check_quote(inpt))
 		return (ft_putstr_fd("Error with quotes\n", 2), NULL);
+	//printf("lexing...\n");
 	while (inpt[i])
 	{
 		if (i < 0)
 			return (free_token(&token), NULL);
-		// printf("i = %ld\n", i);
-		// printf("inpt[i] == [%c], il reste [%s]\n", inpt[i], inpt + i);
+		//printf("i = %ld\n", i);
+		//printf("inpt[i] == [%c], il reste [%s]\n", inpt[i], inpt + i);
 		while (inpt[i] == ' ')
 			i++;
+		//printf("skip des espaces potentiels\n");
 		if (inpt[i] == '|')
 		{
+			//printf("on trouve un pipe\n");
 			new_token(NULL, PIPE, &token, &i);
 			i++;
 		}
 		else if (inpt[i] == '>' || inpt[i] == '<')
+		{
+			//printf("on trouve une redir\n");
 			is_redir(inpt, &i, &token);
+		}
 		else if (inpt[i])
+		{
+			//printf("on trouve un mot\n");
 			create_word(inpt, &i, &token);
+		}
 	}
 	return (token);
 }

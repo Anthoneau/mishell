@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 17:32:41 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/09 11:25:16 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,9 @@ int	count_lst(t_token *lst)
 
 void	free_ast(t_ast *ast)
 {
-	if (ast->left)
+	if (ast && ast->left)
 		free_ast(ast->left);
-	if (ast->right)
+	if (ast && ast->right)
 		free_ast(ast->right);
 	if (ast)
 		free(ast);

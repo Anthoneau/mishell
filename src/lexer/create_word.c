@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 16:32:47 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/09 11:46:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,24 +18,40 @@ char	*word_in_delimitation(char *inpt, char c, long *flag)
 	int		j;
 	char	*new;
 
+	//printf("on entre dans word_in_delimitation\n");
 	i = 0;
 	if (inpt[i] == c)
+	{
+		//printf("inpt[i] == c donc on avance de 1\n");
 		i++;
-	while (inpt[i] != c)
+	}
+	while (inpt[i] && inpt[i] != c)
+	{
+		//printf("inpt[%d] != c dont on avance\n", i);
 		i++;
-	new = malloc(i);
+	}
+	//printf("on malloc\n");
+	new = malloc(i + 1);
 	if (!new)
 	{
+		//printf("malloc foire, on met flag a -10 et on return NULL\n");
 		*flag = -10;
 		return (NULL);
 	}
 	i = 0;
 	if (inpt[i] == c)
+	{
+		//printf("inpt[i] == c donc on avance de 1\n");
 		i++;
+	}
 	j = 0;
-	while (inpt[i] != c)
+	while (inpt[i] && inpt[i] != c)
+	{
+		//printf("on copie...\n");
 		new[j++] = inpt[i++];
+	}
 	new[j] = '\0';
+	//printf("\\0 a %d\n", j);
 	return (new);
 }
 

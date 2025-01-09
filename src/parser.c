@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/08 17:38:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/09 12:19:03 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ t_token	*search_type(t_token **list, t_token *current, int type, int side)
 	return (NULL);
 }
 
-t_ast	*pipe_node(t_token **tokens, t_token *current)
+t_ast	*pipe_node(t_token **tokens, t_token *current, int *error)
 {
 	// int		j;
 	t_ast	*node;
@@ -107,7 +107,10 @@ t_ast	*pipe_node(t_token **tokens, t_token *current)
 	// j = 0;
 	node = malloc(sizeof(t_ast));
 	if (!node)
+	{
+		*error = 1;
 		return (NULL);
+	}
 	printf("malloc du noeud\ncurrent->type pointé : %d\n", current->type);
 	sleep(1);
 	current->explored = 1;
@@ -118,14 +121,20 @@ t_ast	*pipe_node(t_token **tokens, t_token *current)
 	node->left = NULL;
 	node->right = NULL;
 	node->explored = 1;
-	node->error = 0;
 	printf("le noeud est initialisé\n");
 	display_node_ast(node, 1);
 	printf("creation du noeud de gauche\n");
 	sleep(1);
-	node->left = create_ast(tokens, current->prev, 1);
-	if (node->error == 1)
+	node->left = create_ast(tokens, current->prev, 1, error);
+	if (*error == 1)
+	{
+		printf("error == 1\n");
+		if (node->content)
+			free(node->content);
+		if (node)
+			free(node);
 		return (NULL);
+	}
 	if (node->left)
 	{
 		node->left->top = node;
@@ -134,9 +143,16 @@ t_ast	*pipe_node(t_token **tokens, t_token *current)
 	printf("le noeud a gauche a été créé\n");
 	display_node_ast(node, 1);
 	printf("creation du noeud de droite\n");
-	node->right = create_ast(tokens, current->next, 0);
-	if (node->error == 1)
+	node->right = create_ast(tokens, current->next, 0, error);
+	if (*error == 1)
+	{
+		printf("error == 1\n");
+		if (node->content)
+			free(node->content);
+		if (node)
+			free(node);
 		return (NULL);
+	}
 	if (node->right)
 	{
 		node->right->top = node;
@@ -148,7 +164,7 @@ t_ast	*pipe_node(t_token **tokens, t_token *current)
 	return (node);
 }
 
-t_ast	*redir_node(t_token **tokens, t_token *current)
+t_ast	*redir_node(t_token **tokens, t_token *current, int *error)
 {
 	t_ast	*node;
 	// int		j;
@@ -161,6 +177,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 	node = malloc(sizeof(t_ast));
 	if (!node)
 	{
+		*error = 1;
 		return (NULL);
 	}
 	node->type = current->type;
@@ -169,7 +186,6 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 	node->left = NULL;
 	node->right = NULL;
 	node->explored = 1;
-	node->error = 0;
 	printf("noeud initialisé\n");
 	printf("type trouvé : %d\n", current->type);
 	if (current->type == R_TRUNC || current->type == R_APPEND || current->type == R_HEREDOC)
@@ -179,7 +195,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 		{
 			node->content = ft_strdup(current->next->content);
 			if (!node->content)
-				node->error = 1;
+				*error = 1;
 			printf("lisaison du fichier \"%s\"\n", current->next->content);
 			current->next->explored = 1;
 			printf("fichier lié exploré\n");
@@ -188,13 +204,20 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 		{
 			node->content = ft_strdup("stdout");
 			if (!node->content)
-				node->error = 1;
+				*error = 1;
 			printf("fichier \"stdout\"\n");
 		}
 			printf("creation du noeud de gauche\n");
-		node->left = create_ast(tokens, current->prev, 1);
-		if (!node->left)
-			node->error = 1;
+		node->left = create_ast(tokens, current->prev, 1, error);
+		if (*error == 1)
+		{
+			printf("error == 1\n");
+			if (node->content)
+				free(node->content);
+			if (node)
+				free(node);
+			return (NULL);
+		}
 		if (node->left)
 		{
 			node->left->top = node;
@@ -203,9 +226,16 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 		printf("le noeud a gauche a été créé\n");
 		display_node_ast(node, 1);
 		printf("creation du noeud de droite\n");
-		node->right = create_ast(tokens, current->next->next, 0);
-		if (!node->right)
-			node->error = 1;
+		node->right = create_ast(tokens, current->next->next, 0, error);
+		if (*error == 1)
+		{
+			printf("error == 1\n");
+			if (node->content)
+				free(node->content);
+			if (node)
+				free(node);
+			return (NULL);
+		}
 		if (node->right)
 		{
 			node->right->top = node;
@@ -221,7 +251,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 		{
 			node->content = ft_strdup(current->prev->content);
 			if (!node->content)
-				node->error = 1;
+				*error = 1;
 			printf("liaison du fichier \"%s\"\n", current->prev->content);
 			current->prev->explored = 1;
 			printf("fichier lié exploré\n");
@@ -232,9 +262,16 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 			printf("fichier NULL\n");
 		}
 			printf("creation du noeud de gauche\n");
-		node->left = create_ast(tokens, current->prev->prev, 1);
-		if (!node->left)
-			node->error = 1;
+		node->left = create_ast(tokens, current->prev->prev, 1, error);
+		if (*error == 1)
+		{
+			printf("error == 1\n");
+			if (node->content)
+				free(node->content);
+			if (node)
+				free(node);
+			return (NULL);
+		}
 		if (node->left)
 		{
 			node->left->top = node;
@@ -243,9 +280,16 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 		printf("le noeud a gauche a été créé\n");
 		display_node_ast(node, 1);
 		printf("creation du noeud de droite\n");
-		node->right = create_ast(tokens, current->next, 0);
-		if (!node->right)
-			node->error = 1;
+		node->right = create_ast(tokens, current->next, 0, error);
+		if (*error == 1)
+		{
+			printf("error == 1\n");
+			if (node->content)
+				free(node->content);
+			if (node)
+				free(node);
+			return (NULL);
+		}
 		if (node->right)
 		{
 			node->right->top = node;
@@ -254,7 +298,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 		printf("le noeud a droite a été créé\n");
 		display_node_ast(node, 1);
 	}
-	if (node->error == 1)
+	if (*error == 1)
 	{
 		if (node->content)
 			free(node->content);
@@ -265,7 +309,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current)
 	return (node);
 }
 
-char	*all_cmd(t_token *current)
+char	*get_word(t_token *current)
 {
 	char	*res;
 	char	*temp;
@@ -312,63 +356,123 @@ char	*all_cmd(t_token *current)
 	return (res);
 }
 
-t_ast	*word_node(/*t_token **token, */t_token *current)
+size_t	get_len(t_token *current)
 {
-	// int		j;
+	t_token *words;
+	size_t	len;
+
+	len = 0;
+	while (word->type == 0 && word->content)
+	{
+		len += ft_strlen(word->content);
+	}
+	return (len);
+}
+
+char	*get_word(t_token *current)
+{
+	char	*res;
+	char	*temp;
+	size_t	len;
+
+	if (!current || !current->content)
+		return (NULL);
+	len = get_len(current);
+	temp = NULL;
+	res = ft_strjoin(current->content, " ");
+	if (!res)
+		return (NULL);
+	while (current->explored == 0)
+	{
+		current->explored = 1;
+		if (current->next)
+			current = current->next;
+		else
+			break ;
+		if (current->explored)
+			break ;
+		temp = ft_strjoin(res, current->content);
+		if (!temp)
+			return (free(res), NULL);
+		free(res);
+		res = ft_strjoin(temp, " ");
+		if (!res)
+			return (free(temp), NULL);
+		free(temp);
+		temp = NULL;
+	}
+	if (temp)
+		free(temp);
+	return (res);
+}
+
+t_ast	*word_node(/*t_token **token, */t_token *current, int *error)
+{
 	t_ast	*node;
 
 	printf("\n---------- WORD NODE ----------\n");
 	node = malloc(sizeof(t_ast));
 	if (!node)
+	{
+		*error = 1;
 		return (NULL);
+	}
 	node->type = WORD;
-	node->content = all_cmd(current);//si all cmd foire, tout free
+	node->content = get_word(current);
 	printf("content : %s\n", node->content);
 	if (!node->content)
 	{
-		node->error = 1;
-		return (node);
+		*error = 1;
+		return (free(node), NULL);
 	}
 	node->top = NULL;
 	node->right = NULL;
 	node->left = NULL;
-	node->error = 0;
 	current->explored = 1;
 	printf("noeud initialisé\n");
 	printf("\n-------------------------------\n");
 	return (node);
 }
 
-t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored)
+t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error)
 {
 	t_token	*check;
 	t_ast	*node;
 
+	printf("error == %d\n", *error);
+	sleep(1);
 	node = NULL;
 	if ((check = search_type(tokens, current, PIPE, after_explored)))
 	{
 		printf("on trouve un pipe\n");
 		sleep(1);
 		printf("-------------------------------\n\n");
-		node = pipe_node(tokens, check);
+		node = pipe_node(tokens, check, error);
 	}
 	else if ((check = search_type(tokens, current, 2, after_explored)))
 	{
 		printf("on trouve une redir\n");
 		sleep(1);
 		printf("-------------------------------\n\n");
-		node = redir_node(tokens, check);
+		node = redir_node(tokens, check, error);
 	}
 	else if ((check = search_type(tokens, current, WORD, after_explored)))
 	{
 		printf("on trouve un mot\n");
 		sleep(1);
 		printf("-------------------------------\n\n");
-		node = word_node(check);
+		node = word_node(check, error);
 	}
-	if (!node)
+	printf("on check error\n");
+	if (*error == 1)
+	{
+		if (node && node->content)
+			free(node->content);
+		if (node)
+			free(node);
+		printf("error == 1 donc on free ce qu'il faut")
 		return (NULL);
-	if (node->error == 1)
-		return (free(node), NULL);
+	}
+	printf("error == 0\n");
 	return (node);
 }
