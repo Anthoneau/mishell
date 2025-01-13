@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:16:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 11:18:02 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 12:44:19 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 size_t	get_len(t_token *current)
 {

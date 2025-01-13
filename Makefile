@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/01/13 11:20:26 by agoldber         ###   ########.fr        #
+#    Updated: 2025/01/13 13:39:06 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,12 +52,12 @@ COLOR_END		=	\033[0m
 #GRADIENT LOGO
 
 define gradient_logo
-@echo "${PASTEL_PINK}"
-@echo "${PASTEL_PURPLE}"
-@echo "${PASTEL_BLUE}"
-@echo "${PASTEL_BLUE}"
-@echo "${PASTEL_PURPLE}"
-@echo "${PASTEL_PINK}${COLOR_END}"
+@echo "A${PASTEL_PINK}"
+@echo "A${PASTEL_PURPLE}"
+@echo "A${PASTEL_BLUE}"
+@echo "A${PASTEL_BLUE}"
+@echo "A${PASTEL_PURPLE}"
+@echo "A${PASTEL_PINK}${COLOR_END}"
 @echo ""
 endef
 
@@ -69,7 +69,7 @@ PARSER_FILES	=	create_ast redir word
 LEXER			=	${addprefix ${LEXER_DIR}, ${LEXER_FILES}}
 PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
 
-FILES			=	main utils ${LEXER} ${PARSER} display parser
+FILES			=	main utils ${LEXER} ${PARSER} display expander
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}

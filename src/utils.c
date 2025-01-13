@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 10:00:06 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:06:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_exit(char *str, int exit_code)
 {
@@ -24,6 +24,8 @@ void	free_token(t_token **token)
 	t_token	*current;
 	t_token	*to_free;
 
+	if (!*token)
+		return ;
 	current = *token;
 	while (current)
 	{

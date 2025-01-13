@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 10:03:11 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 15:09:32 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 // static char	*name_minishell(char *pwd, char *home)
 // {
@@ -96,7 +96,7 @@ int	main(int ac, char **av, char **env)
 		{
 			//printf("on passe dans le lexer\n");
 			token = lexer(inpt);
-			if (token)
+			if (token && expander(&token, env))
 			{
 				display_token(&token);
 				//sleep(1);
@@ -112,9 +112,10 @@ int	main(int ac, char **av, char **env)
 				}
 				else
 					printf("ast est NULL\n");
-				free_token(&token);
 				add_history(inpt);
 			}
+			if (token)
+				free_token(&token);
 		}
 		if (inpt)
 			free(inpt);

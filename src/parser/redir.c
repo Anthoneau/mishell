@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:15:02 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 11:15:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 12:44:14 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	create_content(t_token *current, t_ast *node, int *error)
 {

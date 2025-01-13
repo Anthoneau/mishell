@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 11:22:06 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 14:39:56 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@ enum type
 	R_INPUT,
 	R_TRUNC,
 	R_HEREDOC,
-	R_APPEND
+	R_APPEND,
+	S_QUOTES,
+	D_QUOTES
 };
 
 typedef struct s_token
 {
 	char			*content;
+	int				expand;
 	int				type;
 	int				explored;
 	int				error;
@@ -60,6 +63,9 @@ int		count_lst(t_token *lst);
 t_token	*lexer(char *inpt);
 void	new_token(char	*content, int type, t_token **lst, long *i);
 void	create_word(char *inpt, long *i, t_token **token);
+
+//EXPANDER
+int		expander(t_token **tokens, char **env);
 
 //PARSER
 t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error);
