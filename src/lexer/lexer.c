@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/09 11:46:05 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:00:51 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ t_token	*lexer(char *inpt)
 	i = 0;
 	token = NULL;
 	//printf("check quotes\n");
-	if (!check_quote(inpt))
+	if (!inpt || !check_quote(inpt))
 		return (ft_putstr_fd("Error with quotes\n", 2), NULL);
 	//printf("lexing...\n");
 	while (inpt[i])

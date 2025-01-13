@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/09 18:42:22 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:03:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ int	main(int ac, char **av, char **env)
 		// name = name_minishell(getcwd(NULL, 0), home);
 		inpt = readline("Mishell > ");
 		// free(name);
-		if (*inpt && !ft_isspace(inpt))
+		if (inpt && *inpt && !ft_isspace(inpt))
 		{
 			//printf("on passe dans le lexer\n");
 			token = lexer(inpt);
@@ -116,7 +116,8 @@ int	main(int ac, char **av, char **env)
 				add_history(inpt);
 			}
 		}
-		free(inpt);
+		if (inpt)
+			free(inpt);
 	}
 	return (0);
 }

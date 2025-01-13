@@ -6,11 +6,51 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/09 11:46:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:22:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+int	is_delimitation(char c)
+{
+	if (c == ' ' || c == '|' || c == '<' || c == '>')
+		return (1);
+	return (0);
+}
+
+char	*space_or_meta_char_delimitation(char *inpt, long *flag)
+{
+	int		i;
+	int		j;
+	char	*new;
+
+	//printf("on entre dans word_in_delimitation\n");
+	i = 0;
+	while (inpt[i] && !is_delimitation(inpt[i]))
+	{
+		//printf("inpt[%d] != c dont on avance\n", i);
+		i++;
+	}
+	//printf("on malloc\n");
+	new = malloc(i + 1);
+	if (!new)
+	{
+		//printf("malloc foire, on met flag a -10 et on return NULL\n");
+		*flag = -10;
+		return (NULL);
+	}
+	i = 0;
+	j = 0;
+	while (inpt[i] && !is_delimitation(inpt[i]))
+	{
+		//printf("on copie...\n");
+		new[j++] = inpt[i++];
+	}
+	new[j] = '\0';
+	//printf("\\0 a %d\n", j);
+	return (new);
+}
 
 char	*word_in_delimitation(char *inpt, char c, long *flag)
 {
@@ -18,6 +58,8 @@ char	*word_in_delimitation(char *inpt, char c, long *flag)
 	int		j;
 	char	*new;
 
+	if (c == ' ')
+		return (space_or_meta_char_delimitation(inpt, flag));
 	//printf("on entre dans word_in_delimitation\n");
 	i = 0;
 	if (inpt[i] == c)
@@ -79,7 +121,7 @@ void	create_word(char *inpt, long *i, t_token **token)
 		if (*i < 0)
 			return ;
 		// printf("i avant ft_strlen: %ld\nft_strlen en question : %ld\n", *i, ft_strlen(word));
-		*i += ft_strlen(word) + 1;
+		*i += ft_strlen(word);
 		// printf("i apres ft_strlen: %ld\n", *i);
 		// printf("word = %s\n\n", word);
 	}

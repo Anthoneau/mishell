@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/09 18:41:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 09:59:34 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -519,7 +519,7 @@ char	*get_word(t_token *current)
 		return (NULL);
 	words = current;
 	len = get_len(current);
-	res = malloc(len);
+	res = ft_calloc(len, sizeof(char));
 	if (!res)
 		return (NULL);
 	while (words->type == 0 && words->content)

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/09 18:42:08 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:00:06 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,10 @@ void	ft_strcat(char *src, char *dst)
 	if (!src)
 		return ;
 	i = 0;
-	j = ft_strlen(dst);
+	if (!dst || !*dst)
+		j = 0;
+	else
+		j = ft_strlen(dst);
 	if (j > 0)
 	{
 		dst[j] = ' ';
