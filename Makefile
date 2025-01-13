@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/01/08 14:35:53 by agoldber         ###   ########.fr        #
+#    Updated: 2025/01/13 11:20:26 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ endif
 NAME			=	minishell
 INCLUDES		=	includes
 LEXER_DIR		=	lexer/
+PARSER_DIR		=	parser/
 SRCS_DIR 		=	src/
 OBJS_DIR		=	obj/
 CC				=	cc
@@ -63,10 +64,12 @@ endef
 #SOURCES
 
 LEXER_FILES		=	lexer create_word
+PARSER_FILES	=	create_ast redir word
 
 LEXER			=	${addprefix ${LEXER_DIR}, ${LEXER_FILES}}
+PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
 
-FILES			=	main utils ${LEXER} display parser
+FILES			=	main utils ${LEXER} ${PARSER} display parser
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}

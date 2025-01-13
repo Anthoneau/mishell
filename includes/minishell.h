@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/09 17:52:50 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 11:22:06 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,16 +48,23 @@ typedef struct s_ast
 	struct s_ast	*right;
 }	t_ast;
 
+//UTILS
 void	ft_exit(char *str, int exit_code);
 void	free_token(t_token **token);
 void	free_error_node(t_ast *node);
 void	free_ast(t_ast *ast);
 void	ft_strcat(char *src, char *dst);
+int		count_lst(t_token *lst);
+
+//LEXER
 t_token	*lexer(char *inpt);
 void	new_token(char	*content, int type, t_token **lst, long *i);
 void	create_word(char *inpt, long *i, t_token **token);
+
+//PARSER
 t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error);
-int		count_lst(t_token *lst);
+t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
+t_ast	*word_node(t_token *current, int *error);
 
 //DISPLAY
 void	display_token(t_token **token);
