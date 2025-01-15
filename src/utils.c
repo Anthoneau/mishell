@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 15:06:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/15 18:04:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,4 +104,24 @@ void	ft_strcat(char *src, char *dst)
 	}
 	dst[j] = '\0';
 	//printf("dst = %s\n", dst);
+}
+
+void	ft_strcat_expander(char *src, char *dst)
+{
+	size_t	i;
+	size_t	j;
+
+	if (!src)
+		return ;
+	i = 0;
+	if (!dst || !*dst)
+		j = 0;
+	else
+		j = ft_strlen(dst);
+	while (src[i])
+	{
+		dst[j] = src[i];
+		j++;
+		i++;
+	}
 }
