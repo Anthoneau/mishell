@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 10:00:06 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:25:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_exit(char *str, int exit_code)
 {
@@ -24,6 +24,8 @@ void	free_token(t_token **token)
 	t_token	*current;
 	t_token	*to_free;
 
+	if (!*token)
+		return ;
 	current = *token;
 	while (current)
 	{
@@ -102,4 +104,29 @@ void	ft_strcat(char *src, char *dst)
 	}
 	dst[j] = '\0';
 	//printf("dst = %s\n", dst);
+}
+
+void	ft_strcat_expander(char *src, char *dst)
+{
+	size_t	i;
+	size_t	j;
+
+	// printf("strcat expander\n");
+	if (!src)
+		return ;
+	// printf("src : %s\n", src);
+	i = 0;
+	if (!dst || !*dst)
+		j = 0;
+	else
+		j = ft_strlen(dst);
+	// printf("j : %ld\n", j);
+	while (src[i])
+	{
+		// printf("src[%ld] == [%c]\n", i, src[i]);
+		dst[j] = src[i];
+		j++;
+		i++;
+	}
+	// printf("dst : %s\n", dst);
 }

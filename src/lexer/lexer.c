@@ -6,15 +6,24 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 10:00:51 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:18:01 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	init_token_var(t_token *token, int type, t_token *current, t_token **lst)
 {
-	token->type = type;
+	if (type == WORD || type == S_QUOTES || type == D_QUOTES)
+	{
+		token->type = WORD;
+		if (type == S_QUOTES)
+			token->expand = 0;
+		else
+			token->expand = 1;
+	}
+	else
+		token->type = type;
 	token->next = NULL;
 	token->prev = NULL;
 	token->explored = 0;

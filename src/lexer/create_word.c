@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 10:22:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/13 13:16:20 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	is_delimitation(char c)
 {
@@ -100,15 +100,23 @@ char	*word_in_delimitation(char *inpt, char c, long *flag)
 void	create_word(char *inpt, long *i, t_token **token)
 {
 	char	*word;
+	int		type;
 
+	type = WORD;
 	// printf("i dans create word mais avant la creation de word = %ld\n", *i);
 	if (inpt[*i] == '\'' || inpt[*i] == '"')
 	{
 		// printf("on trouve une quote\n");
 		if (inpt[*i] == '\'')
+		{
+			type = S_QUOTES;
 			word = word_in_delimitation(inpt + *i, '\'', i);
+		}
 		else if (inpt[*i] == '"')
+		{
+			type = D_QUOTES;
 			word = word_in_delimitation(inpt + *i, '"', i);
+		}	
 		if (*i < 0)
 			return ;
 		*i += ft_strlen(word) + 2;
@@ -126,6 +134,6 @@ void	create_word(char *inpt, long *i, t_token **token)
 		// printf("word = %s\n\n", word);
 	}
 	// printf("i dans create word apres creation de word = %ld\n", *i);
-	new_token(word, WORD, token, i);
+	new_token(word, type, token, i);
 	free(word);
 }
