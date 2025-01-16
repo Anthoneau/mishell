@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/15 18:04:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/16 13:25:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,17 +111,22 @@ void	ft_strcat_expander(char *src, char *dst)
 	size_t	i;
 	size_t	j;
 
+	// printf("strcat expander\n");
 	if (!src)
 		return ;
+	// printf("src : %s\n", src);
 	i = 0;
 	if (!dst || !*dst)
 		j = 0;
 	else
 		j = ft_strlen(dst);
+	// printf("j : %ld\n", j);
 	while (src[i])
 	{
+		// printf("src[%ld] == [%c]\n", i, src[i]);
 		dst[j] = src[i];
 		j++;
 		i++;
 	}
+	// printf("dst : %s\n", dst);
 }

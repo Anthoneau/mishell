@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/15 16:14:57 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/16 14:36:36 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,14 @@ void	create_word(char *inpt, long *i, t_token **token);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);
-void	function_to_expand(char **content, char **env);
+int		expandable(char *content);
+void	to_expand(char **content, char **env);
+int		is_in_env(char *content, char **env, size_t len, int start);
+int		cmp_token(char *content, char *env, size_t len, size_t start);
+char	*change_content(char *content, int start, int end, char **env);
+char	*supp_content(char *content, int start, int end);
+int		contain_backslash(char *content);
+void	del_backslash(char *content);
 
 //PARSER
 t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error);
