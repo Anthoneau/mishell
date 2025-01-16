@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 12:42:57 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 14:33:56 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/16 15:06:23 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,9 @@ int	expander(t_token **tokens, char **env)
 			heredoc = 1;
 		else if (current->type != WORD)
 			heredoc = 0;
-		if (!heredoc && current->type == WORD && current->expand == 1 && !modify_content(&current, env))
+		if (!heredoc && current->type == WORD && current->expand == 1
+			&& ft_strlen(current->content) > 1
+			&& !modify_content(&current, env))
 				return (0);
 		if (current->next)
 			current = current->next;

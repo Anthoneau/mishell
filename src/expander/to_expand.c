@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 14:43:28 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/16 14:58:17 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,11 @@ void	transform_content(char **content, int *pos, char **env)
 	end = start;
 	while ((*content)[end])
 	{
-		if ((*content)[end] == ' ' || (*content)[end] == '|' || (*content)[end] == '<' || (*content)[end] == '>' || (*content)[end] == '$' || ((*content)[end] == '\\' && (*content)[end + 1] == '$'))
+		if ((*content)[end] == ' ' || (*content)[end] == '|'
+			|| (*content)[end] == '<' || (*content)[end] == '>'
+			|| (*content)[end] == '$' || (*content)[end] == '\''
+			|| (*content)[end] == '"'
+			|| ((*content)[end] == '\\' && (*content)[end + 1] == '$'))
 			break ;
 		end++;
 	}
