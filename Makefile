@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/01/16 14:40:53 by agoldber         ###   ########.fr        #
+#    Updated: 2025/01/17 16:19:22 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -64,7 +64,7 @@ endef
 
 #SOURCES
 
-LEXER_FILES		=	lexer create_word
+LEXER_FILES		=	lexer create_word meta_delimiter
 EXPANDER_FILES	=	expander to_expand change_content expander_utils
 PARSER_FILES	=	create_ast redir word
 

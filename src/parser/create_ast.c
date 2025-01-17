@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 12:44:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/17 17:33:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,25 @@ t_ast	*pipe_node(t_token **tokens, t_token *current, int *error)
 
 t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error)
 {
+	/*
+		Fonction principale de l'ast
+		La fonction est recursive a un certain point, c'est a dire qu'elle s'appelle
+			elle meme dans les fonctions suivantes.
+		t_token se presente comme suit :
+				char			*content;
+				int				expand;
+				int				type;
+				int				explored;
+				int				error;
+				struct s_token	*next;
+				struct s_token	*prev;
+
+		La fonction prend en argument :
+			- la lite des tokens
+			- token "current",
+			- flag pour savoir si on check avant ou apres le token current (utile uniquement search_type())
+			- flag error
+	*/
 	t_token	*check;
 	t_ast	*node;
 
