@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 16:24:53 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/20 17:12:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,10 @@ enum type
 {
 	WORD,
 	PIPE,
-	R_INPUT,
-	R_TRUNC,
-	R_HEREDOC,
-	R_APPEND,
+	R_INPUT, //<
+	R_TRUNC, //>
+	R_HEREDOC, //<<
+	R_APPEND, // >>
 	S_QUOTES,
 	D_QUOTES
 };
@@ -65,6 +65,8 @@ t_token	*lexer(char *inpt);
 void	new_token(char	*content, int type, t_token **lst, long *i);
 void	create_word(char *inpt, long *i, t_token **token);
 char	*space_or_meta_char_delimitation(char *inpt, long *flag);
+
+int		check_token(t_token **token);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);

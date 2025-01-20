@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/01/17 16:19:22 by agoldber         ###   ########.fr        #
+#    Updated: 2025/01/20 15:20:25 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -72,7 +72,7 @@ LEXER			=	${addprefix ${LEXER_DIR}, ${LEXER_FILES}}
 EXPANDER		=	${addprefix ${EXPANDER_DIR}, ${EXPANDER_FILES}}
 PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
 
-FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} display
+FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} check_token display
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}
