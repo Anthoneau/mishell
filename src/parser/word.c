@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:16:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 12:44:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:32:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,10 @@ char	*get_word(t_token *current)
 
 t_ast	*word_node(t_token *current, int *error)
 {
+	/*
+		Fonction pour creer les mots
+		On initialise tout et on envoit get_word a content
+	*/
 	t_ast	*node;
 
 	//printf("\n---------- WORD NODE ----------\n");

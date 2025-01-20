@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 16:24:23 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:50:19 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	create_word(char *inpt, long *i, t_token **token)
 	{
 		// printf("y a pas de quotes\n");
 		// word =  word_in_delimitation(inpt + *i, ' ', i);
-		word = space_or_meta_char_delimitation(inpt, i);
+		word = space_or_meta_char_delimitation(inpt + *i, i);
 		if (*i < 0)
 			return ;
 		// printf("i avant ft_strlen: %ld\nft_strlen en question : %ld\n", *i, ft_strlen(word));

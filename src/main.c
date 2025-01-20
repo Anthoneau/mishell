@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 11:22:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:45:25 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	main(int ac, char **av, char **env)
 			if (token && expander(&token, env))
 			{
 				display_token(&token);
+				printf("\n");
 				//sleep(1);
 				//printf("on passe dans le parser\n");
 				ast = create_ast(&token, NULL, 0, &error);

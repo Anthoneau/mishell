@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 13:18:01 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:44:29 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,18 +139,18 @@ t_token	*lexer(char *inpt)
 		//printf("skip des espaces potentiels\n");
 		if (inpt[i] == '|')
 		{
-			//printf("on trouve un pipe\n");
+			// printf("on trouve un pipe\n");
 			new_token(NULL, PIPE, &token, &i);
 			i++;
 		}
 		else if (inpt[i] == '>' || inpt[i] == '<')
 		{
-			//printf("on trouve une redir\n");
+			// printf("on trouve une redir\n");
 			is_redir(inpt, &i, &token);
 		}
 		else if (inpt[i])
 		{
-			//printf("on trouve un mot\n");
+			// printf("on trouve un mot\n");
 			create_word(inpt, &i, &token);
 		}
 	}

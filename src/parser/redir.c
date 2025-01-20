@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:15:02 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 12:44:14 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:31:10 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ void	create_content(t_token *current, t_ast *node, int *error)
 
 int	create_content_and_sides(t_token **tokens, t_token *current, t_ast *node, int *error)
 {
+	/*
+		Fonction pour la creation du content des redirs et des cotes
+		Create_content "lie" le fichier a la redir
+		Le reste c'est juste pour creer les noeuds
+	*/
 	create_content(current, node, error);
 	if (current->type == R_INPUT)
 	{
@@ -56,6 +61,10 @@ int	create_content_and_sides(t_token **tokens, t_token *current, t_ast *node, in
 
 t_ast	*redir_node(t_token **tokens, t_token *current, int *error)
 {
+	/*
+		Fonction pour la creation de noeuds de redirection
+		On initialise les valeurs et on cree des noeuds dans create_content_and_sides
+	*/
 	t_ast	*node;
 
 	node = NULL;

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 16:24:24 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 16:25:22 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:44:43 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,13 +60,14 @@ void	check_if_quotes(char *inpt)
 	i = 0;
 	while (inpt[i])
 	{
-		printf("check de [%c]\n", inpt[i]);
+		// printf("[%c] ", inpt[i]);
 		if (inpt[i] == '\'' || inpt[i] == '"')
 		{
 			i += quotes_shifter(inpt, i);
 		}
 		i++;
 	}
+	// printf("\n");
 }
 
 int	is_delimitation(char c)
