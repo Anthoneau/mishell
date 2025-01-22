@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/22 17:31:54 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/22 17:50:03 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,25 +111,47 @@ void	pipe_handler(t_token **token)
 	free(inpt);
 }
 
+int	forbidden_token(t_token **token)
+{
+	t_token *current;
+
+	current = *token;
+	while (current)
+	{
+		if (current->type == R_INPUT_TRUC)
+		{
+			printf("minishell: unknown token `<>'\n");
+			return (1);
+		}
+		if (current->next)
+			current = current->next;
+		else
+			break ;
+	}
+	return (0);
+}
+
 int	check_token(t_token **token)
 {
 	t_token	*current;
 
 	current = *token;
-	if (current->type != WORD && !current->next)
+	if ((current->type != WORD && !current->next) || current->type == PIPE)
 		return (solo_handler(current), 0);
 	while (current)
 	{
-		if (current->next && current->type != WORD && current->type != PIPE && current->next->type != WORD)
+		if (current->next && ((current->type != WORD && current->type != PIPE && current->next->type != WORD) || (current->type == PIPE && current->next->type == PIPE)))
 			return (error_handler(current), 0);
 		if (current->type == R_HEREDOC)
-			heredoc();
+			heredoc(); // a faire
 		if (current->next)
 			current = current->next;
 		else if (current->type == PIPE)
-			pipe_handler(token);
+			pipe_handler(token); // a faire
 		else
 			break ;
 	}
+	if (forbidden_token(token))
+		return (0);
 	return (1);
 }
