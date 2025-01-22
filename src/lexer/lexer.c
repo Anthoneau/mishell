@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/20 14:44:29 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:23:01 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,26 +67,45 @@ void	new_token(char	*content, int type, t_token **lst, long *i)
 
 void	is_redir(char *inpt, long *i, t_token **token)
 {
-	if (inpt[*i] == '>')
+	(*i)++;
+	if (inpt[(*i) - 1] == '>')
 	{
-		(*i)++;
-		if (inpt[*i] != '>')
-			new_token(NULL, R_TRUNC, token, i);
-		else
+		if (inpt[*i] == '>')
 		{
 			new_token(NULL, R_APPEND, token, i);
 			(*i)++;
 		}
-	}
-	else if (inpt[*i] == '<')
-	{
-		(*i)++;
-		if (inpt[*i] != '<')
-			new_token(NULL, R_INPUT, token, i);
 		else
+		{
+			if (inpt[*i] == '|')
+			{
+				new_token(NULL, R_TRUNC_NOCLOBBER, token, i);
+				(*i)++;
+			}
+			else
+			{
+				new_token(NULL, R_TRUNC, token, i);
+			}
+		}
+	}
+	else if (inpt[(*i) - 1] == '<')
+	{
+		if (inpt[*i] == '<')
 		{
 			new_token(NULL, R_HEREDOC, token, i);
 			(*i)++;
+		}
+		else
+		{
+			if (inpt[(*i)] == '>')
+			{
+				new_token(NULL, R_INPUT_TRUC, token, i);
+				(*i)++;
+			}
+			else
+			{
+				new_token(NULL, R_INPUT, token, i);
+			}
 		}
 	}
 }
@@ -126,7 +145,7 @@ t_token	*lexer(char *inpt)
 	token = NULL;
 	//printf("check quotes\n");
 	if (!inpt || !check_quote(inpt))
-		return (ft_putstr_fd("Error with quotes\n", 2), NULL);
+		return (ft_putstr_fd("minishell : error with quotes\n", 2), NULL);
 	//printf("lexing...\n");
 	while (inpt[i])
 	{

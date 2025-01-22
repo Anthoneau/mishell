@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/20 14:49:06 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:00:46 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *e
 		
 		En gros on verifie le type d'un token et on en fait un noeud
 	*/
+	// printf("on parse\n");
 	t_token	*check;
 	t_ast	*node;
 

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/20 17:12:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/22 16:14:59 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ enum type
 	WORD,
 	PIPE,
 	R_INPUT, //<
+	R_INPUT_TRUC, //<>
 	R_TRUNC, //>
+	R_TRUNC_NOCLOBBER, //>|
 	R_HEREDOC, //<<
 	R_APPEND, // >>
 	S_QUOTES,
