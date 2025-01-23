@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 13:25:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:38:03 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,17 @@ void	free_token(t_token **token)
 		if (current->next)
 			current = current->next;
 		else
-		{
-			free(to_free);
 			break ;
-		}
 		if (to_free)
+		{
+			if (to_free->content)
+				free(to_free->content);
 			free(to_free);
+		}
 	}
+	if (to_free->content)
+		free(to_free->content);
+	free(to_free);
 	token = NULL;
 }
 

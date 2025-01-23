@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/23 15:25:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:47:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,11 @@ void	new_token(char	*content, int type, t_token **lst, long *i);
 void	create_word(char *inpt, long *i, t_token **token);
 char	*space_or_meta_char_delimitation(char *inpt, long *flag);
 
+//CHECK TOKEN
 int		check_token(t_token **token, char **inpt, char **env);
+int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
+
+void	heredoc(void);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);

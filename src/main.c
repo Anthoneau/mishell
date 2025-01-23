@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/23 15:25:10 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:45:59 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,14 @@ int	main(int ac, char **av, char **env)
 					//printf("on dessine l'ast total\n");
 					//sleep(1);
 					draw_ast(ast, 0);
+					//redir ?
+					//exec
 					free_ast(ast);
 				}
 				else
 					printf("ast est NULL\n");
 			}
-			printf("main : inpt = %s\n", inpt);
+			// printf("main : inpt = %s\n", inpt);
 			add_history(inpt);
 			if (token)
 				free_token(&token);
