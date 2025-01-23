@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/22 17:37:31 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:25:10 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int	main(int ac, char **av, char **env)
 		{
 			// printf("on passe dans le lexer\n");
 			token = lexer(inpt);
-			if (token && check_token(&token) && expander(&token, env))
+			if (token && check_token(&token, &inpt, env) && expander(&token, env))
 			{
 				display_token(&token);
 				printf("\n");
@@ -114,6 +114,7 @@ int	main(int ac, char **av, char **env)
 				else
 					printf("ast est NULL\n");
 			}
+			printf("main : inpt = %s\n", inpt);
 			add_history(inpt);
 			if (token)
 				free_token(&token);

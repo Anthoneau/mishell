@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/22 17:50:03 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:28:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,13 +102,89 @@ void	heredoc(void)
 	free(inpt);
 }
 
-void	pipe_handler(t_token **token)
+// void	join_token_to_list(t_token **last_token, t_token *token_to_add)
+// {
+	// t_token	*current;
+
+	// current = *list;
+	// while (current)
+	// {
+	// 	if (current->next)
+	// 		current = current->next;
+	// 	else
+	// 		break ;
+	// }
+	// current->next = token_to_add;
+	// token_to_add->prev = current;
+// }
+
+void	print_error_inpt(void)
+{
+	printf("minishell : error joining inputs\n");
+}
+
+char	*join_inpts(char *first_inpt, char *inpt)
+{
+	int		i;
+	char	*res;
+	char	*temp;
+
+	i = ft_strlen(first_inpt);
+	// printf("first_inpt : %s\nstrlen de first_inpt : %d\n", first_inpt, i);
+	res = NULL;
+	temp = NULL;
+	if (inpt[i] == ' ')
+	{
+		// printf("on trouve un espace a inpt[%d] [%c]\n", i, inpt[i]);
+		res = ft_strjoin(first_inpt, inpt);
+		// printf("res (join) : %s\n", res);
+	}
+	else
+	{
+		// printf("on trouve pas d'espace\n");
+		temp = ft_strjoin(first_inpt, " ");
+		if (!temp)
+			return (print_error_inpt(), NULL);
+		// printf("temp (join 1) : %s\n", temp);
+		res = ft_strjoin(temp, inpt);
+		// printf("res (join 2) : %s\n", res);
+		free(temp);
+	}
+	if (!res)
+		return (print_error_inpt(), NULL);
+	return (res);
+}
+
+int	pipe_handler(t_token **last_token, char **first_inpt, char **env)
 {
 	char	*inpt;
+	char	*replace_inpt;
+	t_token	*token;
 
+	replace_inpt = NULL;
 	inpt = readline("pipe > ");
-	(void)token;
+	
+	token = lexer(inpt);
+	if (!token || !check_token(&token, &inpt, env))
+	{
+		return (0);
+	}
+
+	// join_token_to_list(last_token, token);
+	(*last_token)->next = token;
+	token->prev = (*last_token);
+	replace_inpt = join_inpts(*first_inpt, inpt);
+	// printf("replace inpt : %s\n", replace_inpt);
 	free(inpt);
+	if (replace_inpt)
+	{
+		// printf("on free first_inpt\n");
+		free(*first_inpt);
+		(*first_inpt) = replace_inpt;
+		// printf("on assigne replace_inpt a first_inpt\n");
+		// printf("new inpt : %s\n", *first_inpt);
+	}
+	return (1);
 }
 
 int	forbidden_token(t_token **token)
@@ -131,7 +207,7 @@ int	forbidden_token(t_token **token)
 	return (0);
 }
 
-int	check_token(t_token **token)
+int	check_token(t_token **token, char **inpt, char **env)
 {
 	t_token	*current;
 
@@ -140,18 +216,21 @@ int	check_token(t_token **token)
 		return (solo_handler(current), 0);
 	while (current)
 	{
-		if (current->next && ((current->type != WORD && current->type != PIPE && current->next->type != WORD) || (current->type == PIPE && current->next->type == PIPE)))
+		if (current->next && ((current->type != WORD && current->type != PIPE
+			&& current->next->type != WORD) || (current->type == PIPE
+			&& current->next->type == PIPE)))
 			return (error_handler(current), 0);
 		if (current->type == R_HEREDOC)
 			heredoc(); // a faire
 		if (current->next)
 			current = current->next;
-		else if (current->type == PIPE)
-			pipe_handler(token); // a faire
+		else if (current->type == PIPE && !pipe_handler(&current, inpt, env))
+			return (0);// pipe_handler(token, env); // a faire
 		else
 			break ;
 	}
 	if (forbidden_token(token))
 		return (0);
+	// printf("retour dans check_token\ninpt : %s\n", *inpt);
 	return (1);
 }
