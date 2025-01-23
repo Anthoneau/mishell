@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/22 16:23:01 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/23 17:31:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ t_token	*lexer(char *inpt)
 	token = NULL;
 	//printf("check quotes\n");
 	if (!inpt || !check_quote(inpt))
-		return (ft_putstr_fd("minishell : error with quotes\n", 2), NULL);
+		return (ft_putstr_fd("minishell : quote error\n", 2), NULL);
 	//printf("lexing...\n");
 	while (inpt[i])
 	{

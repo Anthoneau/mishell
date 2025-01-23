@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/23 15:47:27 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/23 17:52:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag);
 int		check_token(t_token **token, char **inpt, char **env);
 int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
 
-void	heredoc(void);
+void	heredoc(char *delimiter);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);
