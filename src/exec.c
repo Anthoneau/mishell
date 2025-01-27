@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/27 14:43:20 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 15:53:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,9 +138,66 @@ char	*right_path(char *content, char **env)
 void	exec_cmd(char *path, char **arg, char **env)
 {
 	execve(path, arg, env);
-	free(path);
-	printf("minishell : command not found\n"); //print temporaire
+	// free(path);
+	// free_array(arg);
+	printf("%s: command not found\n", arg[0]); //print temporaire
 	exit(127);
+}
+
+pid_t	first(int pipe_fd[2], char **env, t_ast *ast)
+{
+	pid_t	pid;
+	char	*path;
+	char	**arg;
+
+	path = right_path(ast->content, env);
+	if (!path)
+	{
+		printf("pas de path dans exec\n"); //print temporaire
+		exit(1);
+	}
+	arg = ft_split(ast->content, ' ');
+	pid = fork();
+	if (pid == -1)
+		return (printf("pid = -1\n"));//print temporaire
+	if (!pid)
+	{
+		dup2(pipe_fd[1], 1);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		execve(path, arg, env);
+		printf("%s: command not found\n", arg[0]); //print temporaire
+		exit(127);
+	}
+	return (pid);
+}
+
+pid_t	second(int pipe_fd[2], char **env, t_ast *ast)
+{
+	pid_t	pid;
+	char	*path;
+	char	**arg;
+
+	path = right_path(ast->content, env);
+	if (!path)
+	{
+		printf("pas de path dans exec\n"); //print temporaire
+		exit(1);
+	}
+	arg = ft_split(ast->content, ' ');
+	pid = fork();
+	if (pid == -1)
+		return (printf("pid = -1\n"));//print temporaire
+	if (!pid)
+	{
+		dup2(pipe_fd[0], 0);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		execve(path, arg, env);
+		printf("%s: command not found\n", arg[0]); //print temporaire
+		exit(127);
+	}
+	return (pid);
 }
 
 int	exec(t_ast *ast, char **env)
@@ -148,17 +205,27 @@ int	exec(t_ast *ast, char **env)
 	int		pipe_fd[2];
 	int		status;
 	pid_t	pid;
+	pid_t	pid2;
 	char	*path;
 	char	**arg;
 
-	if (pipe(pipe_fd) == -1)
-		return (0);
 	status = 0;
 	// if (ast->type == PIPE)
 	// 	exec_pipe();
 	// else if (ast->type >= 2 && ast->type != R_HEREDOC)
 	// 	exec_redir();
-	if (ast->type == WORD)
+	if (pipe(pipe_fd) == -1)
+		return (0);
+	if (ast->type == PIPE)
+	{
+		pid = first(pipe_fd, env, ast->left);
+		pid2 = second(pipe_fd,env, ast->right);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		waitpid(pid, &status, 0);
+		waitpid(pid2, &status, 0);
+	}
+	else if (ast->type == WORD)
 	{
 		path = right_path(ast->content, env);
 		if (!path)
@@ -173,6 +240,10 @@ int	exec(t_ast *ast, char **env)
 		}
 		else
 		{
+			free(path);
+			free_array(arg);
+			close(pipe_fd[0]);
+			close(pipe_fd[1]);
 			waitpid(pid, &status, 0);
 		}
 	}
