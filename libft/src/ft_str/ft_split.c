@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 15:29:39 by agoldber          #+#    #+#             */
-/*   Updated: 2024/05/31 13:06:54 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:23:48 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,20 +70,6 @@ static void	init_start_finish(char const *s, char c, int *start, int *finish)
 	*finish = end;
 }
 
-static char	**free_array(char **arr)
-{
-	int	i;
-
-	i = 0;
-	while (arr[i] != NULL)
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
-	return (NULL);
-}
-
 char	**ft_split(char const *s, char c)
 {
 	char	**arr;
@@ -104,7 +90,7 @@ char	**ft_split(char const *s, char c)
 		{
 			arr[j] = word_split(s, &start, &finish);
 			if (!(arr[j]))
-				return (free_array(arr));
+				return (free_array(arr), NULL);
 			j++;
 		}
 	}

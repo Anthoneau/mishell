@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/27 14:17:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:43:20 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,13 +87,13 @@ char	*get_cmd(char *content)
 	int		i;
 
 	i = 0;
-	while (content[i] != ' ')
+	while (content[i] && content[i] != ' ')
 		i++;
-	cmd = malloc(i);
+	cmd = malloc(i + 1);
 	if (!cmd)
 		return (NULL);
 	i = 0;
-	while (content[i] != ' ')
+	while (content[i] && content[i] != ' ')
 	{
 		cmd[i] = content[i];
 		i++;
@@ -110,6 +110,8 @@ char	*right_path(char *content, char **env)
 	int		i;
 
 	full_path = NULL;
+	if (!content)
+		return (NULL);
 	cmd = get_cmd(content);
 	if (!cmd)
 		return (NULL);
@@ -119,13 +121,17 @@ char	*right_path(char *content, char **env)
 	i = 0;
 	while (access(full_path, R_OK) == -1)
 	{
+		if (!path[i])
+			break ;
 		if (full_path)
 			free(full_path);
 		full_path = get_full_path(path[i], cmd);
 		if (!full_path)
-			return (free_array(path), NULL);
+			return (free(cmd), free_array(path), NULL);
 		i++;
 	}
+	free_array(path);
+	free(cmd);
 	return (full_path);
 }
 

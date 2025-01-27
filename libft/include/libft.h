@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:24:10 by agoldber          #+#    #+#             */
-/*   Updated: 2024/10/10 18:34:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 14:22:32 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,4 +98,5 @@ int		ft_findchar(char c, char *str);
 char	*get_next_line(int fd);
 //ADDITIONAL FUNCTIONS
 void	ft_swap(int *i, int *j);
+void	free_array(char **arr);
 #endif
