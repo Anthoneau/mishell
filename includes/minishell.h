@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/23 17:52:05 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:49:06 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag);
 int		check_token(t_token **token, char **inpt, char **env);
 int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
 
-void	heredoc(char *delimiter);
+void	heredoc(char *delimiter, int expandble);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);
@@ -89,6 +89,9 @@ void	del_backslash(char *content);
 t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error);
 t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
+
+//EXEC
+int	exec(t_ast *ast, char **env);
 
 //DISPLAY
 void	display_token(t_token **token);

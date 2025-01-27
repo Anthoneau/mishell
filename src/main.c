@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/23 15:45:59 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 13:49:33 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int	main(int ac, char **av, char **env)
 					//sleep(1);
 					draw_ast(ast, 0);
 					//redir ?
-					//exec
+					exec(ast, env);
 					free_ast(ast);
 				}
 				else

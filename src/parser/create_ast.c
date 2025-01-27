@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/22 16:00:46 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:00:22 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,30 @@ t_token	*find_redir(t_token *current, int side)
 	return (current);
 }
 
+t_token	*find_heredoc(t_token *current, int side)
+{
+	/*
+		Fonction pour trouver la bonne redirection a envoyer
+		Elle fonctionne comme find_first_word_to_the_left() (la fonction au dessus) mais pour les redirs
+	*/
+	t_token	*check;
+
+	check = current;
+	if (side == 1)
+	{
+		while (check->explored != 1)
+		{
+			if (check->type == 6)
+				current = check;
+			if (check->prev)
+				check = check->prev;
+			else
+				break ;
+		}
+	}
+	return (current);
+}
+
 t_token	*search_type(t_token **list, t_token *current, int type, int side)
 {
 	/*
@@ -109,7 +133,9 @@ t_token	*search_type(t_token **list, t_token *current, int type, int side)
 			else
 				return(find_first_word_to_the_left(current));
 		}
-		else if (type >= 2 && current->type >= 2 && current->explored == 0)
+		else if (type == R_HEREDOC && current->type == R_HEREDOC && current->explored == 0)
+			return (find_heredoc(current, side));
+		else if ((type >= 2 && type != R_HEREDOC) && current->type >= 2 && current->explored == 0)
 			return (find_redir(current, side));
 		if (side == 0 && current->next)
 			current = current->next;
@@ -197,6 +223,13 @@ t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *e
 		//sleep(1);
 		//printf("-------------------------------\n\n");
 		node = pipe_node(tokens, check, error);
+	}
+	else if ((check = search_type(tokens, current, R_HEREDOC, after_explored)) && *error == 0)
+	{
+		//printf("on trouve une redir\n");
+		//sleep(1);
+		//printf("-------------------------------\n\n");
+		node = redir_node(tokens, check, error);
 	}
 	else if ((check = search_type(tokens, current, 2, after_explored)) && *error == 0)
 	{

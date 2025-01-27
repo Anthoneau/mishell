@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/23 17:51:51 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/24 18:44:17 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	check_token(t_token **token, char **inpt, char **env)
 		if (current->type != WORD && current->type != PIPE && !current->next)
 			return (solo_handler(current), 0);
 		if (current->type == R_HEREDOC)
-			heredoc(current->next->content); // a faire
+			heredoc(current->next->content, current->next->expand); // a faire
 		if (current->next)
 			current = current->next;
 		else if (current->type == PIPE && !end_pipe_handler(&current, inpt, env))

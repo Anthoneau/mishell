@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/01/23 15:47:38 by agoldber         ###   ########.fr        #
+#    Updated: 2025/01/27 13:50:02 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -75,7 +75,7 @@ CHECK_TKN		=	${addprefix ${CHECK_TKN_DIR}, ${CHECK_TKN_FILES}}
 EXPANDER		=	${addprefix ${EXPANDER_DIR}, ${EXPANDER_FILES}}
 PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
 
-FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} display
+FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} exec display
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}
