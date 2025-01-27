@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/27 13:49:06 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:16:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ void	free_ast(t_ast *ast);
 void	ft_strcat(char *src, char *dst);
 void	ft_strcat_expander(char *src, char *dst);
 int		count_lst(t_token *lst);
+int		count_pipes(t_token *token);
 
 //LEXER
 t_token	*lexer(char *inpt);
@@ -91,7 +92,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //EXEC
-int	exec(t_ast *ast, char **env);
+int	exec(t_ast *ast, char **env, int n);
 
 //DISPLAY
 void	display_token(t_token **token);

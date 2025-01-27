@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/23 15:38:03 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:15:20 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,21 @@ void	ft_strcat_expander(char *src, char *dst)
 		i++;
 	}
 	// printf("dst : %s\n", dst);
+}
+
+int	count_pipes(t_token *token)
+{
+	int	i;
+
+	i = 0;
+	while (token)
+	{
+		if (token->type == PIPE)
+			i++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+	}
+	return (i);
 }
