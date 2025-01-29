@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/27 16:16:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:56:52 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <sys/wait.h>
+# include <fcntl.h>
+# include <errno.h>
 
 enum type
 {
@@ -52,6 +54,13 @@ typedef struct s_ast
 	struct s_ast	*left;
 	struct s_ast	*right;
 }	t_ast;
+
+typedef struct s_cmd
+{
+	char	*content;
+	int		fd_in;
+	int		fd_out;
+}	t_cmd;
 
 //UTILS
 void	ft_exit(char *str, int exit_code);
