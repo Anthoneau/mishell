@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 16:51:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 18:40:56 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,7 +197,74 @@ t_in_out	change_redir(t_ast *ast, t_cmd *cmd)
 	return (file);
 }
 
-pid_t	exec_cmd(t_cmd *cmd, char **env, int pipefd[2], int in, int out)
+size_t	get_len_to_close(int **to_close)
+{
+	size_t	i;
+
+	i = 0;
+	while (to_close[i])
+		i++;
+	return (i);
+}
+
+int	add_pipe_to_close(int newpipefd[2], int **to_close)
+{
+	int	**temp;
+	int	i;
+
+	temp = NULL;
+	i = 0;
+	if (!to_close)
+	{
+		printf("to_close n'existe pas\n");
+		to_close = malloc(sizeof(int *));
+		if (!to_close)
+			return (0);
+		*to_close = newpipefd;
+		printf("to_close a newpipe en premiere valeur\n");
+	}
+	else
+	{
+		printf("to_close existe\n");
+		temp = malloc(get_len_to_close(to_close) * sizeof(int *));
+		if (!temp)
+			return (0);
+		while (to_close[i])
+		{
+			temp[i] = to_close[i];
+			i++;
+		}
+		temp[i] = newpipefd;
+		free(to_close);
+		to_close = temp;
+	}
+	return (1);
+}
+
+void	close_all_pipes(int **to_close)
+{
+	int	i;
+
+	i = 0;
+	if (!to_close)
+	{
+		printf("to_close existe pas\n");
+		return ;
+	}
+	while (to_close[i])
+	{
+		fprintf(stderr, "pipefd[0] : %d\n", fcntl(*to_close[0], F_GETFD));
+		fprintf(stderr, "pipefd[1] : %d\n", fcntl(*to_close[1], F_GETFD));
+		close(to_close[i][0]);
+		close(to_close[i][1]);
+		fprintf(stderr, "pipefd[0] : %d\n", fcntl(*to_close[0], F_GETFD));
+		fprintf(stderr, "pipefd[1] : %d\n", fcntl(*to_close[1], F_GETFD));
+		i++;
+	}
+	free(to_close);
+}
+
+pid_t	exec_cmd(t_cmd *cmd, char **env, int pipefd[2], int in, int out, int **to_close)
 {
 	char	*path;
 	char	**arg;
@@ -244,7 +311,7 @@ pid_t	exec_cmd(t_cmd *cmd, char **env, int pipefd[2], int in, int out)
 		if (out != -1)
 		{
 			dup2(out, STDOUT_FILENO);
-			close(in);
+			close(out);
 			if (cmd->fd_out != -1)
 				close(cmd->fd_out);
 		}
@@ -258,12 +325,17 @@ pid_t	exec_cmd(t_cmd *cmd, char **env, int pipefd[2], int in, int out)
 			close(pipefd[0]);
 			close(pipefd[1]);
 		}
-		printf("in : %d\n", fcntl(in, F_GETFD));
-		printf("out : %d\n", fcntl(out, F_GETFD));
-		printf("cmd->fd_in : %d\n", fcntl(cmd->fd_in, F_GETFD));
-		printf("cmd->fd_out : %d\n", fcntl(cmd->fd_out, F_GETFD));
-		printf("pipefd[0] : %d\n", fcntl(pipefd[0], F_GETFD));
-		printf("pipefd[1] : %d\n", fcntl(pipefd[1], F_GETFD));
+		if (to_close)
+			close_all_pipes(to_close);
+		// fprintf(stderr, "in : %d\n", fcntl(in, F_GETFD));
+		// fprintf(stderr, "out : %d\n", fcntl(out, F_GETFD));
+		// fprintf(stderr, "cmd->fd_in : %d\n", fcntl(cmd->fd_in, F_GETFD));
+		// fprintf(stderr, "cmd->fd_out : %d\n", fcntl(cmd->fd_out, F_GETFD));
+		// if (pipefd)
+		// {
+		// 	printf("pipefd[0] : %d\n", fcntl(pipefd[0], F_GETFD));
+		// 	printf("pipefd[1] : %d\n", fcntl(pipefd[1], F_GETFD));
+		// }
 		execve(path, arg, env);
 		free(path);
 		free_array(arg);
@@ -276,7 +348,7 @@ pid_t	exec_cmd(t_cmd *cmd, char **env, int pipefd[2], int in, int out)
 	return (pid);
 }
 
-pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipefd[2])
+pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipefd[2], int **to_close)
 {
 	int			status;
 	pid_t		pid;
@@ -325,8 +397,15 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 		int	newpipefd[2];
 	
 		if (pipe(newpipefd) == -1)
-			return (printf("probleme de pipe\n"));
+			return (printf("probleme de pipe\n"));//temp print
 		printf("creation du pipe\n");
+		if (!add_pipe_to_close(newpipefd, to_close))
+			return (printf("probleme de pipe\n"));//temp print
+		if (to_close)
+			printf("to_close existe\n");
+		else
+			printf("to_close n'existe pas \n");
+		sleep(1);
 		if (ast->left)
 		{
 			printf("on envoie ast->left a gauche depuis pipe\n");
@@ -335,7 +414,7 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 			if (pipefd)
 				cmd->fd_in = pipefd[0];
 			cmd->fd_out = newpipefd[1];
-			pid = exec_node_ast(ast->left, cmd, in, out, env, newpipefd);
+			pid = exec_node_ast(ast->left, cmd, in, out, env, newpipefd, to_close);
 			cmd->fd_in = -1;
 			cmd->fd_out = -1;
 
@@ -350,26 +429,22 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 			if (pipefd)
 				cmd->fd_out = pipefd[1];
 			cmd->fd_in = newpipefd[0];
-			pid2 = exec_node_ast(ast->right, cmd, in, out, env, newpipefd);
+			pid2 = exec_node_ast(ast->right, cmd, in, out, env, newpipefd, to_close);
 			cmd->fd_in = -1;
 			cmd->fd_out = -1;
-			
-			//if (cmd && cmd->content)
-			//	free(cmd->content);
-			//if (cmd)
-			//	free(cmd);
 
 				
 			printf("-------------revenu dans la fonction du pipe-------------\n");
 		}
 		printf("on ferme les pipe[1] et pipe[0]\n");
+		close_all_pipes(to_close);
+		// close(newpipefd[0]);
+		// close(newpipefd[1]);
 		// if (pipefd)
 		// {
 		// 	close(pipefd[0]);
 		// 	close(pipefd[1]);
 		// }
-		close(newpipefd[0]);
-		close(newpipefd[1]);
 		printf("newpipe ferme\n");
 		waitpid(pid, &status, 0);
 		printf("pid1 fini\n");
@@ -438,7 +513,7 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 			printf("ast->left est de type = %d\n", ast->left->type);
 
 
-			exec_node_ast(ast->left, cmd, files.infile, files.outfile, env, pipefd);
+			exec_node_ast(ast->left, cmd, files.infile, files.outfile, env, pipefd, to_close);
 
 
 			printf("-------------revenu dans la fonction de la redir-------------\n");
@@ -449,7 +524,7 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 			printf("ast->right est de type = %d\n", ast->right->type);
 
 
-			exec_node_ast(ast->right, cmd, files.infile, files.outfile, env, pipefd);
+			exec_node_ast(ast->right, cmd, files.infile, files.outfile, env, pipefd, to_close);
 
 			
 			printf("-------------revenu dans la fonction de la redir-------------\n");
@@ -466,17 +541,7 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 		cmd->content = ft_strdup(ast->content);
 		if (!cmd->content)
 			return (printf("probleme de malloc\n")); //print temp
-		// if (in != -1 && cmd->fd_in == -1)
-		// {
-		// 	printf("in = %d et cmd->fd_in == -1\n", in);
-		// 	cmd->fd_in = in;
-		// }
-		// if (out != -1 && cmd->fd_out == -1)
-		// {
-		// 	printf("out = %d et cmd->fd_out == -1\n", out);
-		// 	cmd->fd_out = out;
-		// }
-		pid = exec_cmd(cmd, env, pipefd, in, out);
+		pid = exec_cmd(cmd, env, pipefd, in, out, to_close);
 		if (pid == -1)
 		{
 			printf("probleme de fork, on free\n");
@@ -489,20 +554,12 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 			close(in);
 		if (out != -1)
 			close(out);
-		// if (cmd->fd_in != -1)
-		// 	close(cmd->fd_in);
-		// if (cmd->fd_out != -1)
-		// 	close(cmd->fd_out);
-		// if (in != -1)
-		// 	close(in);
-		// if (out != -1)
-		// 	close(out);
-		// if (pipefd && pipefd[0])
-		// 	close(pipefd[0]);
-		// if (pipefd && pipefd[1])
-		// 	close(pipefd[1]);
-		// waitpid(pid, &status, 0);
-		printf("on a fini d'attendre\n");
+		if (!pipefd)
+		{
+			waitpid(pid, &status, 0);
+			printf("on a fini d'attendre\n");
+			exit_code = WEXITSTATUS(status);
+		}
 		printf("cmd->fdin : %d\ncmd->fdout : %d\n", cmd->fd_in, cmd->fd_out);
 		cmd->fd_in = -1;
 		cmd->fd_out = -1;
@@ -528,87 +585,6 @@ pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pip
 	return (pid);
 }
 
-//int	tot_num_cmd(t_ast *ast)
-//{
-//	int		number_of_commands;
-
-//	number_of_commands = 0;
-//	if (!ast)
-//		return (0);
-//	if (ast->type == WORD)
-//		number_of_commands++;
-//	if (ast->right)
-//		number_of_commands += tot_num_cmd(ast->right);
-//	if (ast->left)
-//		number_of_commands += tot_num_cmd(ast->left);
-//	return (number_of_commands);
-//}
-
-//void	exec_node_ast(t_ast *ast)
-//{
-//	int		pipefd[2];
-//	int		oldpipe[2];
-//	int		cmd_num;
-//	int		n;
-//	t_cmd	cmd;
-//	pid_t	pid;
-
-//	cmd_num = 0;
-//	cmd.fd_in = STDIN_FILENO;
-//	cmd.fd_out = STDOUT_FILENO;
-//	n = tot_num_cmd(ast);
-	
-	//while (1)
-	//{
-	//	if (pipe(pipefd) == -1)
-	//		return ; //free
-		
-		//if (cmd_num == 0)
-		//{
-		//	close(pipefd[0]);
-		//}
-		//else if (cmd_num = n - 1)
-		//{
-		//	close(pipefd[1]);
-		//}
-		//else
-		//{
-			
-		//}
-
-		//char	*path;
-		//char	**arg;
-		//pid_t	pid;
-
-		//path = right_path(cmd->content, env);
-		//if (!path)
-		//	return ;
-		//arg = ft_split(cmd->content, ' ');
-		//if (!arg)
-		//{
-		//	free(path);//print temp
-		//	return ;
-		//}
-		//pid = fork();
-		//if (pid == -1)
-		//{
-		//	free(path);
-		//	free_array(arg);//print temporaire
-		//	return ;
-		//}
-		//if (!pid)
-		//{
-		//	execve(path, arg, env);
-		//	free(path);
-		//	free_array(arg);
-		//	printf("%s: command not found\n", arg[0]); //print temporaire
-		//	exit(127);
-		//}
-		//free(path);
-		//free_array(arg);
-		//}
-//}
-
 int	exec(t_ast *ast, char **env, int m)
 {
 	int		status;
@@ -616,6 +592,6 @@ int	exec(t_ast *ast, char **env, int m)
 	(void)m;
 	status = 0;
 	printf("on entre dans exec_node_ast\n");
-	status = exec_node_ast(ast, NULL, -1, -1, env, NULL);
+	status = exec_node_ast(ast, NULL, -1, -1, env, NULL, NULL);
 	return (status);
 }
