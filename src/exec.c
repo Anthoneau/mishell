@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/29 17:01:07 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 12:37:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,7 +245,7 @@ pid_t	exec_cmd(t_cmd *cmd, char **env)
 	return (pid);
 }
 
-int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
+int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipefd[2])
 {
 	int		status;
 	pid_t	pid;
@@ -278,19 +278,27 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 	printf("test\n");
 	printf("cmd->fd_out = %d\n", cmd->fd_out);
 	printf("test\n");
+
+
+
+
 	if (ast->type == PIPE)
 	{
 		printf("on trouve un pipe\n");
-		int	pipefd[2];
+		int	newpipefd[2];
 	
-		if (pipe(pipefd) == -1)
+		if (pipe(newpipefd) == -1)
 			return (printf("probleme de pipe\n"));
 		printf("creation du pipe\n");
 		if (ast->left)
 		{
 			printf("on envoie ast->left a gauche depuis pipe\n");
 				printf("ast->left est de type = %d\n", ast->left->type);
-			printf("exec_node_ast retourne : %d\n", exec_node_ast(ast->left, cmd, in, pipefd[1], env));
+
+
+			exec_node_ast(ast->left, cmd, in, pipefd[1], env, pipefd);
+
+
 			printf("revenu\n");
 			printf("-------------revenu dans la fonction du pipe-------------\n");
 		}
@@ -298,17 +306,27 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 		{
 			printf("on envoie ast->right a droite depuis pipe\n");
 				printf("ast->right est de type = %d\n", ast->right->type);
-			exec_node_ast(ast->right, cmd, pipefd[0], out, env);
-			if (cmd && cmd->content)
-				free(cmd->content);
-			if (cmd)
-				free(cmd);
+
+				
+			exec_node_ast(ast->right, cmd, pipefd[0], out, env, pipefd);
+
+			
+			//if (cmd && cmd->content)
+			//	free(cmd->content);
+			//if (cmd)
+			//	free(cmd);
+
+				
 			printf("-------------revenu dans la fonction du pipe-------------\n");
 		}
 		printf("on ferme les pipe[1] et pipe[0]\n");
 		close(pipefd[0]);
 		close(pipefd[1]);
 	}
+
+
+
+
 	else if (ast->type >= R_INPUT && ast->type != R_HEREDOC)
 	{
 		printf("on trouve une redir\n");
@@ -318,11 +336,6 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 			t_ast	*current;
 		
 			current = ast;
-			while (current->right && current->right->type >= R_INPUT)
-			{
-				current = current->right;
-				printf("on avance current\n");
-			}
 			if (!change_redir(current, cmd))
 			{
 				printf("les redirections ont foires\n");
@@ -331,6 +344,20 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 				if (cmd)
 					free(cmd);
 				return (1);
+			}
+			while (current->right && current->right->type >= R_INPUT && !current->right->left)
+			{
+				current = current->right;
+				if (!change_redir(current, cmd))
+				{
+					printf("les redirections ont foires\n");
+					if (cmd && cmd->content)
+						free(cmd);
+					if (cmd)
+						free(cmd);
+					return (1);
+				}
+				printf("on avance current\n");
 			}
 		}
 		else if (!change_redir(ast, cmd))
@@ -346,17 +373,28 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 		{
 			printf("on envoie ast->left a gauche depuis redir\n");
 			printf("ast->left est de type = %d\n", ast->left->type);
-			exec_node_ast(ast->left, cmd, in, out, env);
+
+
+			exec_node_ast(ast->left, cmd, in, out, env, pipefd);
+
+
 			printf("-------------revenu dans la fonction de la redir-------------\n");
 		}
 		if (ast->right)
 		{
 			printf("on envoie ast->right a droite depuis redir\n");
 			printf("ast->right est de type = %d\n", ast->right->type);
-			exec_node_ast(ast->right, cmd, in, out, env);
+
+
+			exec_node_ast(ast->right, cmd, in, out, env, pipefd);
+
+			
 			printf("-------------revenu dans la fonction de la redir-------------\n");
 		}
 	}
+
+
+
 	else if (ast->type == WORD)
 	{
 		printf("strdup de %s\n", ast->content);
@@ -384,9 +422,6 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 			return (0);
 		}
 		printf("pid wait = %d\n", pid);
-		waitpid(pid, &status, 0);
-		printf("on a fini d'attendre\n");
-		printf("cmd->fdin : %d\ncmd->fdout : %d\n", cmd->fd_in, cmd->fd_out);
 		if (cmd->fd_in != -1)
 			close(cmd->fd_in);
 		if (cmd->fd_out != -1)
@@ -395,10 +430,17 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 			close(in);
 		if (out != -1)
 			close(out);
+		waitpid(pid, &status, 0);
+		printf("on a fini d'attendre\n");
+		printf("cmd->fdin : %d\ncmd->fdout : %d\n", cmd->fd_in, cmd->fd_out);
 		cmd->fd_in = -1;
 		cmd->fd_out = -1;
 		printf("tout est free et close\n");
 	}
+
+
+
+
 	else
 	{
 		printf("on free tout\n");
@@ -415,6 +457,87 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env)
 	return (WEXITSTATUS(status));
 }
 
+//int	tot_num_cmd(t_ast *ast)
+//{
+//	int		number_of_commands;
+
+//	number_of_commands = 0;
+//	if (!ast)
+//		return (0);
+//	if (ast->type == WORD)
+//		number_of_commands++;
+//	if (ast->right)
+//		number_of_commands += tot_num_cmd(ast->right);
+//	if (ast->left)
+//		number_of_commands += tot_num_cmd(ast->left);
+//	return (number_of_commands);
+//}
+
+//void	exec_node_ast(t_ast *ast)
+//{
+//	int		pipefd[2];
+//	int		oldpipe[2];
+//	int		cmd_num;
+//	int		n;
+//	t_cmd	cmd;
+//	pid_t	pid;
+
+//	cmd_num = 0;
+//	cmd.fd_in = STDIN_FILENO;
+//	cmd.fd_out = STDOUT_FILENO;
+//	n = tot_num_cmd(ast);
+	
+	//while (1)
+	//{
+	//	if (pipe(pipefd) == -1)
+	//		return ; //free
+		
+		//if (cmd_num == 0)
+		//{
+		//	close(pipefd[0]);
+		//}
+		//else if (cmd_num = n - 1)
+		//{
+		//	close(pipefd[1]);
+		//}
+		//else
+		//{
+			
+		//}
+
+		//char	*path;
+		//char	**arg;
+		//pid_t	pid;
+
+		//path = right_path(cmd->content, env);
+		//if (!path)
+		//	return ;
+		//arg = ft_split(cmd->content, ' ');
+		//if (!arg)
+		//{
+		//	free(path);//print temp
+		//	return ;
+		//}
+		//pid = fork();
+		//if (pid == -1)
+		//{
+		//	free(path);
+		//	free_array(arg);//print temporaire
+		//	return ;
+		//}
+		//if (!pid)
+		//{
+		//	execve(path, arg, env);
+		//	free(path);
+		//	free_array(arg);
+		//	printf("%s: command not found\n", arg[0]); //print temporaire
+		//	exit(127);
+		//}
+		//free(path);
+		//free_array(arg);
+		//}
+//}
+
 int	exec(t_ast *ast, char **env, int m)
 {
 	int		status;
@@ -422,6 +545,6 @@ int	exec(t_ast *ast, char **env, int m)
 	(void)m;
 	status = 0;
 	printf("on entre dans exec_node_ast\n");
-	status = exec_node_ast(ast, NULL, -1, -1, env);
+	status = exec_node_ast(ast, NULL, -1, -1, env, NULL);
 	return (status);
 }
