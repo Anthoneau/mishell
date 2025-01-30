@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 13:47:57 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:49:46 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,8 @@
 // 	return (env[i] + j);
 // }
 
+int	exit_code;
+
 int	main(int ac, char **av, char **env)
 {
 	char		*inpt;
@@ -87,6 +89,7 @@ int	main(int ac, char **av, char **env)
 	// home = get_home(env);
 	token = NULL;
 	error = 0;
+	exit_code = 0;
 	while (1)
 	{
 		// name = name_minishell(getcwd(NULL, 0), home);

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 13:45:21 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 16:51:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,20 +123,24 @@ int	print_open_error(char *content)
 	return (0);
 }
 
-int	change_redir(t_ast *ast, t_cmd *cmd)
+t_in_out	change_redir(t_ast *ast, t_cmd *cmd)
 {
-	int	fd;
+	t_in_out file;
 
-	fd = 0;
+	file.infile = -1;
+	file.outfile = -1;
 	printf("-------------change redir-------------\n");
 	if (ast->type == R_INPUT)
 	{
 		printf("input trouve\n");
 		printf("open de %s\n", ast->content);
-		fd = open(ast->content, O_RDONLY, 0777);
-		if (fd == -1)
+		file.infile = open(ast->content, O_RDONLY, 0777);
+		if (file.infile == -1)
 		{
-			return (print_open_error(ast->content));
+			print_open_error(ast->content);
+			file.infile = -2;
+			file.outfile = -2;
+			return (file);
 		}
 		printf("ouverture reussie\n");
 		if (cmd->fd_in != -1)
@@ -144,18 +148,21 @@ int	change_redir(t_ast *ast, t_cmd *cmd)
 			printf("fd_in != -1 donc on ferme d'abord\n");
 			close(cmd->fd_in);
 		}
-		cmd->fd_in = fd;
-		printf("on assigne %d a fd_in\n", fd);
+		cmd->fd_in = file.infile;
+		printf("on assigne %d a fd_in\n", file.infile);
 		// sleep(1);
 	}
 	else if (ast->type == R_TRUNC || ast->type == R_TRUNC_NOCLOBBER)
 	{
 		printf("trunc trouve\n");
 		printf("open de %s\n", ast->content);
-		fd = open(ast->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd == -1)
+		file.outfile = open(ast->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (file.outfile == -1)
 		{
-			return (print_open_error(ast->content));
+			print_open_error(ast->content);
+			file.infile = -2;
+			file.outfile = -2;
+			return (file);
 		}
 		printf("ouverture reussie\n");
 		if (cmd->fd_out != -1)
@@ -163,17 +170,20 @@ int	change_redir(t_ast *ast, t_cmd *cmd)
 			printf("fd_out != -1 donc on ferme\n");
 			close(cmd->fd_out);
 		}
-		printf("on assigne %d\n", fd);
-		cmd->fd_out = fd;
+		printf("on assigne %d\n", file.outfile);
+		cmd->fd_out = file.outfile;
 	}
 	else if (ast->type == R_APPEND)
 	{
 		printf("append trouve\n");
 		printf("open de %s\n", ast->content);
-		fd = open(ast->content, O_WRONLY | O_CREAT |O_APPEND, 0644);
-		if (fd == -1)
+		file.outfile = open(ast->content, O_WRONLY | O_CREAT |O_APPEND, 0644);
+		if (file.outfile == -1)
 		{
-			return (print_open_error(ast->content));
+			print_open_error(ast->content);
+			file.infile = -2;
+			file.outfile = -2;
+			return (file);
 		}
 		printf("ouverture reussie\n");
 		if (cmd->fd_out != -1)
@@ -181,13 +191,13 @@ int	change_redir(t_ast *ast, t_cmd *cmd)
 			printf("fd_out != -1 donc on ferme\n");
 			close(cmd->fd_out);
 		}
-		printf("on assigne %d\n", fd);
-		cmd->fd_out = fd;
+		printf("on assigne %d\n", file.outfile);
+		cmd->fd_out = file.outfile;
 	}
-	return (1);
+	return (file);
 }
 
-pid_t	exec_cmd(t_cmd *cmd, char **env)
+pid_t	exec_cmd(t_cmd *cmd, char **env, int pipefd[2], int in, int out)
 {
 	char	*path;
 	char	**arg;
@@ -219,20 +229,41 @@ pid_t	exec_cmd(t_cmd *cmd, char **env)
 	if (!pid)
 	{
 		printf("on est dans le child\n");
-		if (cmd->fd_in != -1)
+		if (in != -1)
 		{
-			printf("fd in pas par defaut : %d\n", cmd->fd_in);
-			dup2(cmd->fd_in, 0);
+			dup2(in, STDIN_FILENO);
+			close(in);
 			if (cmd->fd_in != -1)
 				close(cmd->fd_in);
 		}
-		if (cmd->fd_out != -1)
+		else if (cmd->fd_in != -1)
 		{
-			printf("fd out pas par defaut : %d\n", cmd->fd_out);
-			dup2(cmd->fd_out, 1);
+			dup2(cmd->fd_in, STDIN_FILENO);
+			close(cmd->fd_in);
+		}
+		if (out != -1)
+		{
+			dup2(out, STDOUT_FILENO);
+			close(in);
 			if (cmd->fd_out != -1)
 				close(cmd->fd_out);
 		}
+		else if (cmd->fd_out != -1)
+		{
+			dup2(cmd->fd_out, STDOUT_FILENO);
+			close(cmd->fd_out);
+		}
+		if (pipefd)
+		{
+			close(pipefd[0]);
+			close(pipefd[1]);
+		}
+		printf("in : %d\n", fcntl(in, F_GETFD));
+		printf("out : %d\n", fcntl(out, F_GETFD));
+		printf("cmd->fd_in : %d\n", fcntl(cmd->fd_in, F_GETFD));
+		printf("cmd->fd_out : %d\n", fcntl(cmd->fd_out, F_GETFD));
+		printf("pipefd[0] : %d\n", fcntl(pipefd[0], F_GETFD));
+		printf("pipefd[1] : %d\n", fcntl(pipefd[1], F_GETFD));
 		execve(path, arg, env);
 		free(path);
 		free_array(arg);
@@ -245,14 +276,18 @@ pid_t	exec_cmd(t_cmd *cmd, char **env)
 	return (pid);
 }
 
-int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipefd[2])
+pid_t	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipefd[2])
 {
-	int		status;
-	pid_t	pid;
+	int			status;
+	pid_t		pid;
+	pid_t		pid2;
+	t_in_out	files;
+	extern int exit_code;
 
 	printf("-------------exec node ast-------------\n");
 	// sleep(1);
 	status = 0;
+	pid = 0;
 	printf("check du noeud\n");
 	if (!ast)
 	{
@@ -270,6 +305,8 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 		cmd->fd_in = -1;
 		cmd->fd_out = -1;
 	}
+	files.infile = -1;
+	files.outfile = -1;
 	printf("cmd existe\n");
 	if (cmd && cmd->content)
 		printf("cmd->content = %s\n", cmd->content);
@@ -293,11 +330,14 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 		if (ast->left)
 		{
 			printf("on envoie ast->left a gauche depuis pipe\n");
-				printf("ast->left est de type = %d\n", ast->left->type);
+			printf("ast->left est de type = %d\n", ast->left->type);
 
-
-			exec_node_ast(ast->left, cmd, in, pipefd[1], env, pipefd);
-
+			if (pipefd)
+				cmd->fd_in = pipefd[0];
+			cmd->fd_out = newpipefd[1];
+			pid = exec_node_ast(ast->left, cmd, in, out, env, newpipefd);
+			cmd->fd_in = -1;
+			cmd->fd_out = -1;
 
 			printf("revenu\n");
 			printf("-------------revenu dans la fonction du pipe-------------\n");
@@ -305,11 +345,14 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 		if (ast->right)
 		{
 			printf("on envoie ast->right a droite depuis pipe\n");
-				printf("ast->right est de type = %d\n", ast->right->type);
+			printf("ast->right est de type = %d\n", ast->right->type);
 
-				
-			exec_node_ast(ast->right, cmd, pipefd[0], out, env, pipefd);
-
+			if (pipefd)
+				cmd->fd_out = pipefd[1];
+			cmd->fd_in = newpipefd[0];
+			pid2 = exec_node_ast(ast->right, cmd, in, out, env, newpipefd);
+			cmd->fd_in = -1;
+			cmd->fd_out = -1;
 			
 			//if (cmd && cmd->content)
 			//	free(cmd->content);
@@ -320,8 +363,19 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 			printf("-------------revenu dans la fonction du pipe-------------\n");
 		}
 		printf("on ferme les pipe[1] et pipe[0]\n");
-		close(pipefd[0]);
-		close(pipefd[1]);
+		// if (pipefd)
+		// {
+		// 	close(pipefd[0]);
+		// 	close(pipefd[1]);
+		// }
+		close(newpipefd[0]);
+		close(newpipefd[1]);
+		printf("newpipe ferme\n");
+		waitpid(pid, &status, 0);
+		printf("pid1 fini\n");
+		waitpid(pid2, &status, 0);
+		printf("pid2 finit\n");
+		exit_code = WEXITSTATUS(status);
 	}
 
 
@@ -336,7 +390,8 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 			t_ast	*current;
 		
 			current = ast;
-			if (!change_redir(current, cmd))
+			files = change_redir(current, cmd);
+			if (files.infile == -2 || files.outfile == -2)
 			{
 				printf("les redirections ont foires\n");
 				if (cmd && cmd->content)
@@ -349,7 +404,8 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 			while (current->right && current->right->type >= R_INPUT)
 			{
 				current = current->right;
-				if (!change_redir(current, cmd))
+				files = change_redir(current, cmd);
+				if (files.infile == -2 || files.outfile == -2)
 				{
 					printf("les redirections ont foires\n");
 					if (cmd && cmd->content)
@@ -362,14 +418,18 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 				printf("on avance current\n");
 			}
 		}
-		else if (!change_redir(ast, cmd))
+		else
 		{
-			printf("les redirections ont foires\n");
-			if (cmd && cmd->content)
-				free(cmd);
-			if (cmd)
-				free(cmd);
-			return (1);
+			files = change_redir(ast, cmd);
+			if (files.infile == -2 || files.outfile == -2)
+			{
+				printf("les redirections ont foires\n");
+				if (cmd && cmd->content)
+					free(cmd);
+				if (cmd)
+					free(cmd);
+				return (1);
+			}
 		}
 		ast->done = 1;
 		if (ast->left && !ast->left->done)
@@ -378,7 +438,7 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 			printf("ast->left est de type = %d\n", ast->left->type);
 
 
-			exec_node_ast(ast->left, cmd, in, out, env, pipefd);
+			exec_node_ast(ast->left, cmd, files.infile, files.outfile, env, pipefd);
 
 
 			printf("-------------revenu dans la fonction de la redir-------------\n");
@@ -389,7 +449,7 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 			printf("ast->right est de type = %d\n", ast->right->type);
 
 
-			exec_node_ast(ast->right, cmd, in, out, env, pipefd);
+			exec_node_ast(ast->right, cmd, files.infile, files.outfile, env, pipefd);
 
 			
 			printf("-------------revenu dans la fonction de la redir-------------\n");
@@ -406,17 +466,17 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 		cmd->content = ft_strdup(ast->content);
 		if (!cmd->content)
 			return (printf("probleme de malloc\n")); //print temp
-		if (in != -1 && cmd->fd_in == -1)
-		{
-			printf("in = %d et cmd->fd_in == -1\n", in);
-			cmd->fd_in = in;
-		}
-		if (out != -1 && cmd->fd_out == -1)
-		{
-			printf("out = %d et cmd->fd_out == -1\n", out);
-			cmd->fd_out = out;
-		}
-		pid = exec_cmd(cmd, env);
+		// if (in != -1 && cmd->fd_in == -1)
+		// {
+		// 	printf("in = %d et cmd->fd_in == -1\n", in);
+		// 	cmd->fd_in = in;
+		// }
+		// if (out != -1 && cmd->fd_out == -1)
+		// {
+		// 	printf("out = %d et cmd->fd_out == -1\n", out);
+		// 	cmd->fd_out = out;
+		// }
+		pid = exec_cmd(cmd, env, pipefd, in, out);
 		if (pid == -1)
 		{
 			printf("probleme de fork, on free\n");
@@ -425,15 +485,23 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 			return (0);
 		}
 		printf("pid wait = %d\n", pid);
-		if (cmd->fd_in != -1)
-			close(cmd->fd_in);
-		if (cmd->fd_out != -1)
-			close(cmd->fd_out);
 		if (in != -1)
 			close(in);
 		if (out != -1)
 			close(out);
-		waitpid(pid, &status, 0);
+		// if (cmd->fd_in != -1)
+		// 	close(cmd->fd_in);
+		// if (cmd->fd_out != -1)
+		// 	close(cmd->fd_out);
+		// if (in != -1)
+		// 	close(in);
+		// if (out != -1)
+		// 	close(out);
+		// if (pipefd && pipefd[0])
+		// 	close(pipefd[0]);
+		// if (pipefd && pipefd[1])
+		// 	close(pipefd[1]);
+		// waitpid(pid, &status, 0);
 		printf("on a fini d'attendre\n");
 		printf("cmd->fdin : %d\ncmd->fdout : %d\n", cmd->fd_in, cmd->fd_out);
 		cmd->fd_in = -1;
@@ -457,7 +525,7 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 	}
 	printf("fin de exec_node_ast\n");
 	printf("ce qu'on retourne : %d\n", WEXITSTATUS(status));
-	return (WEXITSTATUS(status));
+	return (pid);
 }
 
 //int	tot_num_cmd(t_ast *ast)
