@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/29 16:50:42 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:43:36 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_ast
 {
 	char			*content;
 	int				type;
+	int				done;
 	struct s_ast	*top;
 	struct s_ast	*left;
 	struct s_ast	*right;

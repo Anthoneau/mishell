@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 13:18:37 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:48:37 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -252,6 +252,8 @@ t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *e
 		//printf("error == 1 donc on free ce qu'il faut");
 		return (free_error_node(node), NULL);
 	}
+	if (node)
+		node->done = 0;
 	//printf("error == 0\n");
 	return (node);
 }

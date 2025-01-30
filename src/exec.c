@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 12:37:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:45:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -345,7 +345,8 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 					free(cmd);
 				return (1);
 			}
-			while (current->right && current->right->type >= R_INPUT && !current->right->left)
+			current->done = 1;
+			while (current->right && current->right->type >= R_INPUT)
 			{
 				current = current->right;
 				if (!change_redir(current, cmd))
@@ -357,6 +358,7 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 						free(cmd);
 					return (1);
 				}
+				current->done = 1;
 				printf("on avance current\n");
 			}
 		}
@@ -369,7 +371,8 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 				free(cmd);
 			return (1);
 		}
-		if (ast->left)
+		ast->done = 1;
+		if (ast->left && !ast->left->done)
 		{
 			printf("on envoie ast->left a gauche depuis redir\n");
 			printf("ast->left est de type = %d\n", ast->left->type);
@@ -380,7 +383,7 @@ int	exec_node_ast(t_ast *ast, t_cmd *cmd, int in, int out, char **env, int pipef
 
 			printf("-------------revenu dans la fonction de la redir-------------\n");
 		}
-		if (ast->right)
+		if (ast->right && !ast->right->done)
 		{
 			printf("on envoie ast->right a droite depuis redir\n");
 			printf("ast->right est de type = %d\n", ast->right->type);
