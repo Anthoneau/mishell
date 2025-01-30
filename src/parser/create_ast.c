@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/27 11:00:22 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:18:37 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_token	*find_heredoc(t_token *current, int side)
 {
 	/*
 		Fonction pour trouver la bonne redirection a envoyer
-		Elle fonctionne comme find_first_word_to_the_left() (la fonction au dessus) mais pour les redirs
+		Elle fonctionne comme find_first_word_to_the_left() (la fonction au dessus) mais pour heredoc
 	*/
 	t_token	*check;
 
@@ -124,7 +124,7 @@ t_token	*search_type(t_token **list, t_token *current, int type, int side)
 		return (NULL);
 	if (!current)
 		current = *list;
-	while (current->explored != 1)
+	while (current)
 	{
 		if (type < 2 && current->type == type && current->explored == 0)
 		{
@@ -236,6 +236,7 @@ t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *e
 		//printf("on trouve une redir\n");
 		//sleep(1);
 		//printf("-------------------------------\n\n");
+		// printf("current->type : %d\n", current->type);
 		node = redir_node(tokens, check, error);
 	}
 	else if ((check = search_type(tokens, current, WORD, after_explored)) && *error == 0)

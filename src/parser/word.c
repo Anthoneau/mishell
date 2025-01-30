@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:16:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/27 14:33:31 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/30 13:11:59 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,16 @@ size_t	get_len(t_token *current)
 
 	len = 0;
 	words = current;
-	while (words->type == 0 && words->content)
+	while (words)
 	{
-		len += ft_strlen(words->content) + 1;
-		if (words->next && words->next->type == 0 && words->next->content)
+		if (words->type == WORD && words->content && words->explored == 0 && !(words->prev && words->prev->type >= R_INPUT))
+		{
+			len += ft_strlen(words->content) + 1;
+			// ft_strcat(words->content, res);
+			// words->explored = 1;
+		}
+		// if (words->type == WORD && words->content)
+		if (words->next && words->next->type != PIPE)
 			words = words->next;
 		else
 			break ;
@@ -43,10 +49,14 @@ char	*get_word(t_token *current)
 	res = ft_calloc(len, sizeof(char));
 	if (!res)
 		return (NULL);
-	while (words->type == 0 && words->content)
+	while (words)
 	{
-		ft_strcat(words->content, res);
-		if (words->next && words->next->type == 0 && words->next->content)
+		if (words->type == WORD && words->content && words->explored == 0 && !(words->prev && words->prev->type >= R_INPUT))
+		{
+			ft_strcat(words->content, res);
+			words->explored = 1;
+		}
+		if (words->next && words->next->type != PIPE)
 			words = words->next;
 		else
 			break ;
@@ -71,7 +81,7 @@ t_ast	*word_node(t_token *current, int *error)
 	}
 	node->type = WORD;
 	node->content = get_word(current);
-	//printf("content : %s\n", node->content);
+	printf("content : %s\n", node->content);
 	//sleep(1);
 	if (!node->content)
 	{
