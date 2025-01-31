@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 15:47:26 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/31 18:08:22 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,24 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <errno.h>
+
+# define RED "\e[0;31m"
+# define GREEN "\e[0;32m"
+# define YELLOW "\e[0;33m"
+# define BLUE "\e[0;34m"
+# define PURPLE "\e[0;35m"
+# define CYAN "\e[0;36m"
+# define WHITE "\e[0;37m"
+
+# define BRED "\e[1;31m"
+# define BGREEN "\e[1;32m"
+# define BYELLOW "\e[1;33m"
+# define BBLUE "\e[1;34m"
+# define BPURPLE "\e[1;35m"
+# define BCYAN "\e[1;36m"
+# define BWHITE "\e[1;37m"
+
+# define END "\e[0m"
 
 enum type
 {
@@ -63,11 +81,17 @@ typedef struct s_cmd
 	int		fd_out;
 }	t_cmd;
 
+typedef struct s_command_array_and_info
+{
+	t_cmd	*cmd;
+	int		num_of_cmds;
+}	t_cmd_info;
+
 typedef struct s_infile_outfile
 {
 	int	infile;
 	int	outfile;
-}	t_in_out;
+}	t_inout;
 
 
 //UTILS

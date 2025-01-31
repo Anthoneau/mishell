@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:15:02 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/20 17:11:33 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/31 17:32:52 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,8 @@ int	create_content_and_sides(t_token **tokens, t_token *current, t_ast *node, in
 	// }
 	// else
 	// {
-		node->left = create_ast(tokens, current->prev, 1, error);
-		node->right = create_ast(tokens, current->next->next, 0, error);
+	node->left = create_ast(tokens, current->prev, 1, error);
+	node->right = create_ast(tokens, current->next->next, 0, error);
 	// }
 	if (*error == 1)
 		return (0);

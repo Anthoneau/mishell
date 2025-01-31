@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 13:48:37 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/31 17:35:47 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,6 +126,8 @@ t_token	*search_type(t_token **list, t_token *current, int type, int side)
 		current = *list;
 	while (current)
 	{
+		if (current->explored == 1)
+			break ;
 		if (type < 2 && current->type == type && current->explored == 0)
 		{
 			if (side == 0 || type == 1)

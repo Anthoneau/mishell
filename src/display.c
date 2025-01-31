@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:03:15 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/22 16:15:12 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/31 17:37:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void draw_ast(t_ast *node, int depth)
         printf("    ");
 
     // Print the node content and type
-    printf("Type: %d, Content: %s\n", node->type, node->content ? node->content : "(null)");
+    printf("%sType%s: %d, Content: %s\n", BPURPLE, END, node->type, node->content ? node->content : "(null)");
 
     // Recursively draw the left and right children
     if (node->left || node->right) {

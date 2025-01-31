@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 16:49:46 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/01/31 17:39:07 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ int	main(int ac, char **av, char **env)
 					//printf("create_ast fonctionne !\nretour au main\n");
 					//printf("on dessine l'ast total\n");
 					//sleep(1);
+					printf("\n");
 					draw_ast(ast, 0);
 					printf("\n");
 					//redir ?
