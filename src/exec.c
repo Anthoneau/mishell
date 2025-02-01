@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/31 18:34:20 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/01 17:44:59 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -737,15 +737,16 @@ void	free_cmd(t_cmd_info *cmd)
 {
 	int	i;
 
+	if (!cmd || !cmd->cmd)
+		return ;
 	i = 0;
 	while (cmd->cmd && i < cmd->num_of_cmds)
 	{
-		if (cmd->cmd[i].content)
+		if (cmd->cmd[i].content) //ligne 745
 			free(cmd->cmd[i].content);
 		i++;
 	}
-	if (cmd->cmd)
-		free(cmd->cmd);
+	free(cmd->cmd);
 	cmd->cmd = NULL;
 }
 
@@ -756,7 +757,7 @@ t_cmd_info	get_cmd_array(t_ast *ast)
 	// printf("%sGET_CMD_ARRAY%s\n", BRED, END);
 	cmd.num_of_cmds = get_cmd_number(ast);
 	// printf("%scommand number : %s%d%s\n", GREEN, BYELLOW, cmd.num_of_cmds, END);
-	cmd.cmd = malloc(cmd.num_of_cmds * sizeof(t_cmd));
+	cmd.cmd = ft_calloc(cmd.num_of_cmds + 1, sizeof(t_cmd));
 	if (!cmd.cmd)
 		return (cmd);
 	if (!create_cmds_array(&cmd, ast))
@@ -779,6 +780,121 @@ void	display_cmds(t_cmd_info cmd)
 	}
 }
 
+void	exec_cmds(t_cmd_info cmd, char **env)
+{
+	char		*path;
+	char		**arg;
+	pid_t		pid;
+	int			i;
+	int			newpipefd[2];
+	int			oldpipefd[2];
+	int			status;
+	extern int	exit_code;
+
+	i = 0;
+	status = 0;
+	newpipefd[0] = -1;
+	newpipefd[1] = -1;
+	oldpipefd[0] = -1;
+	oldpipefd[1] = -1;
+	while (i < cmd.num_of_cmds)
+	{
+		path = right_path(cmd.cmd[i].content, env);
+		if (!path)
+		{
+			printf("probleme path\n");//temp
+			return ;
+		}
+		arg = ft_split(cmd.cmd[i].content, ' ');
+		if (!arg)
+		{
+			free(path);
+			printf("probleme arg\n");//temp
+			return ;
+		}
+		if (pipe(newpipefd) == -1)
+		{
+			free(path);
+			free_array(arg);
+			printf("probleme pipe\n");
+			return ;
+		}
+		pid = fork();
+		if (pid == -1)
+		{
+			free(path);
+			free_array(arg);
+			printf("probleme fork\n");//temp
+			return ;
+		}
+		if (!pid)
+		{
+			if (cmd.num_of_cmds > 1)
+			{
+				if (i == 0 && cmd.cmd[i].fd_out == -1)
+					cmd.cmd[i].fd_out = newpipefd[1];
+				else if (i == cmd.num_of_cmds - 1 && cmd.cmd[i].fd_in != -1)
+					cmd.cmd[i].fd_in = newpipefd[0];
+				else
+				{
+					if (cmd.cmd[i].fd_out != -1)
+						cmd.cmd[i].fd_out = oldpipefd[0];
+					if (cmd.cmd[i].fd_in != -1)
+						cmd.cmd[i].fd_in = newpipefd[1];
+				}
+			}
+			if (cmd.cmd[i].fd_in != -1)
+			{
+				dup2(cmd.cmd[i].fd_in, STDIN_FILENO);
+				close(cmd.cmd[i].fd_in);
+			}
+			if (cmd.cmd[i].fd_out != -1)
+			{
+				dup2(cmd.cmd[i].fd_out, STDOUT_FILENO);
+				close(cmd.cmd[i].fd_out);
+			}
+			if (newpipefd[0] != -1)
+				close(newpipefd[0]);
+			if (newpipefd[1] != -1)
+				close(newpipefd[1]);
+			if (oldpipefd[0] != -1)
+				close(oldpipefd[0]);
+			if (oldpipefd[1] != -1)
+				close(oldpipefd[1]);
+			// fprintf(stderr, "in : %d\n", fcntl(in, F_GETFD));
+			// fprintf(stderr, "out : %d\n", fcntl(out, F_GETFD));
+			// fprintf(stderr, "cmd->fd_in : %d\n", fcntl(cmd->fd_in, F_GETFD));
+			// fprintf(stderr, "cmd->fd_out : %d\n", fcntl(cmd->fd_out, F_GETFD));
+			// if (pipefd)
+			// {
+			// 	printf("pipefd[0] : %d\n", fcntl(pipefd[0], F_GETFD));
+			// 	printf("pipefd[1] : %d\n", fcntl(pipefd[1], F_GETFD));
+			// }
+			execve(path, arg, env);
+			free(path);
+			free_array(arg);
+			printf("%s: command not found\n", arg[0]); //print temporaire
+			exit(127);
+		}
+		free(path);
+		free_array(arg);
+		oldpipefd[2] = newpipefd[2];
+		// if (newpipefd[0] != -1)
+		// 	close(newpipefd[0]);
+		// if (newpipefd[1] != -1)
+		// 	close(newpipefd[1]);
+		// if (oldpipefd[0] != -1)
+		// 	close(oldpipefd[0]);
+		// if (oldpipefd[1] != -1)
+		// 	close(oldpipefd[1]);
+		waitpid(pid, &status, 0);
+		exit_code = WEXITSTATUS(status);
+		printf("exit_code : %d\n", exit_code);
+		i++;
+	}
+	printf("test dans fonction\n");
+}
+
 int	exec(t_ast *ast, char **env, int m)
 {
 	int		status;
@@ -788,9 +904,12 @@ int	exec(t_ast *ast, char **env, int m)
 	(void)env;
 	status = 0;
 	cmd = get_cmd_array(ast);
-	if (!cmd.cmd)
+	if (!cmd.cmd || !cmd.cmd->content)
 		return (0);//temp print
 	display_cmds(cmd);
+	exec_cmds(cmd, env);
+	printf("test\n");
+	free_cmd(&cmd);
 	// printf("on entre dans exec_node_ast\n");
 	// status = exec_node_ast(ast, NULL, -1, -1, env, NULL, NULL);
 	return (status);
