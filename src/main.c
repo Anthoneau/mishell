@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/31 17:39:07 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/03 14:26:18 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	main(int ac, char **av, char **env)
 					draw_ast(ast, 0);
 					printf("\n");
 					//redir ?
-					printf("exec retourne %d\n", exec(ast, env, count_pipes(token)));
+					exec(ast, env, count_pipes(token));
 					free_ast(ast);
 				}
 				else

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/01 17:44:59 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:08:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ char	*right_path(char *content, char **env)
 	if (!path)
 		return (free(cmd), NULL);
 	i = 0;
-	while (access(full_path, R_OK) == -1)
+	while (!full_path || access(full_path, R_OK) == -1)
 	{
 		if (!path[i])
 			break ;
@@ -398,6 +398,226 @@ int	print_open_error(char *content)
 // 			{
 // 				printf("les redirections ont foires\n");
 // 				if (cmd && cmd->content)
+// 			}
+// 			current->done = 1;
+// 			while (current->right && current->right->type >= R_INPUT)
+// 			{
+// 				current = current->right;
+// 				files = change_redir(current, cmd);
+// 				if (files.infile == -2 || files.outfile == -2)
+// 				{
+// 					printf("les redirections ont foires\n");
+// 					if (cmd && cmd->content)
+// 						free(cmd);
+// 					if (cmd)
+// 						free(cmd);
+// 					return (1);
+// 				}
+// 				current->done = 1;
+// 				printf("on avance current\n");
+// 			}
+// 		}
+// 		else
+// 		{
+// 			files = change_redir(ast, cmd);
+// 			if (files.infile == -2 || files.outfile == -2)
+// 			{
+// 				printf("les redirections ont foires\n");
+// 				if (cmd && cmd->content)
+// 					free(cmd);
+// 				if (cmd)
+// 					free(cmd);
+// 				return (1);
+// 			}
+// 		}
+// 		ast->done = 1;
+// 		if (ast->left && !ast->left->done)
+// 		{
+// 			printf("on envoie ast->left a gauche depuis redir\n");
+// 			printf("ast->left est de type = %d\n", ast->left->type);
+
+
+// 			exec_node_ast(ast->left, cmd, files.infile, files.outfile, env, pipefd, to_close);
+
+
+// 			printf("-------------revenu dans la fonction de la redir-------------\n");
+// 		}
+// 		if (ast->right && !ast->right->done)
+// 		{
+// 			printf("on envoie ast->right a droite depuis redir\n");
+// 			printf("ast->right est de type = %d\n", ast->right->type);
+
+
+// 			exec_node_ast(ast->right, cmd, files.infile, files.outfile, env, pipefd, to_close);
+
+			
+// 			printf("-------------revenu dans la fonction de la redir-------------\n");
+// 		}
+// 	}
+
+
+
+// 	else if (ast->type == WORD)
+// 	{
+// 		printf("strdup de %s\n", ast->content);
+// 		if (cmd->content)
+// 			free(cmd->content);
+// 		cmd->content = ft_strdup(ast->content);
+// 		if (!cmd->content)
+// 			return (printf("probleme de malloc\n")); //print temp
+// 		pid = exec_cmd(cmd, env, pipefd, in, out, to_close);
+// 		if (pid == -1)
+// 		{
+// 			printf("probleme de fork, on free\n");
+// 			free(cmd->content);
+// 			free(cmd);
+// 			return (0);
+// 		}
+// 		printf("pid wait = %d\n", pid);
+// 		if (in != -1)
+// 			close(in);
+// 		if (out != -1)
+// 			close(out);
+// 		if (!pipefd)
+// 		{
+// 			waitpid(pid, &status, 0);
+// 			printf("on a fini d'attendre\n");
+// 			exit_code = WEXITSTATUS(status);
+// 		}
+// 		printf("cmd->fdin : %d\ncmd->fdout : %d\n", cmd->fd_in, cmd->fd_out);
+// 		cmd->fd_in = -1;
+// 		cmd->fd_out = -1;
+// 		printf("tout est free et close\n");
+// 	}
+
+
+// 			}
+// 			current->done = 1;
+// 			while (current->right && current->right->type >= R_INPUT)
+// 			{
+// 				current = current->right;
+// 				files = change_redir(current, cmd);
+// 				if (files.infile == -2 || files.outfile == -2)
+// 				{
+// 					printf("les redirections ont foires\n");
+// 					if (cmd && cmd->content)
+// 						free(cmd);
+// 					if (cmd)
+// 						free(cmd);
+// 					return (1);
+// 				}
+// 				current->done = 1;
+// 				printf("on avance current\n");
+// 			}
+// 		}
+// 		else
+// 		{
+// 			files = change_redir(ast, cmd);
+// 			if (files.infile == -2 || files.outfile == -2)
+// 			{
+// 				printf("les redirections ont foires\n");
+// 				if (cmd && cmd->content)
+// 					free(cmd);
+// 				if (cmd)
+// 					free(cmd);
+// 				return (1);
+// 			}
+// 		}
+// 		ast->done = 1;
+// 		if (ast->left && !ast->left->done)
+// 		{
+// 			printf("on envoie ast->left a gauche depuis redir\n");
+// 			printf("ast->left est de type = %d\n", ast->left->type);
+
+
+// 			exec_node_ast(ast->left, cmd, files.infile, files.outfile, env, pipefd, to_close);
+
+
+// 			printf("-------------revenu dans la fonction de la redir-------------\n");
+// 		}
+// 		if (ast->right && !ast->right->done)
+// 		{
+// 			printf("on envoie ast->right a droite depuis redir\n");
+// 			printf("ast->right est de type = %d\n", ast->right->type);
+
+
+// 			exec_node_ast(ast->right, cmd, files.infile, files.outfile, env, pipefd, to_close);
+
+			
+// 			printf("-------------revenu dans la fonction de la redir-------------\n");
+// 		}
+// 	}
+
+
+
+// 	else if (ast->type == WORD)
+// 	{
+// 		printf("strdup de %s\n", ast->content);
+// 		if (cmd->content)
+// 			free(cmd->content);
+// 		cmd->content = ft_strdup(ast->content);
+// 		if (!cmd->content)
+// 			return (printf("probleme de malloc\n")); //print temp
+// 		pid = exec_cmd(cmd, env, pipefd, in, out, to_close);
+// 		if (pid == -1)
+// 		{
+// 			printf("probleme de fork, on free\n");
+// 			free(cmd->content);
+// 			free(cmd);
+// 			return (0);
+// 		}
+// 		printf("pid wait = %d\n", pid);
+// 		if (in != -1)
+// 			close(in);
+// 		if (out != -1)
+// 			close(out);
+// 		if (!pipefd)
+// 		{
+// 			waitpid(pid, &status, 0);
+// 			printf("on a fini d'attendre\n");
+// 			exit_code = WEXITSTATUS(status);
+// 		}
+// 		printf("cmd->fdin : %d\ncmd->fdout : %d\n", cmd->fd_in, cmd->fd_out);
+// 		cmd->fd_in = -1;
+// 		cmd->fd_out = -1;
+// 		printf("tout est free et close\n");
+// 	}
+
+
+
+
+// 	else
+// 	{
+// 		printf("on free tout\n");
+// 		if (cmd && cmd->content)
+// 		{
+// 			printf("cmd->content = %s\n", cmd->content);
+// 			free(cmd->content);
+// 		}
+// 		if (cmd)
+// 			free(cmd);
+// 	}
+// 	printf("fin de exec_node_ast\n");
+// 	printf("ce qu'on retourne : %d\n", WEXITSTATUS(status));
+// 	return (pid);
+// }
+
+
+// 	else
+// 	{
+// 		printf("on free tout\n");
+// 		if (cmd && cmd->content)
+// 		{
+// 			printf("cmd->content = %s\n", cmd->content);
+// 			free(cmd->content);
+// 		}
+// 		if (cmd)
+// 			free(cmd);
+// 	}
+// 	printf("fin de exec_node_ast\n");
+// 	printf("ce qu'on retourne : %d\n", WEXITSTATUS(status));
+// 	return (pid);
+// }
 // 					free(cmd);
 // 				if (cmd)
 // 					free(cmd);
@@ -650,6 +870,8 @@ t_ast	*find_new_current(t_ast *node)
 	t_ast	*left;
 	t_ast	*right;
 
+	left = NULL;
+	right = NULL;
 	if (node->type == WORD)
 		return (node);
 	if (node->left)
@@ -784,19 +1006,29 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 {
 	char		*path;
 	char		**arg;
-	pid_t		pid;
+	pid_t		*pid;
+	int			i_pid;
 	int			i;
 	int			newpipefd[2];
-	int			oldpipefd[2];
+	int			oldpipefd;
 	int			status;
 	extern int	exit_code;
 
 	i = 0;
+	i_pid = 0;
 	status = 0;
 	newpipefd[0] = -1;
 	newpipefd[1] = -1;
-	oldpipefd[0] = -1;
-	oldpipefd[1] = -1;
+	oldpipefd = -1;
+	pid = malloc(cmd.num_of_cmds);
+	if (!pid)
+	{
+		printf("probleme pid\n");
+		return ;
+	}
+	// oldpipefd[0] = -1;
+	// oldpipefd[1] = -1;
+	fprintf(stderr, "%sGREEN pour le child\n%sBLUE pour le parent\n\n%s", GREEN, BLUE, END);
 	while (i < cmd.num_of_cmds)
 	{
 		path = right_path(cmd.cmd[i].content, env);
@@ -812,87 +1044,114 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 			printf("probleme arg\n");//temp
 			return ;
 		}
-		if (pipe(newpipefd) == -1)
+		if (i < cmd.num_of_cmds - 1 && pipe(newpipefd) == -1) //line 1039
 		{
 			free(path);
 			free_array(arg);
 			printf("probleme pipe\n");
 			return ;
 		}
-		pid = fork();
-		if (pid == -1)
+		pid[i_pid] = fork();
+		if (pid[i_pid] == -1)
 		{
 			free(path);
 			free_array(arg);
 			printf("probleme fork\n");//temp
 			return ;
 		}
-		if (!pid)
+		if (!pid[i_pid])
 		{
 			if (cmd.num_of_cmds > 1)
 			{
 				if (i == 0 && cmd.cmd[i].fd_out == -1)
-					cmd.cmd[i].fd_out = newpipefd[1];
-				else if (i == cmd.num_of_cmds - 1 && cmd.cmd[i].fd_in != -1)
-					cmd.cmd[i].fd_in = newpipefd[0];
-				else
 				{
-					if (cmd.cmd[i].fd_out != -1)
-						cmd.cmd[i].fd_out = oldpipefd[0];
-					if (cmd.cmd[i].fd_in != -1)
-						cmd.cmd[i].fd_in = newpipefd[1];
+					fprintf(stderr, "%sfd out devient newpipefd[1] (ecriture) parce que commencement\n%s", GREEN, END);
+					cmd.cmd[i].fd_out = newpipefd[1];
+				}
+				else if (i == cmd.num_of_cmds - 1 && cmd.cmd[i].fd_in == -1)
+				{
+					fprintf(stderr, "%sfd in devient oldpipefd[0] (lecture) parce que fin\n%s", GREEN, END);
+					cmd.cmd[i].fd_in = oldpipefd;
+				}
+				else if (i > 0 && i < cmd.num_of_cmds - 1)
+				{
+					if (cmd.cmd[i].fd_out == -1)
+					{
+						fprintf(stderr, "%sfd out devient newpipefd[1] (ecriture)\n%s", GREEN, END);
+						cmd.cmd[i].fd_out = newpipefd[1];
+					}
+					if (cmd.cmd[i].fd_in == -1)
+					{
+						fprintf(stderr, "%sfd in devient oldpipefd[0] (lecture)\n%s", GREEN, END);
+						cmd.cmd[i].fd_in = oldpipefd;
+					}
 				}
 			}
 			if (cmd.cmd[i].fd_in != -1)
 			{
+				fprintf(stderr, "%sdup2 de fdin a stdin fileno\n%s", GREEN, END);
 				dup2(cmd.cmd[i].fd_in, STDIN_FILENO);
 				close(cmd.cmd[i].fd_in);
 			}
 			if (cmd.cmd[i].fd_out != -1)
 			{
+				fprintf(stderr, "%sdup2 de fdout a stdout fileno\n%s", GREEN, END);
 				dup2(cmd.cmd[i].fd_out, STDOUT_FILENO);
 				close(cmd.cmd[i].fd_out);
 			}
 			if (newpipefd[0] != -1)
+			{
+				fprintf(stderr, "%sclose de newpipe[0]\n%s", GREEN, END);
 				close(newpipefd[0]);
+			}
 			if (newpipefd[1] != -1)
+			{
+				fprintf(stderr, "%sclose de newpipe[1]\n%s", GREEN, END);
 				close(newpipefd[1]);
-			if (oldpipefd[0] != -1)
-				close(oldpipefd[0]);
-			if (oldpipefd[1] != -1)
-				close(oldpipefd[1]);
-			// fprintf(stderr, "in : %d\n", fcntl(in, F_GETFD));
-			// fprintf(stderr, "out : %d\n", fcntl(out, F_GETFD));
-			// fprintf(stderr, "cmd->fd_in : %d\n", fcntl(cmd->fd_in, F_GETFD));
-			// fprintf(stderr, "cmd->fd_out : %d\n", fcntl(cmd->fd_out, F_GETFD));
-			// if (pipefd)
-			// {
-			// 	printf("pipefd[0] : %d\n", fcntl(pipefd[0], F_GETFD));
-			// 	printf("pipefd[1] : %d\n", fcntl(pipefd[1], F_GETFD));
-			// }
+			}
+			if (oldpipefd != -1)
+			{
+				fprintf(stderr, "%sclose de oldpipe[0]\n%s", GREEN, END);
+				close(oldpipefd);
+			}
 			execve(path, arg, env);
 			free(path);
 			free_array(arg);
 			printf("%s: command not found\n", arg[0]); //print temporaire
 			exit(127);
 		}
+		fprintf(stderr, "%son free\n%s", BLUE, END);
 		free(path);
 		free_array(arg);
-		oldpipefd[2] = newpipefd[2];
-		// if (newpipefd[0] != -1)
-		// 	close(newpipefd[0]);
-		// if (newpipefd[1] != -1)
-		// 	close(newpipefd[1]);
-		// if (oldpipefd[0] != -1)
-		// 	close(oldpipefd[0]);
-		// if (oldpipefd[1] != -1)
-		// 	close(oldpipefd[1]);
-		waitpid(pid, &status, 0);
+
+		if (newpipefd[1] != -1)
+		{
+			fprintf(stderr, "%sclose de newpipefd[1]\n%s", BLUE, END);
+			close(newpipefd[1]);
+		}
+
+		if (oldpipefd != -1)
+		{
+			fprintf(stderr, "%sclose de oldpipefd[0]\n%s", BLUE, END);
+			close(oldpipefd);
+		}
+
+		oldpipefd = dup(newpipefd[0]);
+		fprintf(stderr, "%soldpipefd[0] = newpipefd[0]\n%s", BLUE, END);
+		close(newpipefd[0]);
+		newpipefd[0] = -1;
 		exit_code = WEXITSTATUS(status);
-		printf("exit_code : %d\n", exit_code);
 		i++;
 	}
-	printf("test dans fonction\n");
+	if (oldpipefd != -1)
+		close(oldpipefd);
+	int j = 0;
+	while (j <= i_pid)
+	{
+		waitpid(pid[j], &status, 0);
+		j++;
+	}
+	printf("exit_code : %d\n", exit_code);
 }
 
 int	exec(t_ast *ast, char **env, int m)
@@ -908,9 +1167,9 @@ int	exec(t_ast *ast, char **env, int m)
 		return (0);//temp print
 	display_cmds(cmd);
 	exec_cmds(cmd, env);
-	printf("test\n");
 	free_cmd(&cmd);
 	// printf("on entre dans exec_node_ast\n");
 	// status = exec_node_ast(ast, NULL, -1, -1, env, NULL, NULL);
 	return (status);
 }
+

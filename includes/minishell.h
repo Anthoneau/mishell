@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/31 18:08:22 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:09:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ typedef struct s_infile_outfile
 	int	infile;
 	int	outfile;
 }	t_inout;
-
 
 //UTILS
 void	ft_exit(char *str, int exit_code);
