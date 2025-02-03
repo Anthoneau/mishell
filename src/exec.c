@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/03 18:12:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:18:29 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1142,13 +1142,15 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		newpipefd[0] = -1;
 		exit_code = WEXITSTATUS(status);
 		i++;
+		i_pid++;
 	}
 	if (oldpipefd != -1)
 		close(oldpipefd);
 	int j = 0;
-	while (j <= i_pid)
+	fprintf(stderr, "i_pid = %d\n", i_pid);
+	while (j < i_pid)
 	{
-		fprintf(stderr, "on attend\n");
+		fprintf(stderr, "on attend %d\n", pid[j]);
 		waitpid(pid[j], &status, 0);
 		j++;
 	}
