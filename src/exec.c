@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/03 18:08:21 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/03 18:12:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1115,9 +1115,9 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 				close(oldpipefd);
 			}
 			execve(path, arg, env);
+			fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
 			free(path);
 			free_array(arg);
-			printf("%s: command not found\n", arg[0]); //print temporaire
 			exit(127);
 		}
 		fprintf(stderr, "%son free\n%s", BLUE, END);
@@ -1148,6 +1148,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	int j = 0;
 	while (j <= i_pid)
 	{
+		fprintf(stderr, "on attend\n");
 		waitpid(pid[j], &status, 0);
 		j++;
 	}
