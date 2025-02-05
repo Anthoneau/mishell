@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:16:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/30 13:11:59 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 09:32:42 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_ast	*word_node(t_token *current, int *error)
 	}
 	node->type = WORD;
 	node->content = get_word(current);
-	printf("content : %s\n", node->content);
+	// printf("content : %s\n", node->content);
 	//sleep(1);
 	if (!node->content)
 	{

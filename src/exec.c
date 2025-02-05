@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/03 18:18:29 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 09:31:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -994,10 +994,10 @@ void	display_cmds(t_cmd_info cmd)
 	i = 0;
 	while (i < cmd.num_of_cmds)
 	{
-		printf("%scommand[%d] :%s\n", BPURPLE, i, END);
-		printf("%s\tcontent -- %s%s\n", YELLOW, cmd.cmd[i].content, END);
-		printf("%s\tfd_in   -- %d%s\n", YELLOW, cmd.cmd[i].fd_in, END);
-		printf("%s\tfd_out  -- %d%s\n", YELLOW, cmd.cmd[i].fd_out, END);
+		// printf("%scommand[%d] :%s\n", BPURPLE, i, END);
+		// printf("%s\tcontent -- %s%s\n", YELLOW, cmd.cmd[i].content, END);
+		// printf("%s\tfd_in   -- %d%s\n", YELLOW, cmd.cmd[i].fd_in, END);
+		// printf("%s\tfd_out  -- %d%s\n", YELLOW, cmd.cmd[i].fd_out, END);
 		i++;
 	}
 }
@@ -1028,27 +1028,27 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	}
 	// oldpipefd[0] = -1;
 	// oldpipefd[1] = -1;
-	fprintf(stderr, "%sGREEN pour le child\n%sBLUE pour le parent\n\n%s", GREEN, BLUE, END);
+	// fprintf(stderr, "%sGREEN pour le child\n%sBLUE pour le parent\n\n%s", GREEN, BLUE, END);
 	while (i < cmd.num_of_cmds)
 	{
 		path = right_path(cmd.cmd[i].content, env);
 		if (!path)
 		{
-			printf("probleme path\n");//temp
+			// printf("probleme path\n");//temp
 			return ;
 		}
 		arg = ft_split(cmd.cmd[i].content, ' ');
 		if (!arg)
 		{
 			free(path);
-			printf("probleme arg\n");//temp
+			// printf("probleme arg\n");//temp
 			return ;
 		}
 		if (i < cmd.num_of_cmds - 1 && pipe(newpipefd) == -1) //line 1039
 		{
 			free(path);
 			free_array(arg);
-			printf("probleme pipe\n");
+			// printf("probleme pipe\n");
 			return ;
 		}
 		pid[i_pid] = fork();
@@ -1056,7 +1056,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		{
 			free(path);
 			free_array(arg);
-			printf("probleme fork\n");//temp
+			// printf("probleme fork\n");//temp
 			return ;
 		}
 		if (!pid[i_pid])
@@ -1065,79 +1065,79 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 			{
 				if (i == 0 && cmd.cmd[i].fd_out == -1)
 				{
-					fprintf(stderr, "%sfd out devient newpipefd[1] (ecriture) parce que commencement\n%s", GREEN, END);
+					// fprintf(stderr, "%sfd out devient newpipefd[1] (ecriture) parce que commencement\n%s", GREEN, END);
 					cmd.cmd[i].fd_out = newpipefd[1];
 				}
 				else if (i == cmd.num_of_cmds - 1 && cmd.cmd[i].fd_in == -1)
 				{
-					fprintf(stderr, "%sfd in devient oldpipefd[0] (lecture) parce que fin\n%s", GREEN, END);
+					// fprintf(stderr, "%sfd in devient oldpipefd[0] (lecture) parce que fin\n%s", GREEN, END);
 					cmd.cmd[i].fd_in = oldpipefd;
 				}
 				else if (i > 0 && i < cmd.num_of_cmds - 1)
 				{
 					if (cmd.cmd[i].fd_out == -1)
 					{
-						fprintf(stderr, "%sfd out devient newpipefd[1] (ecriture)\n%s", GREEN, END);
+						// fprintf(stderr, "%sfd out devient newpipefd[1] (ecriture)\n%s", GREEN, END);
 						cmd.cmd[i].fd_out = newpipefd[1];
 					}
 					if (cmd.cmd[i].fd_in == -1)
 					{
-						fprintf(stderr, "%sfd in devient oldpipefd[0] (lecture)\n%s", GREEN, END);
+						// fprintf(stderr, "%sfd in devient oldpipefd[0] (lecture)\n%s", GREEN, END);
 						cmd.cmd[i].fd_in = oldpipefd;
 					}
 				}
 			}
 			if (cmd.cmd[i].fd_in != -1)
 			{
-				fprintf(stderr, "%sdup2 de fdin a stdin fileno\n%s", GREEN, END);
+				// fprintf(stderr, "%sdup2 de fdin a stdin fileno\n%s", GREEN, END);
 				dup2(cmd.cmd[i].fd_in, STDIN_FILENO);
 				close(cmd.cmd[i].fd_in);
 			}
 			if (cmd.cmd[i].fd_out != -1)
 			{
-				fprintf(stderr, "%sdup2 de fdout a stdout fileno\n%s", GREEN, END);
+				// fprintf(stderr, "%sdup2 de fdout a stdout fileno\n%s", GREEN, END);
 				dup2(cmd.cmd[i].fd_out, STDOUT_FILENO);
 				close(cmd.cmd[i].fd_out);
 			}
 			if (newpipefd[0] != -1)
 			{
-				fprintf(stderr, "%sclose de newpipe[0]\n%s", GREEN, END);
+				// fprintf(stderr, "%sclose de newpipe[0]\n%s", GREEN, END);
 				close(newpipefd[0]);
 			}
 			if (newpipefd[1] != -1)
 			{
-				fprintf(stderr, "%sclose de newpipe[1]\n%s", GREEN, END);
+				// fprintf(stderr, "%sclose de newpipe[1]\n%s", GREEN, END);
 				close(newpipefd[1]);
 			}
 			if (oldpipefd != -1)
 			{
-				fprintf(stderr, "%sclose de oldpipe[0]\n%s", GREEN, END);
+				// fprintf(stderr, "%sclose de oldpipe[0]\n%s", GREEN, END);
 				close(oldpipefd);
 			}
 			execve(path, arg, env);
-			fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
+			// fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
 			free(path);
 			free_array(arg);
 			exit(127);
 		}
-		fprintf(stderr, "%son free\n%s", BLUE, END);
+		// fprintf(stderr, "%son free\n%s", BLUE, END);
 		free(path);
 		free_array(arg);
 
 		if (newpipefd[1] != -1)
 		{
-			fprintf(stderr, "%sclose de newpipefd[1]\n%s", BLUE, END);
+			// fprintf(stderr, "%sclose de newpipefd[1]\n%s", BLUE, END);
 			close(newpipefd[1]);
 		}
 
 		if (oldpipefd != -1)
 		{
-			fprintf(stderr, "%sclose de oldpipefd[0]\n%s", BLUE, END);
+			// fprintf(stderr, "%sclose de oldpipefd[0]\n%s", BLUE, END);
 			close(oldpipefd);
 		}
 
 		oldpipefd = dup(newpipefd[0]);
-		fprintf(stderr, "%soldpipefd[0] = newpipefd[0]\n%s", BLUE, END);
+		// fprintf(stderr, "%soldpipefd[0] = newpipefd[0]\n%s", BLUE, END);
 		close(newpipefd[0]);
 		newpipefd[0] = -1;
 		exit_code = WEXITSTATUS(status);
@@ -1147,14 +1147,14 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	if (oldpipefd != -1)
 		close(oldpipefd);
 	int j = 0;
-	fprintf(stderr, "i_pid = %d\n", i_pid);
+	// fprintf(stderr, "i_pid = %d\n", i_pid);
 	while (j < i_pid)
 	{
-		fprintf(stderr, "on attend %d\n", pid[j]);
+		// fprintf(stderr, "on attend %d\n", pid[j]);
 		waitpid(pid[j], &status, 0);
 		j++;
 	}
-	printf("exit_code : %d\n", exit_code);
+	// printf("exit_code : %d\n", exit_code);
 }
 
 int	exec(t_ast *ast, char **env, int m)

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/03 14:26:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 09:32:04 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,23 +97,23 @@ int	main(int ac, char **av, char **env)
 		// free(name);
 		if (inpt && *inpt && !ft_isspace(inpt))
 		{
-			printf("on passe dans le lexer\n");
+			// printf("on passe dans le lexer\n");
 			token = lexer(inpt);
 			if (token && check_token(&token, &inpt, env) && expander(&token, env))
 			{
-				display_token(&token);
-				printf("\n");
+				// display_token(&token);
+				// printf("\n");
 				//sleep(1);
-				printf("on passe dans le parser\n");
+				// printf("on passe dans le parser\n");
 				ast = create_ast(&token, NULL, 0, &error);
 				if (ast)
 				{
 					//printf("create_ast fonctionne !\nretour au main\n");
 					//printf("on dessine l'ast total\n");
 					//sleep(1);
-					printf("\n");
-					draw_ast(ast, 0);
-					printf("\n");
+					// printf("\n");
+					// draw_ast(ast, 0);
+					// printf("\n");
 					//redir ?
 					exec(ast, env, count_pipes(token));
 					free_ast(ast);
