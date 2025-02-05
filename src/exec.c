@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 11:41:12 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 11:59:37 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,15 +113,20 @@ char	*right_path(char *content, char **env)
 int	print_open_error(char *content)
 {
 	if (errno == ENOENT)
-		printf("minishell: %s: No such file or directory\n", content);
+		// printf("minishell: %s: No such file or directory\n", content);
+		print_error_message(1, content, "No such file or directory");
 	else if (errno == EISDIR)
-		printf("minishell: %s: Is a directory\n", content);
+		print_error_message(1, content, "Is a directory");
+		// printf("minishell: %s: Is a directory\n", content);
 	else if (errno == EACCES)
-		printf("minishell: %s: Permission denied\n", content);
+		print_error_message(1, content, "Permission denied");
+		// printf("minishell: %s: Permission denied\n", content);
 	else if (errno == EMFILE || errno == ENFILE)
-		printf("minishell: Too many open files\n");
+		print_error_message(1, NULL, "Too many open files");
+		// printf("minishell: Too many open files\n");
 	else
-		printf("minishell: Error opening file\n");
+		print_error_message(1, NULL, "Error opening file");
+		// printf("minishell: Error opening file\n");
 	return (0);
 }
 
@@ -994,10 +999,10 @@ void	display_cmds(t_cmd_info cmd)
 	i = 0;
 	while (i < cmd.num_of_cmds)
 	{
-		// printf("%scommand[%d] :%s\n", BPURPLE, i, END);
-		// printf("%s\tcontent -- %s%s\n", YELLOW, cmd.cmd[i].content, END);
-		// printf("%s\tfd_in   -- %d%s\n", YELLOW, cmd.cmd[i].fd_in, END);
-		// printf("%s\tfd_out  -- %d%s\n", YELLOW, cmd.cmd[i].fd_out, END);
+		printf("%scommand[%d] :%s\n", BPURPLE, i, END);
+		printf("%s\tcontent -- %s%s\n", YELLOW, cmd.cmd[i].content, END);
+		printf("%s\tfd_in   -- %d%s\n", YELLOW, cmd.cmd[i].fd_in, END);
+		printf("%s\tfd_out  -- %d%s\n", YELLOW, cmd.cmd[i].fd_out, END);
 		i++;
 	}
 }
@@ -1023,7 +1028,8 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	pid = malloc(cmd.num_of_cmds);
 	if (!pid)
 	{
-		printf("probleme pid\n");
+		// printf("probleme pid\n");
+		print_error_message(1, "malloc", "Cannot allocate memory");
 		return ;
 	}
 	// oldpipefd[0] = -1;
@@ -1035,12 +1041,14 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		if (!path)
 		{
 			// printf("probleme path\n");//temp
+			print_error_message(1, "malloc", "Cannot allocate memory");
 			return ;
 		}
 		arg = ft_split(cmd.cmd[i].content, ' ');
 		if (!arg)
 		{
 			free(path);
+			print_error_message(1, "malloc", "Cannot allocate memory");
 			// printf("probleme arg\n");//temp
 			return ;
 		}
@@ -1048,6 +1056,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		{
 			free(path);
 			free_array(arg);
+			print_error_message(1, "pipe", "Cannot allocate memory");
 			// printf("probleme pipe\n");
 			return ;
 		}
@@ -1056,6 +1065,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		{
 			free(path);
 			free_array(arg);
+			print_error_message(1, "fork", "Cannot allocate memory");
 			// printf("probleme fork\n");//temp
 			return ;
 		}
@@ -1115,7 +1125,8 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 				close(oldpipefd);
 			}
 			execve(path, arg, env);
-			fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
+			print_error_message(1, arg[0], "command not found");
+			// fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
 			free(path);
 			free_array(arg);
 			exit(127);
@@ -1169,7 +1180,7 @@ int	exec(t_ast *ast, char **env, int m)
 	cmd = get_cmd_array(ast);
 	if (!cmd.cmd || !cmd.cmd->content)
 		return (0);//temp print
-	display_cmds(cmd);
+	// display_cmds(cmd);
 	exec_cmds(cmd, env);
 	free_cmd(&cmd);
 	// printf("on entre dans exec_node_ast\n");

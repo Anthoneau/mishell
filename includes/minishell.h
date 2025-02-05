@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 11:35:43 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 11:49:32 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	ft_strcat(char *src, char *dst);
 void	ft_strcat_expander(char *src, char *dst);
 int		count_lst(t_token *lst);
 int		count_pipes(t_token *token);
+void	print_error_message(int shell_name, char *content, char *message);
 
 //LEXER
 t_token	*lexer(char *inpt);

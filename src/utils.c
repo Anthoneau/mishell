@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/31 16:38:45 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 11:59:10 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,4 +150,17 @@ int	count_pipes(t_token *token)
 			break ;
 	}
 	return (i);
+}
+
+void	print_error_message(int shell_name, char *content, char *message)
+{
+	if (shell_name)
+		ft_putstr_fd("minishell: ", 2);
+	if (content)
+	{
+		ft_putstr_fd(content, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	if (message)
+		ft_putendl_fd(message, 2);
 }
