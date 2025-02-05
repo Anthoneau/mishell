@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 09:32:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 11:38:51 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ int	main(int ac, char **av, char **env)
 	exit_code = 0;
 	while (1)
 	{
+		// printf("exit code : %d\n", exit_code);
 		// name = name_minishell(getcwd(NULL, 0), home);
 		inpt = readline("Mishell > ");
 		// free(name);

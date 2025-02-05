@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 14:58:17 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 11:35:14 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,11 @@ void	transform_content(char **content, int *pos, char **env)
 	if (is_in_env((*content), env, (size_t)(end - start), start))
 	{
 		(*content) = change_content(*content, start, end, env);
+	}
+	else if ((*content)[start] == '?')
+	{
+		// printf("ah\n");
+		(*content) = change_exit_code(*content, start, end);
 	}
 	else
 	{

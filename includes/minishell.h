@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/03 18:09:11 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/05 11:35:43 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,7 @@ void	to_expand(char **content, char **env);
 int		is_in_env(char *content, char **env, size_t len, int start);
 int		cmp_token(char *content, char *env, size_t len, size_t start);
 char	*change_content(char *content, int start, int end, char **env);
+char	*change_exit_code(char *content, int start, int end);
 char	*supp_content(char *content, int start, int end);
 int		contain_backslash(char *content);
 void	del_backslash(char *content);
