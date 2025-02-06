@@ -40,6 +40,11 @@ int	create_content_and_sides(t_token **tokens, t_token *current, t_ast *node, in
 		Le reste c'est juste pour creer les noeuds
 	*/
 	create_content(current, node, error);
+	if (current->type == R_HEREDOC)
+	{
+		node->fd = dup(current->fd);
+		close(current->fd);
+	}
 	// if (current->type == R_INPUT)
 	// {
 	// 	node->left = create_ast(tokens, current->prev->prev, 1, error);

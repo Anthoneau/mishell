@@ -79,7 +79,11 @@ int	check_token(t_token **token, char **inpt, char **env)
 		if (current->type != WORD && current->type != PIPE && !current->next)
 			return (solo_handler(current), 0);
 		if (current->type == R_HEREDOC)
-			heredoc(current->next->content, current->next->expand); // a faire
+		{
+			current->fd = heredoc(current->next->content, current->next->expand); // a faire
+			if (current->fd == -1)
+				return (printf("AAAAAH\n"));
+		}
 		if (current->next)
 			current = current->next;
 		else if (current->type == PIPE && !end_pipe_handler(&current, inpt, env))

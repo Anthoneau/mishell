@@ -12,34 +12,35 @@
 
 #include "minishell.h"
 
-void	heredoc(char *delimiter, int expand)
+int	heredoc(char *delimiter, int expand)
 {
 	char	*inpt;
-	int		pipe_buf[2];
+	int		fd[2];
 
 	inpt = NULL;
-	if (pipe(pipe_buf) == -1)
-		return (print_error_message(1, "pipe", "Cannot allocate memory"));
+	if (pipe(fd) == -1)
+		return (print_error_message(1, "pipe", "Cannot allocate memory"), -1);
 	while (1)
 	{
 		inpt = readline("heredoc > ");
 		if (!inpt)
 		{
-			close(pipe_buf[1]);
-			close(pipe_buf[0]);
-			return (print_error_message(1, "pipe", "Cannot allocate memory"));
+			close(fd[1]);
+			close(fd[0]);
+			return (print_error_message(1, "pipe", "Cannot allocate memory"), -1);
 		}
 		if (!(ft_strncmp(delimiter, inpt, ft_strlen(delimiter) + 1)))
 			break ;
-		// if (expand)
-		// {
-			
-		// }
-		ft_putstr_fd(inpt, pipe_buf[1]);
-		ft_putstr_fd("\n", pipe_buf[1]);
+		if (expand)
+		{
+			printf("ah\n");
+		}
+		ft_putstr_fd(inpt, fd[1]);
+		ft_putstr_fd("\n", fd[1]);
 		free(inpt);
 	}
 	printf("inpt : %s\n", inpt);
-	close(pipe_buf[1]);
+	close(fd[1]);
 	free(inpt);
+	return (fd[0]);
 }

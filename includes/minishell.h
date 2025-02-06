@@ -60,6 +60,7 @@ typedef struct s_token
 	int				type;
 	int				explored;
 	int				error;
+	int				fd;
 	struct s_token	*next;
 	struct s_token	*prev;
 }	t_token;
@@ -69,6 +70,7 @@ typedef struct s_ast
 	char			*content;
 	int				type;
 	int				done;
+	int				fd;
 	struct s_ast	*top;
 	struct s_ast	*left;
 	struct s_ast	*right;
@@ -114,7 +116,7 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag);
 int		check_token(t_token **token, char **inpt, char **env);
 int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
 
-void	heredoc(char *delimiter, int expandble);
+int		heredoc(char *delimiter, int expandble);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);

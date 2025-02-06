@@ -821,6 +821,13 @@ t_inout	change_redir(t_ast *ast)
 		// printf("on assigne %d\n", file.outfile);
 		// cmd->fd_out = file.outfile;
 	}
+	else if (ast->type == R_HEREDOC)
+	{
+		fd.infile = dup(ast->fd);
+		close(ast->fd);
+		if (fd.infile == -1)
+			return (return_wrong_fds(ast));
+	}
 	return (fd);
 }
 
@@ -917,7 +924,7 @@ int	create_cmds_array(t_cmd_info *cmd, t_ast * ast)
 					current = current->right;
 			}
 		}
-		if (current->type >= R_INPUT && current->type != R_HEREDOC && current->done == 0)
+		if (current->type >= R_INPUT && current->done == 0)
 		{
 			// printf("%scurrent->type est une redir%s\n", PURPLE, END);
 			fd = get_fd(current);
