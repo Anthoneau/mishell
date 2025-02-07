@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:16:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 09:32:42 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 15:08:50 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ size_t	get_len(t_token *current)
 	{
 		if (words->type == WORD && words->content && words->explored == 0 && !(words->prev && words->prev->type >= R_INPUT))
 		{
-			len += ft_strlen(words->content) + 1;
+			// len += ft_strlen(words->content) + 1;
+			len++;
 			// ft_strcat(words->content, res);
 			// words->explored = 1;
 		}
@@ -33,28 +34,33 @@ size_t	get_len(t_token *current)
 		else
 			break ;
 	}
-	return (len);
+	return (len + 1);
 }
 
-char	*get_word(t_token *current)
+char	**get_word(t_token *current)
 {
-	char	*res;
+	char	**res;
+	// char	*temp;
 	t_token	*words;
 	size_t	len;
+	int		i;
 
 	if (!current || !current->content)
 		return (NULL);
 	words = current;
 	len = get_len(current);
-	res = ft_calloc(len, sizeof(char));
+	res = ft_calloc(len, sizeof(char *));
 	if (!res)
 		return (NULL);
+	i = 0;
 	while (words)
 	{
 		if (words->type == WORD && words->content && words->explored == 0 && !(words->prev && words->prev->type >= R_INPUT))
 		{
-			ft_strcat(words->content, res);
+			// ft_strcat(words->content, res);
+			res[i] = ft_strdup(words->content);
 			words->explored = 1;
+			i++;
 		}
 		if (words->next && words->next->type != PIPE)
 			words = words->next;
@@ -80,10 +86,12 @@ t_ast	*word_node(t_token *current, int *error)
 		return (NULL);
 	}
 	node->type = WORD;
-	node->content = get_word(current);
+	// node->content = get_word(current);
+	node->content = NULL;
+	node->arg = get_word(current);
 	// printf("content : %s\n", node->content);
-	//sleep(1);
-	if (!node->content)
+	// sleep(1);
+	if (!node->arg)
 	{
 		*error = 1;
 		return (free(node), NULL);

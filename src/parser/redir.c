@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:15:02 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/31 17:32:52 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 15:15:28 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,30 @@
 
 void	create_content(t_token *current, t_ast *node, int *error)
 {
+	// t_token	*current2;
+
+	// current2 = current;
 	// if (current->type == R_INPUT && current->prev)
 	// {
 	// 	node->content = ft_strdup(current->prev->content);
 	// 	if (!node->content)
 	// 		*error = 1;
 	// 	current->prev->explored = 1;
+	// }
+	// while (current2)
+	// {
+	// 	current2->explored = 1;
+	// 	if (current2->content && current2->content != ' ')
+	// 	{
+	// 		node->content = ft_strdup(current2->next->content);
+	// 		if (!node->content)
+	// 			*error = 1;
+	// 		break ;
+	// 	}
+	// 	if (current2->next)
+	// 		current2 = current2->next;
+	// 	else
+	// 		break ;
 	// }
 	if (current->next)
 	{
@@ -82,6 +100,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error)
 	}
 	node->type = current->type;
 	node->content = NULL;
+	node->arg = NULL;
 	node->top = NULL;
 	node->left = NULL;
 	node->right = NULL;

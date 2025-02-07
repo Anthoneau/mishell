@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/31 17:35:47 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 15:15:08 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,7 @@ t_ast	*pipe_node(t_token **tokens, t_token *current, int *error)
 	current->explored = 1;
 	node->type = PIPE;
 	node->content = NULL;
+	node->arg = NULL;
 	node->top = NULL;
 	node->left = NULL;
 	node->right = NULL;

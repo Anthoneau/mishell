@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 16:24:24 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/20 14:44:43 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 10:10:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ void	check_if_quotes(char *inpt)
 
 int	is_delimitation(char c)
 {
-	if (c == ' ' || c == '|' || c == '<' || c == '>')
+	if (c == '|' || c == '<' || c == '>' || c == '\'' || c == '"')
 		return (1);
 	return (0);
 }
@@ -85,11 +85,13 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag)
 
 	//printf("on entre dans word_in_delimitation\n");
 	i = 0;
-	check_if_quotes(inpt);
+	// check_if_quotes(inpt);
 	while (inpt[i] && !is_delimitation(inpt[i]))
 	{
-		//printf("inpt[%d] != c dont on avance\n", i);
+		// printf("inpt[%d] != c dont on avance\n", i);
 		i++;
+		if (inpt[i] == ' ')
+			break ;
 	}
 	//printf("on malloc\n");
 	new = malloc(i + 1);
@@ -105,8 +107,11 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag)
 	{
 		//printf("on copie...\n");
 		new[j++] = inpt[i++];
+		if (inpt[i] == ' ')
+			break ;
 	}
 	new[j] = '\0';
+	printf("new : %s|\n", new);
 	//printf("\\0 a %d\n", j);
 	return (new);
 }

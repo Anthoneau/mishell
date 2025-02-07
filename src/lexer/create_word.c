@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/20 13:50:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 14:38:02 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,12 +57,39 @@ char	*word_in_delimitation(char *inpt, char c, long *flag)
 	return (new);
 }
 
+void	join_content(char *word, t_token **token, long *error)
+{
+	t_token	*current;
+	char	*temp;
+
+	current = *token;
+	while (current)
+	{
+		if (current->next)
+			current = current->next;
+		else
+			break ;
+	}
+	temp = ft_strdup(current->content);
+	if (!temp) //print
+	{
+		*error = -10;
+		return ;
+	}
+	free(current->content);
+	current->content = ft_strjoin(temp, word);
+}
+
 void	create_word(char *inpt, long *i, t_token **token)
 {
 	char	*word;
 	int		type;
+	int		space;
 
 	type = WORD;
+	space = 0;
+	if (i != 0 && inpt[*i - 1] && inpt[*i - 1] != ' ' && !is_delimitation(inpt[*i -1]))
+		space = 1;
 	// printf("i dans create word mais avant la creation de word = %ld\n", *i);
 	if (inpt[*i] == '\'' || inpt[*i] == '"')
 	{
@@ -95,6 +122,11 @@ void	create_word(char *inpt, long *i, t_token **token)
 		// printf("word = %s\n\n", word);
 	}
 	// printf("i dans create word apres creation de word = %ld\n", *i);
-	new_token(word, type, token, i);
+	if (space)
+	{
+		join_content(word, token, i);
+	}
+	else
+		new_token(word, type, token, i);
 	free(word);
 }

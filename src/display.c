@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:03:15 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/31 17:37:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 15:04:08 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,17 @@ void	display_token(t_token **token)
 void	display_node_ast(t_ast *ast, int i)
 {
 	(void) i;
-	printf("content : %s\ntype : %d\ntop : %p\nleft : %p\nright : %p\n", ast->content, ast->type, ast->top, ast->left, ast->right);
+	int j = 0;
+
+	if (ast->arg)
+	{
+		while (ast->arg[i])
+		{
+			printf("arg[%d]: %s\n", j, ast->arg[i]);
+			i++;
+		}
+	}
+	printf("type : %d\ntop : %p\nleft : %p\nright : %p\n", ast->type, ast->top, ast->left, ast->right);
 }
 
 void draw_ast(t_ast *node, int depth)
@@ -50,8 +60,18 @@ void draw_ast(t_ast *node, int depth)
         printf("    ");
 
     // Print the node content and type
-    printf("%sType%s: %d, Content: %s\n", BPURPLE, END, node->type, node->content ? node->content : "(null)");
-
+	if (node->type != WORD)
+	    printf("%sType%s: %d, Content: %s\n", BPURPLE, END, node->type, node->content ? node->content : "(null)");
+	else
+	{
+		printf("%sType%s: %d\n", BPURPLE, END, node->type);
+		int i = 0;
+		while (node->arg[i])
+		{
+			printf("    arg[%d]: %s\n", i, node->arg[i]);
+			i++;
+		}
+	}
     // Recursively draw the left and right children
     if (node->left || node->right) {
         for (int i = 0; i < depth; i++)

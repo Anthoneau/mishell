@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 11:59:10 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 15:08:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,8 @@ void	free_error_node(t_ast *node)
 {
 	if (node && node->content)
 		free(node->content);
+	if (node && node->arg)
+		free_array(node->arg);
 	if (node)
 		free(node);
 }
@@ -90,11 +92,11 @@ void	ft_strcat(char *src, char *dst)
 		j = 0;
 	else
 		j = ft_strlen(dst);
-	if (j > 0)
-	{
-		dst[j] = ' ';
-		j++;
-	}
+	// if (j > 0)
+	// {
+	// 	dst[j] = ' ';
+	// 	j++;
+	// }
 	//printf("strlen(dst) = %ld\ndst[j] = %c\n", j, dst[j]);
 	//printf("src = %s\n", src);
 	while (src[i])
@@ -163,4 +165,27 @@ void	print_error_message(int shell_name, char *content, char *message)
 	}
 	if (message)
 		ft_putendl_fd(message, 2);
+}
+
+char	**ft_arrdup(char **arr)
+{
+	char	**dest;
+	int		i;
+
+	i = 0;
+	while (arr[i])
+		i++;
+	dest = malloc((i + 1) * sizeof(char *));
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (arr[i])
+	{
+		dest[i] = ft_strdup(arr[i]);
+		if (!dest[i])
+			return (free_array(dest), NULL);
+		i++;
+	}
+	dest[i] = NULL;
+	return (dest);
 }

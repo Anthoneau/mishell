@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 11:35:14 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/06 16:19:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ void	to_expand(char **content, char **env)
 
 	i = 0;
 	// printf("----------to_expand\n");
+	printf("content to expand : %s\n", (*content));
 	while ((*content)[i])
 	{
 		if ((*content)[i] == '$' && (i == 0 || ((*content)[i - 1] && (*content)[i - 1] != '\\')))

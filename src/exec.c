@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 11:59:37 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 15:11:18 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -839,12 +839,14 @@ t_inout	get_fd(t_ast *ast)
 	fd.outfile = -1;
 	while (ast)
 	{
-		// printf("%sast->done = : %s%d%s\n", GREEN, BYELLOW, ast->done, END);
+		printf("%sast->done = : %s%d%s\n", GREEN, BYELLOW, ast->done, END);
 		// if (ast->left)
 			// printf("%sast->left->done = : %s%d%s\n", GREEN, BYELLOW, ast->left->done, END);
 		// if (ast->right)
 			// printf("%sast->right->done = : %s%d%s\n", GREEN, BYELLOW, ast->right->done, END);
 		// sleep(1);
+		if (ast->done == 1)
+			break ;
 		if (fd.infile != -1)
 			close(fd.infile);
 		if (fd.outfile != -1)
@@ -855,22 +857,22 @@ t_inout	get_fd(t_ast *ast)
 		ast->done = 1;
 		if (ast->left && ast->left->type >= R_INPUT && ast->left->done == 0)
 		{
-			// printf("fd left\n");
+			printf("fd left\n");
 			ast = ast->left;
 		}
 		else if (ast->right && ast->right->type >= R_INPUT && ast->right->done == 0)
 		{
-			// printf("fd right\n");
+			printf("fd right\n");
 			ast = ast->right;
 		}
 		else if (ast->top && ast->top->type != PIPE)
 		{
-			// printf("fd top\n");
+			printf("fd top\n");
 			ast = ast->top;
 		}
 		else
 		{
-			// printf("fd break\n");
+			printf("fd break\n");
 			break ;
 		}
 	}
@@ -939,13 +941,14 @@ int	create_cmds_array(t_cmd_info *cmd, t_ast * ast)
 		{
 			// printf("%scurrent->type est un word%s\n", PURPLE, END);
 			current->done = 1;
-			cmd->cmd[i].content = ft_strdup(current->content);
-			if (!cmd->cmd[i].content)
+			// cmd->cmd[i].content = ft_strdup(current->content);
+			cmd->cmd[i].arg = ft_arrdup(current->arg);
+			if (!cmd->cmd[i].arg)
 				return (0);
 			cmd->cmd[i].fd_in = fd.infile;
 			cmd->cmd[i].fd_out = fd.outfile;
 		}
-		if (cmd->cmd[i].content)
+		if (cmd->cmd[i].arg)
 			i++;
 		current = ast;
 		// sleep(1);
@@ -1017,7 +1020,6 @@ void	display_cmds(t_cmd_info cmd)
 void	exec_cmds(t_cmd_info cmd, char **env)
 {
 	char		*path;
-	char		**arg;
 	pid_t		*pid;
 	int			i_pid;
 	int			i;
@@ -1032,7 +1034,8 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	newpipefd[0] = -1;
 	newpipefd[1] = -1;
 	oldpipefd = -1;
-	pid = malloc(cmd.num_of_cmds);
+	// fprintf(stderr, "num of cmds : %d\n", cmd.num_of_cmds);
+	pid = malloc(cmd.num_of_cmds * sizeof(pid_t));
 	if (!pid)
 	{
 		// printf("probleme pid\n");
@@ -1042,36 +1045,27 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	// oldpipefd[0] = -1;
 	// oldpipefd[1] = -1;
 	// fprintf(stderr, "%sGREEN pour le child\n%sBLUE pour le parent\n\n%s", GREEN, BLUE, END);
-	while (i < cmd.num_of_cmds)
+	while (i < cmd.num_of_cmds) //si execve foire, il faut free les tokens, l'ast, etc...
 	{
-		path = right_path(cmd.cmd[i].content, env);
+		path = right_path(cmd.cmd[i].arg[0], env);
 		if (!path)
 		{
 			// printf("probleme path\n");//temp
 			print_error_message(1, "malloc", "Cannot allocate memory");
 			return ;
 		}
-		arg = ft_split(cmd.cmd[i].content, ' ');
-		if (!arg)
-		{
-			free(path);
-			print_error_message(1, "malloc", "Cannot allocate memory");
-			// printf("probleme arg\n");//temp
-			return ;
-		}
 		if (i < cmd.num_of_cmds - 1 && pipe(newpipefd) == -1) //line 1039
 		{
 			free(path);
-			free_array(arg);
 			print_error_message(1, "pipe", "Cannot allocate memory");
 			// printf("probleme pipe\n");
 			return ;
 		}
 		pid[i_pid] = fork();
+		// fprintf(stderr, "pid = %d\n", pid[i_pid]);
 		if (pid[i_pid] == -1)
 		{
 			free(path);
-			free_array(arg);
 			print_error_message(1, "fork", "Cannot allocate memory");
 			// printf("probleme fork\n");//temp
 			return ;
@@ -1131,16 +1125,14 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 				// fprintf(stderr, "%sclose de oldpipe[0]\n%s", GREEN, END);
 				close(oldpipefd);
 			}
-			execve(path, arg, env);
-			print_error_message(1, arg[0], "command not found");
+			execve(path, cmd.cmd[i].arg, env);
+			print_error_message(0, cmd.cmd[i].arg[0], "command not found");
 			// fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
 			free(path);
-			free_array(arg);
 			exit(127);
 		}
 		// fprintf(stderr, "%son free\n%s", BLUE, END);
 		free(path);
-		free_array(arg);
 
 		if (newpipefd[1] != -1)
 		{
@@ -1154,10 +1146,13 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 			close(oldpipefd);
 		}
 
-		oldpipefd = dup(newpipefd[0]);
-		// fprintf(stderr, "%soldpipefd[0] = newpipefd[0]\n%s", BLUE, END);
-		close(newpipefd[0]);
-		newpipefd[0] = -1;
+		if (newpipefd[0] != -1)
+		{
+			oldpipefd = dup(newpipefd[0]);
+			// fprintf(stderr, "%soldpipefd[0] = newpipefd[0]\n%s", BLUE, END);
+			close(newpipefd[0]);
+			newpipefd[0] = -1;
+		}
 		exit_code = WEXITSTATUS(status);
 		i++;
 		i_pid++;
@@ -1184,14 +1179,15 @@ int	exec(t_ast *ast, char **env, int m)
 	(void)m;
 	(void)env;
 	status = 0;
+	// printf("get cmd array\n");
 	cmd = get_cmd_array(ast);
-	if (!cmd.cmd || !cmd.cmd->content)
+	if (!cmd.cmd || !cmd.cmd->arg)
 		return (0);//temp print
 	// display_cmds(cmd);
+	// printf("exec cmd\n");
 	exec_cmds(cmd, env);
 	free_cmd(&cmd);
 	// printf("on entre dans exec_node_ast\n");
 	// status = exec_node_ast(ast, NULL, -1, -1, env, NULL, NULL);
 	return (status);
 }
-

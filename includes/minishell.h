@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 11:49:32 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/07 14:46:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ typedef struct s_token
 typedef struct s_ast
 {
 	char			*content;
+	char			**arg;
 	int				type;
 	int				done;
 	int				fd;
@@ -79,6 +80,7 @@ typedef struct s_ast
 typedef struct s_cmd
 {
 	char	*content;
+	char	**arg;
 	int		fd_in;
 	int		fd_out;
 }	t_cmd;
@@ -105,6 +107,8 @@ void	ft_strcat_expander(char *src, char *dst);
 int		count_lst(t_token *lst);
 int		count_pipes(t_token *token);
 void	print_error_message(int shell_name, char *content, char *message);
+int		is_delimitation(char c);
+char	**ft_arrdup(char **arr);
 
 //LEXER
 t_token	*lexer(char *inpt);
