@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 07:28:08 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:03:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void	join_content(char *word, t_token **token, long *error)
 	}
 	free(current->content);
 	current->content = ft_strjoin(temp, word);
+	free(temp);
 }
 
 void	create_word(char *inpt, long *i, t_token **token)

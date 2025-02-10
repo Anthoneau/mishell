@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 07:56:42 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 08:24:15 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -885,7 +885,7 @@ t_inout	get_fd(t_ast *ast)
 	fd.outfile = -1;
 	while (ast)
 	{
-		printf("%sast->done = : %s%d%s\n", GREEN, BYELLOW, ast->done, END);
+		// printf("%sast->done = : %s%d%s\n", GREEN, BYELLOW, ast->done, END);
 		// if (ast->left)
 			// printf("%sast->left->done = : %s%d%s\n", GREEN, BYELLOW, ast->left->done, END);
 		// if (ast->right)
@@ -903,22 +903,22 @@ t_inout	get_fd(t_ast *ast)
 		ast->done = 1;
 		if (ast->left && ast->left->type >= R_INPUT && ast->left->done == 0)
 		{
-			printf("fd left\n");
+			// printf("fd left\n");
 			ast = ast->left;
 		}
 		else if (ast->right && ast->right->type >= R_INPUT && ast->right->done == 0)
 		{
-			printf("fd right\n");
+			// printf("fd right\n");
 			ast = ast->right;
 		}
 		else if (ast->top && ast->top->type != PIPE)
 		{
-			printf("fd top\n");
+			// printf("fd top\n");
 			ast = ast->top;
 		}
 		else
 		{
-			printf("fd break\n");
+			// printf("fd break\n");
 			break ;
 		}
 	}
@@ -1027,6 +1027,8 @@ void	free_cmd(t_cmd_info *cmd)
 	{
 		if (cmd->cmd[i].content) //ligne 745
 			free(cmd->cmd[i].content);
+		if (cmd->cmd[i].arg)
+			free_array(cmd->cmd[i].arg);
 		i++;
 	}
 	free(cmd->cmd);
@@ -1182,6 +1184,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 				// fprintf(stderr, "%sclose de oldpipe[0]\n%s", GREEN, END);
 				close(oldpipefd);
 			}
+			free(pid);
 			// fprintf(stderr, "fd in : %d\n", fcntl(cmd.cmd[i].fd_in, F_GETFD));
 			// fprintf(stderr, "fd out : %d\n", fcntl(cmd.cmd[i].fd_out, F_GETFD));
 			// fprintf(stderr, "pipefd[0] : %d\n", fcntl(newpipefd[0], F_GETFD));
@@ -1232,6 +1235,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		waitpid(pid[j], &status, 0);
 		j++;
 	}
+	free(pid);
 	exit_code = WEXITSTATUS(status);
 	// printf("exit_code : %d\n", exit_code);
 }

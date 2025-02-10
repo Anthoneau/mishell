@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:29:11 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 15:05:20 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 08:57:44 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ int	contain_backslash(char *content)
 
 	i = 0;
 	count = 0;
+	if (!content)
+		return (0);
 	// printf("----------contain backslah ?\ncontent :%s\n", content);
 	while (content[i])
 	{

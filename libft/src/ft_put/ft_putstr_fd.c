@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/11 15:09:01 by agoldber          #+#    #+#             */
-/*   Updated: 2024/04/23 14:33:14 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 08:44:19 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	ft_putstr_fd(char *s, int fd)
 {
+	if (!s)
+		return ;
 	while (*s)
-		write(fd, &*s++, 1);
+		write(fd, s++, 1);
 }

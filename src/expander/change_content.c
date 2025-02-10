@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:31:01 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/05 11:36:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:01:12 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ char	*find_env_value(char **env, int start, int end, char *content)
 	i = start;
 	j = 0;
 	// printf("on malloc de %d\n", end - start);
-	env_value = malloc(end - start);
+	env_value = ft_calloc((end - start) + 1, sizeof(char));
 	if (!env_value)
 		return (NULL);
-	while (i <= end)
+	while (i <= end && content[i])
 		env_value[j++] = content[i++];
-	env_value[j] = '\0';
+	// env_value[j] = '\0';
 	i = find_env_i(env, start, end, env_value);
 	free(env_value);
 	if (i < 0)
@@ -54,7 +54,6 @@ char	*find_env_value(char **env, int start, int end, char *content)
 	env_value = ft_strdup(env[i]);
 	if (!env_value)
 		return (NULL);
-	// printf("on a trouve : %s\n", env_value);
 	return (env_value);
 }
 
@@ -92,6 +91,8 @@ char	*change_content(char *content, int start, int end, char **env)
 	char	*env_value;
 	char	*pointer;
 
+	if (!content)
+		return (NULL);
 	pointer = find_env_value(env, start, end, content);
 	if (!pointer)
 		return (NULL);
