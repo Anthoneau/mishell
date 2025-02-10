@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 16:24:24 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/07 10:10:27 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 07:55:46 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag)
 			break ;
 	}
 	new[j] = '\0';
-	printf("new : %s|\n", new);
+	// printf("new : %s|\n", new);
 	//printf("\\0 a %d\n", j);
 	return (new);
 }

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/07 15:11:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 07:56:42 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char	*right_path(char *content, char **env)
 	return (full_path);
 }
 
-int	print_open_error(char *content)
+void	print_open_error(char *content)
 {
 	if (errno == ENOENT)
 		// printf("minishell: %s: No such file or directory\n", content);
@@ -127,7 +127,7 @@ int	print_open_error(char *content)
 	else
 		print_error_message(1, NULL, "Error opening file");
 		// printf("minishell: Error opening file\n");
-	return (0);
+	// return (0);
 }
 
 // size_t	get_len_to_close(int **to_close)
@@ -738,29 +738,40 @@ int	print_open_error(char *content)
 // 	return (pid);
 // }
 
-t_inout	return_wrong_fds(t_ast *ast)
+void	return_wrong_fds(t_ast *ast)
 {
-	t_inout	fd;
+	// t_inout	fd;
 
 	print_open_error(ast->content);
-	fd.infile = -2;
-	fd.outfile = -2;
-	return (fd);
+	// fd.infile = -2;
+	// fd.outfile = -2;
+	// return (fd);
 }
 
-t_inout	change_redir(t_ast *ast)
+void	change_redir(t_ast *ast, t_inout *fd)
 {
-	t_inout fd;
+	// t_inout fd;
 
-	fd.infile = -1;
-	fd.outfile = -1;
+	// fd->infile = -1;
+	// fd->outfile = -1;
 	if (ast->type == R_INPUT)
 	{
 		// printf("input trouve\n");
 		// printf("open de %s\n", ast->content);
-		fd.infile = open(ast->content, O_RDONLY, 0777);
-		if (fd.infile == -1)
-			return (return_wrong_fds(ast));
+		if (fd->infile != -1)
+			close(fd->infile);
+		fd->infile = open(ast->content, O_RDONLY, 0777);
+		if (fd->infile == -1)
+		{
+			if (fd->infile != -1)
+				close(fd->infile);
+			if (fd->outfile != -1)
+				close(fd->outfile);
+			fd->infile = -2;
+			fd->outfile = -2;
+			return (print_open_error(ast->content));
+		}
+			// return (return_wrong_fds(ast));
 		// {
 		// 	print_open_error(ast->content);
 		// 	fd.infile = -2;
@@ -781,9 +792,21 @@ t_inout	change_redir(t_ast *ast)
 	{
 		// printf("trunc trouve\n");
 		// printf("open de %s\n", ast->content);
-		fd.outfile = open(ast->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd.outfile == -1)
-			return (return_wrong_fds(ast));
+		if (fd->outfile != -1)
+			close(fd->outfile);
+		fd->outfile = open(ast->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd->outfile == -1)
+		{
+			if (fd->infile != -1)
+				close(fd->infile);
+			if (fd->outfile != -1)
+				close(fd->outfile);
+			fd->infile = -2;
+			fd->outfile = -2;
+			return (print_open_error(ast->content));
+		}
+			// return (return_wrong_fds(ast));
+			// return (print_open_error(ast->content));
 		// {
 		// 	print_open_error(ast->content);
 		// 	fd.infile = -2;
@@ -803,9 +826,21 @@ t_inout	change_redir(t_ast *ast)
 	{
 		// printf("append trouve\n");
 		// printf("open de %s\n", ast->content);
-		fd.outfile = open(ast->content, O_WRONLY | O_CREAT |O_APPEND, 0644);
-		if (fd.outfile == -1)
-			return (return_wrong_fds(ast));
+		if (fd->outfile != -1)
+			close(fd->outfile);
+		fd->outfile = open(ast->content, O_WRONLY | O_CREAT |O_APPEND, 0644);
+		if (fd->outfile == -1)
+		{
+			if (fd->infile != -1)
+				close(fd->infile);
+			if (fd->outfile != -1)
+				close(fd->outfile);
+			fd->infile = -2;
+			fd->outfile = -2;
+			return (print_open_error(ast->content));
+		}
+			// return (return_wrong_fds(ast));
+			// return (print_open_error(ast->content));
 		// {
 		// 	print_open_error(ast->content);
 		// 	fd.infile = -2;
@@ -823,12 +858,23 @@ t_inout	change_redir(t_ast *ast)
 	}
 	else if (ast->type == R_HEREDOC)
 	{
-		fd.infile = dup(ast->fd);
+		if (fd->infile != -1)
+			close(fd->infile);
+		fd->infile = dup(ast->fd);
 		close(ast->fd);
-		if (fd.infile == -1)
-			return (return_wrong_fds(ast));
+		if (fd->infile == -1)
+		{
+			if (fd->infile != -1)
+				close(fd->infile);
+			if (fd->outfile != -1)
+				close(fd->outfile);
+			fd->infile = -2;
+			fd->outfile = -2;
+			return (print_open_error(ast->content));
+		}
+			// return (return_wrong_fds(ast));
+			// return (print_open_error(ast->content));
 	}
-	return (fd);
 }
 
 t_inout	get_fd(t_ast *ast)
@@ -847,11 +893,11 @@ t_inout	get_fd(t_ast *ast)
 		// sleep(1);
 		if (ast->done == 1)
 			break ;
-		if (fd.infile != -1)
-			close(fd.infile);
-		if (fd.outfile != -1)
-			close(fd.outfile);
-		fd = change_redir(ast);
+		// if (fd.infile != -1)
+		// 	close(fd.infile);
+		// if (fd.outfile != -1)
+		// 	close(fd.outfile);
+		change_redir(ast, &fd);
 		if (fd.infile == -2 || fd.outfile == -2)
 			return (fd);
 		ast->done = 1;
@@ -1072,7 +1118,30 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		}
 		if (!pid[i_pid])
 		{
-			if (cmd.num_of_cmds > 1)
+			// fprintf(stderr, "fd in : %d\n", fcntl(cmd.cmd[i].fd_in, F_GETFD));
+			// fprintf(stderr, "fd out : %d\n", fcntl(cmd.cmd[i].fd_out, F_GETFD));
+			// fprintf(stderr, "pipefd[0] : %d\n", fcntl(newpipefd[0], F_GETFD));
+			// fprintf(stderr, "pipefd[1] : %d\n", fcntl(newpipefd[1], F_GETFD));
+			// fprintf(stderr, "oldpipefd : %d\n", fcntl(oldpipefd, F_GETFD));
+			if (cmd.cmd[i].fd_in != -1)
+			{
+				// fprintf(stderr, "%sdup2 de fdin a stdin fileno\n%s", GREEN, END);
+				if (dup2(cmd.cmd[i].fd_in, STDIN_FILENO) == -1)
+				{
+					printf("ah\n"); //proteger dup2
+				}
+				close(cmd.cmd[i].fd_in);
+			}
+			if (cmd.cmd[i].fd_out != -1)
+			{
+				// fprintf(stderr, "%sdup2 de fdout a stdout fileno\n%s", GREEN, END);
+				if (dup2(cmd.cmd[i].fd_out, STDOUT_FILENO) == -1)
+				{
+					printf("ah\n"); //proteger dup2
+				}
+				close(cmd.cmd[i].fd_out);
+			}
+			else if (cmd.num_of_cmds > 1)
 			{
 				if (i == 0 && cmd.cmd[i].fd_out == -1)
 				{
@@ -1098,18 +1167,6 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 					}
 				}
 			}
-			if (cmd.cmd[i].fd_in != -1)
-			{
-				// fprintf(stderr, "%sdup2 de fdin a stdin fileno\n%s", GREEN, END);
-				dup2(cmd.cmd[i].fd_in, STDIN_FILENO);
-				close(cmd.cmd[i].fd_in);
-			}
-			if (cmd.cmd[i].fd_out != -1)
-			{
-				// fprintf(stderr, "%sdup2 de fdout a stdout fileno\n%s", GREEN, END);
-				dup2(cmd.cmd[i].fd_out, STDOUT_FILENO);
-				close(cmd.cmd[i].fd_out);
-			}
 			if (newpipefd[0] != -1)
 			{
 				// fprintf(stderr, "%sclose de newpipe[0]\n%s", GREEN, END);
@@ -1125,6 +1182,11 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 				// fprintf(stderr, "%sclose de oldpipe[0]\n%s", GREEN, END);
 				close(oldpipefd);
 			}
+			// fprintf(stderr, "fd in : %d\n", fcntl(cmd.cmd[i].fd_in, F_GETFD));
+			// fprintf(stderr, "fd out : %d\n", fcntl(cmd.cmd[i].fd_out, F_GETFD));
+			// fprintf(stderr, "pipefd[0] : %d\n", fcntl(newpipefd[0], F_GETFD));
+			// fprintf(stderr, "pipefd[1] : %d\n", fcntl(newpipefd[1], F_GETFD));
+			// fprintf(stderr, "oldpipefd : %d\n", fcntl(oldpipefd, F_GETFD));
 			execve(path, cmd.cmd[i].arg, env);
 			print_error_message(0, cmd.cmd[i].arg[0], "command not found");
 			// fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
@@ -1153,7 +1215,10 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 			close(newpipefd[0]);
 			newpipefd[0] = -1;
 		}
-		exit_code = WEXITSTATUS(status);
+		if (cmd.cmd[i].fd_in != -1)
+			close(cmd.cmd[i].fd_in);
+		if (cmd.cmd[i].fd_out != -1)
+			close(cmd.cmd[i].fd_out);
 		i++;
 		i_pid++;
 	}

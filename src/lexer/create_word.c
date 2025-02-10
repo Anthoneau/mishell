@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/07 14:38:02 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 07:28:08 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	create_word(char *inpt, long *i, t_token **token)
 
 	type = WORD;
 	space = 0;
-	if (i != 0 && inpt[*i - 1] && inpt[*i - 1] != ' ' && !is_delimitation(inpt[*i -1]))
+	if (*i > 0 && inpt[*i - 1] && inpt[*i - 1] != ' ' && !is_delimitation(inpt[*i -1]))
 		space = 1;
 	// printf("i dans create word mais avant la creation de word = %ld\n", *i);
 	if (inpt[*i] == '\'' || inpt[*i] == '"')
