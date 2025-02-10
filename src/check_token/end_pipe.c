@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:40:23 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/29 17:19:36 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:52:06 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,13 @@ int	end_pipe_handler(t_token **last_token, char **first_inpt, char **env)
 	replace_inpt = NULL;
 	inpt = readline("pipe > ");
 	
-	token = lexer(inpt);
+	token = lexer(inpt, env);
 	if (!token || !check_token(&token, &inpt, env))
 	{
 		if (token)
 			free_token(&token);
 		return (0);
 	}
-
 	// join_token_to_list(last_token, token);
 	(*last_token)->next = token;
 	token->prev = (*last_token);

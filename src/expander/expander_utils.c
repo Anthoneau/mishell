@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:29:11 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 10:06:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:34:25 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ int	expandable(char *content)
 	i = 0;
 	if (!content)
 		return (0);
-	// printf("----------expandable ?\ncontent : %s\n", content);
+	printf("----------expandable ?\ncontent : %s\n", content);
 	while (content[i])
 	{
 		if (content[i] == '$')

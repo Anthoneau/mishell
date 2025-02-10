@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/07 12:07:53 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/10 16:29:16 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,7 +30,7 @@ PARSER_DIR		=	parser/
 SRCS_DIR 		=	src/
 OBJS_DIR		=	obj/
 CC				=	cc
-C_FLAGS			=	-g -Wall -Werror -Wextra -I${INCLUDES}
+C_FLAGS			=	-g -Wall -Werror -Wextra -g -I${INCLUDES}
 LIBFT			=	libft.a
 RM				=	rm -rf
 MAKEFLAGS		+=	--no-print-directory

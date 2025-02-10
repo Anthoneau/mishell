@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 09:03:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:34:58 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	join_content(char *word, t_token **token, long *error)
 	free(temp);
 }
 
-void	create_word(char *inpt, long *i, t_token **token)
+void	create_word(char *inpt, long *i, t_token **token, int expandable, char **env)
 {
 	char	*word;
 	int		type;
@@ -90,13 +90,18 @@ void	create_word(char *inpt, long *i, t_token **token)
 	type = WORD;
 	space = 0;
 	if (*i > 0 && inpt[*i - 1] && inpt[*i - 1] != ' ' && !is_delimitation(inpt[*i -1]))
-		space = 1;
-	// printf("i dans create word mais avant la creation de word = %ld\n", *i);
-	if (inpt[*i] == '\'' || inpt[*i] == '"')
 	{
-		// printf("on trouve une quote\n");
+		// printf("inpt[%ld] = : %c\n", *i, inpt[*i]);
+		space = 1;
+	}
+	// printf("i dans create word mais avant la creation de word = %ld\n", *i);
+	if (inpt[*i] && (inpt[*i] == '\'' || inpt[*i] == '"'))
+	{
+		printf("on trouve une quote\n");
 		if (inpt[*i] == '\'')
 		{
+			printf("aaaaah\n");
+			expandable = 0;
 			type = S_QUOTES;
 			word = word_in_delimitation(inpt + *i, '\'', i);
 		}
@@ -112,7 +117,7 @@ void	create_word(char *inpt, long *i, t_token **token)
 	}
 	else
 	{
-		// printf("y a pas de quotes\n");
+		printf("y a pas de quotes\n");
 		// word =  word_in_delimitation(inpt + *i, ' ', i);
 		word = space_or_meta_char_delimitation(inpt + *i, i);
 		if (*i < 0)
@@ -123,10 +128,17 @@ void	create_word(char *inpt, long *i, t_token **token)
 		// printf("word = %s\n\n", word);
 	}
 	// printf("i dans create word apres creation de word = %ld\n", *i);
-	if (space)
+	printf("space : %d\n", space);
+	printf("expandable : %d\n", expandable);
+	if (expandable)
 	{
-		join_content(word, token, i);
+		if (!modify_inpt(&word, env))
+		{
+			return (print_error_message(1, "malloc", "Cannot allocate memory"));
+		}
 	}
+	if (space)
+		join_content(word, token, i);
 	else
 		new_token(word, type, token, i);
 	free(word);

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 10:11:52 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:53:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,10 +136,27 @@ int	check_quote(char *inpt)
 	return (1);
 }
 
-t_token	*lexer(char *inpt)
+int	is_heredoc(char *inpt, int i)
+{
+	// printf("%s%d\n%s", GREEN, i, END);
+	i--;
+	while (inpt[i] == ' ' && i > 0)
+		i--;
+	// printf("%s%d\n%s", GREEN, i, END);
+	if (inpt[i] && inpt[i - 1])
+		// printf("%s%c | %c%s\n", GREEN, inpt[i], inpt[i - 1], END);
+	if (inpt[i] && inpt[i] == '<' && inpt[i - 1] && inpt[i - 1] == '<')
+	{
+		return (1);
+	}
+	return (0);
+}
+
+t_token	*lexer(char *inpt, char **env)
 {
 	t_token	*token;
 	long	i;
+	int		expandable;
 
 	i = 0;
 	token = NULL;
@@ -147,6 +164,7 @@ t_token	*lexer(char *inpt)
 	if (!inpt || !check_quote(inpt))
 		return (print_error_message(1, "quote", "error"), NULL);
 	//printf("lexing...\n");
+	expandable = 1;
 	while (inpt[i])
 	{
 		if (i < 0)
@@ -155,6 +173,8 @@ t_token	*lexer(char *inpt)
 		//printf("inpt[i] == [%c], il reste [%s]\n", inpt[i], inpt + i);
 		while (inpt[i] == ' ')
 			i++;
+		// printf("inpt[i] = %c\n", inpt[i]);
+		// sleep(1);
 		//printf("skip des espaces potentiels\n");
 		if (inpt[i] == '|')
 		{
@@ -186,6 +206,7 @@ t_token	*lexer(char *inpt)
 		}
 		else if (inpt[i] == ';')
 		{
+			// printf("on trouve un dot\n");
 			if (inpt[i + 1] && inpt[i + 1] == ';')
 			{
 				i++;
@@ -198,8 +219,15 @@ t_token	*lexer(char *inpt)
 		else if (inpt[i])
 		{
 			// printf("on trouve un mot\n");
-			create_word(inpt, &i, &token);
+			if (is_heredoc(inpt, i))
+				expandable = 0;
+			else
+				expandable = 1;
+			create_word(inpt, &i, &token, expandable, env);
 		}
+		// printf("boucle\n");
+		// sleep(1);
 	}
+	// printf("hein\n");
 	return (token);
 }

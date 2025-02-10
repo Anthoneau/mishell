@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 09:39:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:27:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,15 +116,16 @@ int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
 
 //LEXER
-t_token	*lexer(char *inpt);
+t_token	*lexer(char *inpt, char **env);
 void	new_token(char	*content, int type, t_token **lst, long *i);
-void	create_word(char *inpt, long *i, t_token **token);
+void	create_word(char *inpt, long *i, t_token **token, int expandable, char **env);
 char	*space_or_meta_char_delimitation(char *inpt, long *flag);
 
 //CHECK TOKEN
 int		check_token(t_token **token, char **inpt, char **env);
 int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
 
+int		modify_inpt(char **inpt, char **env);
 int		heredoc(char *delimiter, int expandble, char **env);
 
 //EXPANDER

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 10:12:24 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:31:45 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,10 +98,10 @@ int	main(int ac, char **av, char **env)
 		if (inpt && *inpt && !ft_isspace(inpt))
 		{
 			// printf("on passe dans le lexer\n");
-			token = lexer(inpt);
+			token = lexer(inpt, env);
 			// display_token(&token);
 			// printf("\n");
-			if (token && check_token(&token, &inpt, env) && expander(&token, env))
+			if (token && check_token(&token, &inpt, env))
 			{
 				display_token(&token);
 				printf("\n");
