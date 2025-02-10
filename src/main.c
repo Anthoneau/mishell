@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/07 15:11:07 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:12:24 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,7 @@ int	main(int ac, char **av, char **env)
 	{
 		// printf("exit code : %d\n", exit_code);
 		// name = name_minishell(getcwd(NULL, 0), home);
-		inpt = readline("Mishell > ");
+		inpt = readline("minishell > ");
 		// free(name);
 		if (inpt && *inpt && !ft_isspace(inpt))
 		{
@@ -121,9 +121,11 @@ int	main(int ac, char **av, char **env)
 					exec(ast, env, count_pipes(token));
 					free_ast(ast);
 				}
-				else
-					printf("ast est NULL\n");
+				// else
+				// 	print_error_message(1, "malloc", "Cannot allocate memory");
 			}
+			// else
+			// 	print_error_message(1, "malloc", "Cannot allocate memory");
 			// printf("main : inpt = %s\n", inpt);
 			add_history(inpt);
 			if (token)

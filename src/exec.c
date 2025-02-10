@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 08:24:15 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:33:50 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1125,25 +1125,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 			// fprintf(stderr, "pipefd[0] : %d\n", fcntl(newpipefd[0], F_GETFD));
 			// fprintf(stderr, "pipefd[1] : %d\n", fcntl(newpipefd[1], F_GETFD));
 			// fprintf(stderr, "oldpipefd : %d\n", fcntl(oldpipefd, F_GETFD));
-			if (cmd.cmd[i].fd_in != -1)
-			{
-				// fprintf(stderr, "%sdup2 de fdin a stdin fileno\n%s", GREEN, END);
-				if (dup2(cmd.cmd[i].fd_in, STDIN_FILENO) == -1)
-				{
-					printf("ah\n"); //proteger dup2
-				}
-				close(cmd.cmd[i].fd_in);
-			}
-			if (cmd.cmd[i].fd_out != -1)
-			{
-				// fprintf(stderr, "%sdup2 de fdout a stdout fileno\n%s", GREEN, END);
-				if (dup2(cmd.cmd[i].fd_out, STDOUT_FILENO) == -1)
-				{
-					printf("ah\n"); //proteger dup2
-				}
-				close(cmd.cmd[i].fd_out);
-			}
-			else if (cmd.num_of_cmds > 1)
+			if (cmd.num_of_cmds > 1)
 			{
 				if (i == 0 && cmd.cmd[i].fd_out == -1)
 				{
@@ -1168,6 +1150,24 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 						cmd.cmd[i].fd_in = oldpipefd;
 					}
 				}
+			}
+			if (cmd.cmd[i].fd_in != -1)
+			{
+				// fprintf(stderr, "%sdup2 de fdin a stdin fileno\n%s", GREEN, END);
+				if (dup2(cmd.cmd[i].fd_in, STDIN_FILENO) == -1)
+				{
+					printf("ah\n"); //proteger dup2
+				}
+				close(cmd.cmd[i].fd_in);
+			}
+			if (cmd.cmd[i].fd_out != -1)
+			{
+				// fprintf(stderr, "%sdup2 de fdout a stdout fileno\n%s", GREEN, END);
+				if (dup2(cmd.cmd[i].fd_out, STDOUT_FILENO) == -1)
+				{
+					printf("ah\n"); //proteger dup2
+				}
+				close(cmd.cmd[i].fd_out);
 			}
 			if (newpipefd[0] != -1)
 			{

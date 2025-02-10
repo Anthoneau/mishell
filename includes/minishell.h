@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 08:16:17 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 09:39:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,12 @@ enum type
 	R_HEREDOC, //<<
 	R_APPEND, // >>
 	S_QUOTES,
-	D_QUOTES
+	D_QUOTES,
+	PIPE2, //||
+	AND, //&
+	AND2, //&&
+	DOT, //;
+	DOT2 //;;
 };
 
 typedef struct s_token

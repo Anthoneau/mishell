@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 08:16:34 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:09:41 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,22 @@ void	print_syntax_error(char *c)
 
 void	solo_handler(t_token *current)
 {
-	if (current->type != PIPE)
+	if (current->type != PIPE && current->type != PIPE2
+		&& current->type != AND && current->type != AND2
+		&& current->type != DOT && current->type != DOT2)
 		print_syntax_error("newline");
-	else
+	else if (current->type == PIPE)
 		print_syntax_error("|");
+	else if (current->type == PIPE2)
+		print_syntax_error("||");
+	else if (current->type == AND)
+		print_syntax_error("&");
+	else if (current->type == AND2)
+		print_syntax_error("&&");
+	else if (current->type == DOT)
+		print_syntax_error(";");
+	else if (current->type == DOT2)
+		print_syntax_error(";;");
 }
 
 void	error_handler(t_token *current)
@@ -41,6 +53,16 @@ void	error_handler(t_token *current)
 		print_syntax_error("<<");
 	else if (current->next->type == PIPE)
 		print_syntax_error("|");
+	else if (current->next->type == PIPE2)
+		print_syntax_error("||");
+	else if (current->next->type == AND)
+		print_syntax_error("&");
+	else if (current->next->type == AND2)
+		print_syntax_error("&&");
+	else if (current->next->type == DOT)
+		print_syntax_error(";");
+	else if (current->next->type == DOT2)
+		print_syntax_error(";;");
 }
 
 int	forbidden_token(t_token **token)
@@ -51,10 +73,17 @@ int	forbidden_token(t_token **token)
 	while (current)
 	{
 		if (current->type == R_INPUT_TRUC)
-		{
-			printf("minishell: unknown token `<>'\n");
-			return (1);
-		}
+			return (print_error_message(1, NULL, "unknown token `<>'"), 1);
+		if (current->type == PIPE2)
+			return (print_error_message(1, NULL, "unknown token `||'"), 1);
+		if (current->type == AND)
+			return (print_error_message(1, NULL, "unknown token `&'"), 1);
+		if (current->type == AND2)
+			return (print_error_message(1, NULL, "unknown token `&&'"), 1);
+		if (current->type == DOT)
+			return (print_error_message(1, NULL, "unknown token `;'"), 1);
+		if (current->type == DOT2)
+			return (print_error_message(1, NULL, "unknown token `;;'"), 1);
 		if (current->next)
 			current = current->next;
 		else
@@ -68,7 +97,7 @@ int	check_token(t_token **token, char **inpt, char **env)
 	t_token	*current;
 
 	current = *token;
-	if ((current->type != WORD && !current->next) || current->type == PIPE)
+	if ((current->type != WORD && !current->next))
 		return (solo_handler(current), 0);
 	while (current)
 	{
@@ -80,14 +109,14 @@ int	check_token(t_token **token, char **inpt, char **env)
 			return (solo_handler(current), 0);
 		if (current->type == R_HEREDOC)
 		{
-			current->fd = heredoc(current->next->content, current->next->expand, env); // a faire
+			current->fd = heredoc(current->next->content, current->next->expand, env);
 			if (current->fd == -1)
-				return (printf("AAAAAH\n"));
+				return (print_error_message(1, "heredoc", "Cannot allocate memory"), 0);
 		}
 		if (current->next)
 			current = current->next;
 		else if (current->type == PIPE && !end_pipe_handler(&current, inpt, env))
-			return (0);// pipe_handler(token, env); // a faire
+			return (0);
 		else
 			break ;
 	}

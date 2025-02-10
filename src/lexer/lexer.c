@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/07 12:07:14 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:11:52 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ t_token	*lexer(char *inpt)
 	token = NULL;
 	//printf("check quotes\n");
 	if (!inpt || !check_quote(inpt))
-		return (ft_putstr_fd("minishell : quote error\n", 2), NULL);
+		return (print_error_message(1, "quote", "error"), NULL);
 	//printf("lexing...\n");
 	while (inpt[i])
 	{
@@ -159,13 +159,41 @@ t_token	*lexer(char *inpt)
 		if (inpt[i] == '|')
 		{
 			// printf("on trouve un pipe\n");
-			new_token(NULL, PIPE, &token, &i);
+			if (inpt[i + 1] && inpt[i + 1] == '|')
+			{
+				i++;
+				new_token(NULL, PIPE2, &token, &i);
+			}
+			else
+				new_token(NULL, PIPE, &token, &i);
 			i++;
 		}
 		else if (inpt[i] == '>' || inpt[i] == '<')
 		{
 			// printf("on trouve une redir\n");
 			is_redir(inpt, &i, &token);
+		}
+		else if (inpt[i] == '&')
+		{
+			if (inpt[i + 1] && inpt[i + 1] == '&')
+			{
+				i++;
+				new_token(NULL, AND2, &token, &i);
+			}
+			else
+				new_token(NULL, AND, &token, &i);
+			i++;
+		}
+		else if (inpt[i] == ';')
+		{
+			if (inpt[i + 1] && inpt[i + 1] == ';')
+			{
+				i++;
+				new_token(NULL, DOT2, &token, &i);
+			}
+			else
+				new_token(NULL, DOT, &token, &i);
+			i++;
 		}
 		else if (inpt[i])
 		{
