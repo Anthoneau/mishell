@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 17:34:58 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:58:37 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,13 @@ void	join_content(char *word, t_token **token, long *error)
 	free(temp);
 }
 
+int	is_del_mod(char c)
+{
+	if (c == '|' || c == '<' || c == '>' || c == '&' || c == ';')
+		return (1);
+	return (0);
+}
+
 void	create_word(char *inpt, long *i, t_token **token, int expandable, char **env)
 {
 	char	*word;
@@ -89,7 +96,7 @@ void	create_word(char *inpt, long *i, t_token **token, int expandable, char **en
 
 	type = WORD;
 	space = 0;
-	if (*i > 0 && inpt[*i - 1] && inpt[*i - 1] != ' ' && !is_delimitation(inpt[*i -1]))
+	if (*i > 0 && inpt[*i - 1] && inpt[*i - 1] != ' ' && !is_del_mod(inpt[*i -1]))
 	{
 		// printf("inpt[%ld] = : %c\n", *i, inpt[*i]);
 		space = 1;
