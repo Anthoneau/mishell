@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 17:53:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/10 18:10:59 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,12 +140,12 @@ int	is_heredoc(char *inpt, int i)
 {
 	// printf("%s%d\n%s", GREEN, i, END);
 	i--;
-	while (inpt[i] == ' ' && i > 0)
+	while (i > 0 && inpt[i] == ' ')
 		i--;
 	// printf("%s%d\n%s", GREEN, i, END);
-	if (inpt[i] && inpt[i - 1])
+	if (i > 0 && inpt[i] && inpt[i - 1])
 		// printf("%s%c | %c%s\n", GREEN, inpt[i], inpt[i - 1], END);
-	if (inpt[i] && inpt[i] == '<' && inpt[i - 1] && inpt[i - 1] == '<')
+	if (i > 0 && inpt[i] && inpt[i] == '<' && inpt[i - 1] && inpt[i - 1] == '<')
 	{
 		return (1);
 	}
