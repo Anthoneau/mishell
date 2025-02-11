@@ -1,28 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_array.c                                       :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/18 12:40:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 12:19:45 by agoldber         ###   ########.fr       */
+/*   Created: 2025/02/11 12:21:35 by agoldber          #+#    #+#             */
+/*   Updated: 2025/02/11 12:23:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	free_array(char **arr)
+void	ft_free(void *pointer)
 {
-	int	i;
-
-	if (!arr)
+	if (!pointer)
 		return ;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
-	}
-	free(arr);
+	free(pointer);
 }

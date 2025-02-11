@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:16:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:36:48 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:51:44 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ char	**get_word(t_token *current)
 				&& words->prev->type >= R_INPUT))
 		{
 			res[i] = ft_strdup(words->content);
+			if (!res[i])
+				return (free_array(res), NULL);
 			words->explored = 1;
 			i++;
 		}

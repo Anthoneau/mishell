@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 10:31:47 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 12:11:10 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ void	to_expand(char **content, char **env)
 			&& (*content)[i - 1] != '\\')))
 		{
 			i++;
-			printf("on trouve un [$] sans [\\]\n");
 			transform_content(content, &i, env);
 		}
 		else
