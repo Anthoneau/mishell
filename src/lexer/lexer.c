@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 18:10:59 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	init_token_var(t_token *token, int type, t_token *current, t_token **lst)
+void	init_token_var(t_token *token, int type, t_token *curr, t_token **lst)
 {
 	if (type == WORD || type == S_QUOTES || type == D_QUOTES)
 	{
@@ -31,11 +31,11 @@ void	init_token_var(t_token *token, int type, t_token *current, t_token **lst)
 		*lst = token;
 	else
 	{
-		current = *lst;
-		while (current->next)
-			current = current->next;
-		current->next = token;
-		token->prev = current;
+		curr = *lst;
+		while (curr->next)
+			curr = curr->next;
+		curr->next = token;
+		token->prev = curr;
 	}
 }
 
@@ -65,51 +65,6 @@ void	new_token(char	*content, int type, t_token **lst, long *i)
 	init_token_var(token, type, current, lst);
 }
 
-void	is_redir(char *inpt, long *i, t_token **token)
-{
-	(*i)++;
-	if (inpt[(*i) - 1] == '>')
-	{
-		if (inpt[*i] == '>')
-		{
-			new_token(NULL, R_APPEND, token, i);
-			(*i)++;
-		}
-		else
-		{
-			if (inpt[*i] == '|')
-			{
-				new_token(NULL, R_TRUNC_NOCLOBBER, token, i);
-				(*i)++;
-			}
-			else
-			{
-				new_token(NULL, R_TRUNC, token, i);
-			}
-		}
-	}
-	else if (inpt[(*i) - 1] == '<')
-	{
-		if (inpt[*i] == '<')
-		{
-			new_token(NULL, R_HEREDOC, token, i);
-			(*i)++;
-		}
-		else
-		{
-			if (inpt[(*i)] == '>')
-			{
-				new_token(NULL, R_INPUT_TRUC, token, i);
-				(*i)++;
-			}
-			else
-			{
-				new_token(NULL, R_INPUT, token, i);
-			}
-		}
-	}
-}
-
 int	check_quote(char *inpt)
 {
 	int	i;
@@ -136,98 +91,29 @@ int	check_quote(char *inpt)
 	return (1);
 }
 
-int	is_heredoc(char *inpt, int i)
-{
-	// printf("%s%d\n%s", GREEN, i, END);
-	i--;
-	while (i > 0 && inpt[i] == ' ')
-		i--;
-	// printf("%s%d\n%s", GREEN, i, END);
-	if (i > 0 && inpt[i] && inpt[i - 1])
-		// printf("%s%c | %c%s\n", GREEN, inpt[i], inpt[i - 1], END);
-	if (i > 0 && inpt[i] && inpt[i] == '<' && inpt[i - 1] && inpt[i - 1] == '<')
-	{
-		return (1);
-	}
-	return (0);
-}
-
 t_token	*lexer(char *inpt, char **env)
 {
 	t_token	*token;
 	long	i;
-	int		expandable;
 
 	i = 0;
 	token = NULL;
-	//printf("check quotes\n");
 	if (!inpt || !check_quote(inpt))
-		return (print_error_message(1, "quote", "error"), NULL);
-	//printf("lexing...\n");
-	expandable = 1;
+		return (print_error(1, "quote", "error"), NULL);
 	while (inpt[i])
 	{
 		if (i < 0)
 			return (free_token(&token), NULL);
-		//printf("i = %ld\n", i);
-		//printf("inpt[i] == [%c], il reste [%s]\n", inpt[i], inpt + i);
 		while (inpt[i] == ' ')
 			i++;
-		// printf("inpt[i] = %c\n", inpt[i]);
-		// sleep(1);
-		//printf("skip des espaces potentiels\n");
 		if (inpt[i] == '|')
-		{
-			// printf("on trouve un pipe\n");
-			if (inpt[i + 1] && inpt[i + 1] == '|')
-			{
-				i++;
-				new_token(NULL, PIPE2, &token, &i);
-			}
-			else
-				new_token(NULL, PIPE, &token, &i);
-			i++;
-		}
+			pipe_token(inpt, &i, &token);
 		else if (inpt[i] == '>' || inpt[i] == '<')
-		{
-			// printf("on trouve une redir\n");
-			is_redir(inpt, &i, &token);
-		}
-		else if (inpt[i] == '&')
-		{
-			if (inpt[i + 1] && inpt[i + 1] == '&')
-			{
-				i++;
-				new_token(NULL, AND2, &token, &i);
-			}
-			else
-				new_token(NULL, AND, &token, &i);
-			i++;
-		}
-		else if (inpt[i] == ';')
-		{
-			// printf("on trouve un dot\n");
-			if (inpt[i + 1] && inpt[i + 1] == ';')
-			{
-				i++;
-				new_token(NULL, DOT2, &token, &i);
-			}
-			else
-				new_token(NULL, DOT, &token, &i);
-			i++;
-		}
+			redir_token(inpt, &i, &token);
+		else if (inpt[i] == '&' || inpt[i] == ';')
+			weird_token(inpt, &i, &token);
 		else if (inpt[i])
-		{
-			// printf("on trouve un mot\n");
-			if (is_heredoc(inpt, i))
-				expandable = 0;
-			else
-				expandable = 1;
-			create_word(inpt, &i, &token, expandable, env);
-		}
-		// printf("boucle\n");
-		// sleep(1);
+			create_word(inpt, &i, &token, env);
 	}
-	// printf("hein\n");
 	return (token);
 }

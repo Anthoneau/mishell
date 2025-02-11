@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 09:33:50 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,18 +114,18 @@ void	print_open_error(char *content)
 {
 	if (errno == ENOENT)
 		// printf("minishell: %s: No such file or directory\n", content);
-		print_error_message(1, content, "No such file or directory");
+		print_error(1, content, "No such file or directory");
 	else if (errno == EISDIR)
-		print_error_message(1, content, "Is a directory");
+		print_error(1, content, "Is a directory");
 		// printf("minishell: %s: Is a directory\n", content);
 	else if (errno == EACCES)
-		print_error_message(1, content, "Permission denied");
+		print_error(1, content, "Permission denied");
 		// printf("minishell: %s: Permission denied\n", content);
 	else if (errno == EMFILE || errno == ENFILE)
-		print_error_message(1, NULL, "Too many open files");
+		print_error(1, NULL, "Too many open files");
 		// printf("minishell: Too many open files\n");
 	else
-		print_error_message(1, NULL, "Error opening file");
+		print_error(1, NULL, "Error opening file");
 		// printf("minishell: Error opening file\n");
 	// return (0);
 }
@@ -1065,7 +1065,7 @@ void	display_cmds(t_cmd_info cmd)
 	}
 }
 
-void	exec_cmds(t_cmd_info cmd, char **env)
+void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 {
 	char		*path;
 	pid_t		*pid;
@@ -1087,7 +1087,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	if (!pid)
 	{
 		// printf("probleme pid\n");
-		print_error_message(1, "malloc", "Cannot allocate memory");
+		print_error(1, "malloc", "Cannot allocate memory");
 		return ;
 	}
 	// oldpipefd[0] = -1;
@@ -1099,13 +1099,13 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		if (!path)
 		{
 			// printf("probleme path\n");//temp
-			print_error_message(1, "malloc", "Cannot allocate memory");
+			print_error(1, "malloc", "Cannot allocate memory");
 			return ;
 		}
 		if (i < cmd.num_of_cmds - 1 && pipe(newpipefd) == -1) //line 1039
 		{
 			free(path);
-			print_error_message(1, "pipe", "Cannot allocate memory");
+			print_error(1, "pipe", "Cannot allocate memory");
 			// printf("probleme pipe\n");
 			return ;
 		}
@@ -1114,7 +1114,7 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 		if (pid[i_pid] == -1)
 		{
 			free(path);
-			print_error_message(1, "fork", "Cannot allocate memory");
+			print_error(1, "fork", "Cannot allocate memory");
 			// printf("probleme fork\n");//temp
 			return ;
 		}
@@ -1185,13 +1185,14 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 				close(oldpipefd);
 			}
 			free(pid);
+			free_to_free(to_free);
 			// fprintf(stderr, "fd in : %d\n", fcntl(cmd.cmd[i].fd_in, F_GETFD));
 			// fprintf(stderr, "fd out : %d\n", fcntl(cmd.cmd[i].fd_out, F_GETFD));
 			// fprintf(stderr, "pipefd[0] : %d\n", fcntl(newpipefd[0], F_GETFD));
 			// fprintf(stderr, "pipefd[1] : %d\n", fcntl(newpipefd[1], F_GETFD));
 			// fprintf(stderr, "oldpipefd : %d\n", fcntl(oldpipefd, F_GETFD));
 			execve(path, cmd.cmd[i].arg, env);
-			print_error_message(0, cmd.cmd[i].arg[0], "command not found");
+			print_error(0, cmd.cmd[i].arg[0], "command not found");
 			// fprintf(stderr, "%s: command not found\n", arg[0]); //print temporaire
 			free(path);
 			exit(127);
@@ -1240,23 +1241,18 @@ void	exec_cmds(t_cmd_info cmd, char **env)
 	// printf("exit_code : %d\n", exit_code);
 }
 
-int	exec(t_ast *ast, char **env, int m)
+void	exec(t_ast *ast, char **env, t_free to_free)
 {
-	int		status;
 	t_cmd_info	cmd;
 
-	(void)m;
-	(void)env;
-	status = 0;
 	// printf("get cmd array\n");
 	cmd = get_cmd_array(ast);
 	if (!cmd.cmd || !cmd.cmd->arg)
-		return (0);//temp print
+		return ;//temp print
 	// display_cmds(cmd);
 	// printf("exec cmd\n");
-	exec_cmds(cmd, env);
+	exec_cmds(cmd, env, to_free);
 	free_cmd(&cmd);
 	// printf("on entre dans exec_node_ast\n");
 	// status = exec_node_ast(ast, NULL, -1, -1, env, NULL, NULL);
-	return (status);
 }

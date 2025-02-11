@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/07 15:08:21 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ int	count_pipes(t_token *token)
 	return (i);
 }
 
-void	print_error_message(int shell_name, char *content, char *message)
+void	print_error(int shell_name, char *content, char *message)
 {
 	if (shell_name)
 		ft_putstr_fd("minishell: ", 2);
@@ -188,4 +188,31 @@ char	**ft_arrdup(char **arr)
 	}
 	dest[i] = NULL;
 	return (dest);
+}
+
+t_free	get_to_free(char **name, t_token **token, t_ast **ast)
+{
+	t_free	to_free;
+
+	to_free.name = name;
+	to_free.token = token;
+	to_free.ast = ast;
+	return (to_free);
+}
+
+void	free_to_free(t_free to_free)
+{
+	if (*to_free.name)
+		free(*to_free.name);
+	if (*to_free.token)
+		free_token(to_free.token);
+	if (*to_free.name)
+		free_ast(*to_free.ast);
+}
+
+int	is_delimitation(char c)
+{
+	if (c == '|' || c == '<' || c == '>' || c == '\'' || c == '"' || c == '&' || c == ';')
+		return (1);
+	return (0);
 }

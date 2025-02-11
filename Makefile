@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/10 16:29:16 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/11 10:25:14 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,7 +65,7 @@ endef
 
 #SOURCES
 
-LEXER_FILES		=	lexer create_word meta_delimiter
+LEXER_FILES		=	lexer create_word word which_token
 CHECK_TKN_FILES	=	check_token end_pipe heredoc
 EXPANDER_FILES	=	expander to_expand change_content expander_utils
 PARSER_FILES	=	create_ast redir word
@@ -75,7 +75,7 @@ CHECK_TKN		=	${addprefix ${CHECK_TKN_DIR}, ${CHECK_TKN_FILES}}
 EXPANDER		=	${addprefix ${EXPANDER_DIR}, ${EXPANDER_FILES}}
 PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
 
-FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} exec display
+FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} exec display get_name
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}

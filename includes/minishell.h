@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 17:27:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,26 @@ typedef struct s_infile_outfile
 	int	outfile;
 }	t_inout;
 
+typedef struct s_free
+{
+	char	**name;
+	t_token	**token;
+	t_ast	**ast;
+}	t_free;
+
+typedef struct s_data
+{
+	int		error;
+	char	*name;
+	char	*inpt;
+	t_token	*token;
+	t_ast	*ast;
+	char	**env;
+}	t_data;
+
 //UTILS
-void	ft_exit(char *str, int exit_code);
+char	*minishell_name(char **env);
+void	ft_exit(char *str, int exit_code); //?
 void	free_token(t_token **token);
 void	free_error_node(t_ast *node);
 void	free_ast(t_ast *ast);
@@ -111,20 +129,28 @@ void	ft_strcat(char *src, char *dst);
 void	ft_strcat_expander(char *src, char *dst);
 int		count_lst(t_token *lst);
 int		count_pipes(t_token *token);
-void	print_error_message(int shell_name, char *content, char *message);
+void	print_error(int shell_name, char *content, char *message);
 int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
+t_free	get_to_free(char **name, t_token **token, t_ast **ast);
+void	free_to_free(t_free to_free);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
+void	pipe_token(char *inpt, long *i, t_token **token);
+void	redir_token(char *inpt, long *i, t_token **token);
+void	weird_token(char *inpt, long *i, t_token **token);
+void	word_token(char *inpt, long *i, t_token **token, char **env);
 void	new_token(char	*content, int type, t_token **lst, long *i);
-void	create_word(char *inpt, long *i, t_token **token, int expandable, char **env);
+void	create_word(char *inpt, long *i, t_token **token, char **env);
 char	*space_or_meta_char_delimitation(char *inpt, long *flag);
+char	*word_in_delimitation(char *inpt, char c, long *flag);
 
 //CHECK TOKEN
 int		check_token(t_token **token, char **inpt, char **env);
 int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
 
+int		do_heredoc(t_token *cur, char **env);
 int		modify_inpt(char **inpt, char **env);
 int		heredoc(char *delimiter, int expandble, char **env);
 
@@ -146,7 +172,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //EXEC
-int	exec(t_ast *ast, char **env, int n);
+void	exec(t_ast *ast, char **env, t_free to_free);
 
 //DISPLAY
 void	display_token(t_token **token);

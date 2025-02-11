@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:31:01 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 09:01:12 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:31:19 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@ int	find_env_i(char **env, int start, int end, char *env_value)
 		i++;
 		if (!env[i])
 		{
-			// printf("on retourne NULL, on a rien trouve\n");
 			free(env_value);
 			return (-1);
 		}
@@ -40,13 +39,11 @@ char	*find_env_value(char **env, int start, int end, char *content)
 
 	i = start;
 	j = 0;
-	// printf("on malloc de %d\n", end - start);
 	env_value = ft_calloc((end - start) + 1, sizeof(char));
 	if (!env_value)
 		return (NULL);
 	while (i <= end && content[i])
 		env_value[j++] = content[i++];
-	// env_value[j] = '\0';
 	i = find_env_i(env, start, end, env_value);
 	free(env_value);
 	if (i < 0)
@@ -108,8 +105,8 @@ char	*change_content(char *content, int start, int end, char **env)
 
 char	*change_exit_code(char *content, int start, int end)
 {
-	char	*new;
-	char	*value;
+	char		*new;
+	char		*value;
 	extern int	exit_code;
 
 	value = ft_itoa(exit_code);
