@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:32:52 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,9 @@ int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
 t_free	get_to_free(char **name, t_token **token, t_ast **ast);
 void	free_to_free(t_free to_free);
+
+t_token	*good_cur(t_token *current, int side, int type);
+void	put_error_to_one(int *error);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);

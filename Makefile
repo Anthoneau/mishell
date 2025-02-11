@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/11 10:25:14 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/11 11:33:13 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -68,7 +68,7 @@ endef
 LEXER_FILES		=	lexer create_word word which_token
 CHECK_TKN_FILES	=	check_token end_pipe heredoc
 EXPANDER_FILES	=	expander to_expand change_content expander_utils
-PARSER_FILES	=	create_ast redir word
+PARSER_FILES	=	create_ast redir word ast_utils
 
 LEXER			=	${addprefix ${LEXER_DIR}, ${LEXER_FILES}}
 CHECK_TKN		=	${addprefix ${CHECK_TKN_DIR}, ${CHECK_TKN_FILES}}
