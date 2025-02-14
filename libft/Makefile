@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/27 09:39:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/11 12:23:48 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/14 15:11:59 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ COLOR_END	=	\033[0m
 #SOURCES
 
 FTIS_DIR	=	ft_is/
-FTIS		=	ft_isalnum ft_isalpha ft_isascii ft_isdigit ft_isprint ft_isspace
+FTIS		=	ft_isalnum ft_isalpha ft_isascii ft_isdigit ft_isprint ft_isspace ft_isnum
 
 FTMEM_DIR	=	ft_mem/
 FTMEM		=	ft_bzero ft_calloc ft_memchr ft_memcmp ft_memmove ft_memset

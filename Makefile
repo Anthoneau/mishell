@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/11 11:33:13 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/14 14:20:44 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ LEXER_DIR		=	lexer/
 CHECK_TKN_DIR	=	check_token/
 EXPANDER_DIR	=	expander/
 PARSER_DIR		=	parser/
+BUILTINS_DIR	=	builtins/
 SRCS_DIR 		=	src/
 OBJS_DIR		=	obj/
 CC				=	cc
@@ -69,13 +70,15 @@ LEXER_FILES		=	lexer create_word word which_token
 CHECK_TKN_FILES	=	check_token end_pipe heredoc
 EXPANDER_FILES	=	expander to_expand change_content expander_utils
 PARSER_FILES	=	create_ast redir word ast_utils
+BUILTINS_FILES	=	exit
 
 LEXER			=	${addprefix ${LEXER_DIR}, ${LEXER_FILES}}
 CHECK_TKN		=	${addprefix ${CHECK_TKN_DIR}, ${CHECK_TKN_FILES}}
 EXPANDER		=	${addprefix ${EXPANDER_DIR}, ${EXPANDER_FILES}}
 PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
+BUILTINS		=	${addprefix ${BUILTINS_DIR}, ${BUILTINS_FILES}}
 
-FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} exec display get_name
+FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} ${BUILTINS} exec display get_name
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}

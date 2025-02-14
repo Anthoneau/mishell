@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 12:18:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/14 14:55:23 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,9 @@ void	del_backslash(char *content);
 t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error);
 t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
+
+//BUILTINS
+void	exit_builtin(char **arg);
 
 //EXEC
 void	exec(t_ast *ast, char **env, t_free to_free);

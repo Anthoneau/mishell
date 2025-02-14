@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 12:40:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/14 14:55:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*get_full_path(char *path, char *content)
 	char	*temp;
 	char	*res;
 
-	if (*content == '/')
+	if (*content == '/' || *content == '.')
 		return (ft_strdup(content));
 	temp = ft_strjoin(path, "/");
 	if (!temp)
@@ -107,6 +107,7 @@ char	*right_path(char *content, char **env)
 	i = 0;
 	while (!full_path || access(full_path, R_OK) == -1)
 	{
+		// printf("full_path : %s\n", full_path);
 		if (!arr.arr2[i])
 			break ;
 		// if (full_path)
@@ -361,6 +362,44 @@ void	display_cmds(t_cmd_info cmd)
 	}
 }
 
+int	is_buitin(char *content)
+{
+	if (!ft_strncmp(content, "echo", 4))
+		return (printf("echo\n"));
+	else if (!ft_strncmp(content, "cd", 4))
+		return (printf("cd\n"));
+	else if (!ft_strncmp(content, "pwd", 4))
+		return (printf("pwd\n"));
+	else if (!ft_strncmp(content, "export", 4))
+		return (printf("export\n"));
+	else if (!ft_strncmp(content, "unset", 4))
+		return (printf("unset\n"));
+	else if (!ft_strncmp(content, "env", 4))
+		return (printf("env\n"));
+	else if (!ft_strncmp(content, "exit", 4))
+		return (1);
+	return (0);
+}
+
+int	do_builtins(char **arg)
+{
+	if (!ft_strncmp(arg[0], "echo", 4))
+		return (printf("echo\n"));
+	else if (!ft_strncmp(arg[0], "cd", 4))
+		return (printf("cd\n"));
+	else if (!ft_strncmp(arg[0], "pwd", 4))
+		return (printf("pwd\n"));
+	else if (!ft_strncmp(arg[0], "export", 4))
+		return (printf("export\n"));
+	else if (!ft_strncmp(arg[0], "unset", 4))
+		return (printf("unset\n"));
+	else if (!ft_strncmp(arg[0], "env", 4))
+		return (printf("env\n"));
+	else if (!ft_strncmp(arg[0], "exit", 4))
+		exit_builtin(arg);
+	return (0);
+}
+
 void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 {
 	char		*path;
@@ -370,6 +409,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 	int			newpipefd[2];
 	int			oldpipefd;
 	int			status;
+	int			builtin;
 	extern int	exit_code;
 
 	i = 0;
@@ -378,6 +418,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 	newpipefd[0] = -1;
 	newpipefd[1] = -1;
 	oldpipefd = -1;
+	builtin = 0;
 	pid = malloc(cmd.num_of_cmds * sizeof(pid_t));
 	if (!pid)
 	{
@@ -398,84 +439,77 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 			print_error(1, "pipe", "Cannot allocate memory");
 			return ;
 		}
-		pid[i_pid] = fork();
-		if (pid[i_pid] == -1)
+		if (cmd.num_of_cmds == 1 && is_buitin(cmd.cmd[0].arg[0]))
 		{
-			free(path);
-			print_error(1, "fork", "Cannot allocate memory");
-			return ;
+			builtin = 1;
+			exit_code = do_builtins(cmd.cmd[0].arg);
 		}
-		if (!pid[i_pid])
+		else
 		{
-			if (cmd.num_of_cmds > 1)
+			pid[i_pid] = fork();
+			if (pid[i_pid] == -1)
 			{
-				if (i == 0 && cmd.cmd[i].fd_out == -1)
+				free(path);
+				print_error(1, "fork", "Cannot allocate memory");
+				return ;
+			}
+			if (!pid[i_pid])
+			{
+				if (cmd.num_of_cmds > 1)
 				{
-					cmd.cmd[i].fd_out = newpipefd[1];
-				}
-				else if (i == cmd.num_of_cmds - 1 && cmd.cmd[i].fd_in == -1)
-				{
-					cmd.cmd[i].fd_in = oldpipefd;
-				}
-				else if (i > 0 && i < cmd.num_of_cmds - 1)
-				{
-					if (cmd.cmd[i].fd_out == -1)
-					{
+					if (i == 0 && cmd.cmd[i].fd_out == -1)
 						cmd.cmd[i].fd_out = newpipefd[1];
-					}
-					if (cmd.cmd[i].fd_in == -1)
-					{
+					else if (i == cmd.num_of_cmds - 1 && cmd.cmd[i].fd_in == -1)
 						cmd.cmd[i].fd_in = oldpipefd;
+					else if (i > 0 && i < cmd.num_of_cmds - 1)
+					{
+						if (cmd.cmd[i].fd_out == -1)
+							cmd.cmd[i].fd_out = newpipefd[1];
+						if (cmd.cmd[i].fd_in == -1)
+							cmd.cmd[i].fd_in = oldpipefd;
 					}
 				}
-			}
-			if (cmd.cmd[i].fd_in != -1)
-			{
-				if (dup2(cmd.cmd[i].fd_in, STDIN_FILENO) == -1)
+				if (cmd.cmd[i].fd_in != -1)
 				{
-					printf("ah\n"); //proteger dup2
+					if (dup2(cmd.cmd[i].fd_in, STDIN_FILENO) == -1)
+					{
+						free(pid);
+						free_to_free(to_free);
+						free(path);
+						exit(1);
+					}
+					close(cmd.cmd[i].fd_in);
 				}
-				close(cmd.cmd[i].fd_in);
-			}
-			if (cmd.cmd[i].fd_out != -1)
-			{
-				if (dup2(cmd.cmd[i].fd_out, STDOUT_FILENO) == -1)
+				if (cmd.cmd[i].fd_out != -1)
 				{
-					printf("ah\n"); //proteger dup2
+					if (dup2(cmd.cmd[i].fd_out, STDOUT_FILENO) == -1)
+					{
+						free(pid);
+						free_to_free(to_free);
+						free(path);
+						exit(1);
+					}
+					close(cmd.cmd[i].fd_out);
 				}
-				close(cmd.cmd[i].fd_out);
+				if (newpipefd[0] != -1)
+					close(newpipefd[0]);
+				if (newpipefd[1] != -1)
+					close(newpipefd[1]);
+				if (oldpipefd != -1)
+					close(oldpipefd);
+				free(pid);
+				free_to_free(to_free);
+				execve(path, cmd.cmd[i].arg, env);
+				print_error(0, cmd.cmd[i].arg[0], "command not found");
+				free(path);
+				exit(127);
 			}
-			if (newpipefd[0] != -1)
-			{
-				close(newpipefd[0]);
-			}
-			if (newpipefd[1] != -1)
-			{
-				close(newpipefd[1]);
-			}
-			if (oldpipefd != -1)
-			{
-				close(oldpipefd);
-			}
-			free(pid);
-			free_to_free(to_free);
-			execve(path, cmd.cmd[i].arg, env);
-			print_error(0, cmd.cmd[i].arg[0], "command not found");
-			free(path);
-			exit(127);
 		}
 		free(path);
-
 		if (newpipefd[1] != -1)
-		{
 			close(newpipefd[1]);
-		}
-
 		if (oldpipefd != -1)
-		{
 			close(oldpipefd);
-		}
-
 		if (newpipefd[0] != -1)
 		{
 			oldpipefd = dup(newpipefd[0]);
@@ -492,13 +526,16 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 	if (oldpipefd != -1)
 		close(oldpipefd);
 	int j = 0;
-	while (j < i_pid)
+	if (!builtin)
 	{
-		waitpid(pid[j], &status, 0);
-		j++;
+		while (j < i_pid)
+		{
+			waitpid(pid[j], &status, 0);
+			j++;
+		}
+		exit_code = WEXITSTATUS(status);
 	}
 	free(pid);
-	exit_code = WEXITSTATUS(status);
 }
 
 void	exec(t_ast *ast, char **env, t_free to_free)
