@@ -6,22 +6,50 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/13 12:44:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:59:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*find_first_word_to_the_left(t_token *current)
+t_token	*find_redir(t_token *current, int side)
 {
-	while (current->explored != 1)
+	t_token	*check;
+
+	check = current;
+	if (side == 1)
 	{
-		if (current->prev && current->prev->type == 0 && current->explored == 0)
-			current = current->prev;
-		else
-			break ;
+		while (check->explored != 1)
+		{
+			if (check->type >= 2)
+				current = check;
+			if (check->prev)
+				check = check->prev;
+			else
+				break ;
+		}
 	}
-	return (current);	
+	return (current);
+}
+
+t_token	*find_heredoc(t_token *current, int side)
+{
+	t_token	*check;
+
+	check = current;
+	if (side == 1)
+	{
+		while (check->explored != 1)
+		{
+			if (check->type == 6)
+				current = check;
+			if (check->prev)
+				check = check->prev;
+			else
+				break ;
+		}
+	}
+	return (current);
 }
 
 t_token	*search_type(t_token **list, t_token *current, int type, int side)
@@ -30,17 +58,18 @@ t_token	*search_type(t_token **list, t_token *current, int type, int side)
 		return (NULL);
 	if (!current)
 		current = *list;
-	while (current->explored != 1)
+	while (current)
 	{
+		if (current->explored == 1)
+			break ;
 		if (type < 2 && current->type == type && current->explored == 0)
-		{
-			if (side == 0 || type == 1)
-				return (current);
-			else
-				return(find_first_word_to_the_left(current));
-		}
-		else if (type >= 2 && current->type >= 2 && current->explored == 0)
-			return (current);
+			return (good_cur(current, side, type));
+		else if (type == R_HEREDOC && current->type == R_HEREDOC
+			&& current->explored == 0)
+			return (find_heredoc(current, side));
+		else if ((type >= 2 && type != R_HEREDOC) && current->type >= 2
+			&& current->explored == 0)
+			return (find_redir(current, side));
 		if (side == 0 && current->next)
 			current = current->next;
 		else if (side == 1 && current->prev)
@@ -57,13 +86,11 @@ t_ast	*pipe_node(t_token **tokens, t_token *current, int *error)
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
-	{
-		*error = 1;
-		return (NULL);
-	}
+		return (put_error_to_one(error), NULL);
 	current->explored = 1;
 	node->type = PIPE;
 	node->content = NULL;
+	node->arg = NULL;
 	node->top = NULL;
 	node->left = NULL;
 	node->right = NULL;
@@ -80,41 +107,23 @@ t_ast	*pipe_node(t_token **tokens, t_token *current, int *error)
 	return (node);
 }
 
-t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error)
+t_ast	*create_ast(t_token **tokens, t_token *cur, int side, int *error)
 {
 	t_token	*check;
 	t_ast	*node;
 
-	//printf("error == %d\n", *error);
-	//sleep(1);
 	node = NULL;
-	if ((check = search_type(tokens, current, PIPE, after_explored)) && *error == 0)
-	{
-		//printf("on trouve un pipe\n");
-		//sleep(1);
-		//printf("-------------------------------\n\n");
+	if ((check = search_type(tokens, cur, PIPE, side)) && *error == 0)
 		node = pipe_node(tokens, check, error);
-	}
-	else if ((check = search_type(tokens, current, 2, after_explored)) && *error == 0)
-	{
-		//printf("on trouve une redir\n");
-		//sleep(1);
-		//printf("-------------------------------\n\n");
+	else if ((check = search_type(tokens, cur, R_HEREDOC, side)) && *error == 0)
 		node = redir_node(tokens, check, error);
-	}
-	else if ((check = search_type(tokens, current, WORD, after_explored)) && *error == 0)
-	{
-		//printf("on trouve un mot\n");
-		//sleep(1);
-		//printf("-------------------------------\n\n");
+	else if ((check = search_type(tokens, cur, 2, side)) && *error == 0)
+		node = redir_node(tokens, check, error);
+	else if ((check = search_type(tokens, cur, WORD, side)) && *error == 0)
 		node = word_node(check, error);
-	}
-	//printf("on check error\n");
 	if (*error == 1)
-	{
-		//printf("error == 1 donc on free ce qu'il faut");
 		return (free_error_node(node), NULL);
-	}
-	//printf("error == 0\n");
+	if (node)
+		node->done = 0;
 	return (node);
 }

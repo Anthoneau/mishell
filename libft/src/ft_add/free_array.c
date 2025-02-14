@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   free_array.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/11 15:09:01 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/10 08:44:19 by agoldber         ###   ########.fr       */
+/*   Created: 2024/10/18 12:40:53 by agoldber          #+#    #+#             */
+/*   Updated: 2025/02/11 12:19:45 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	ft_putstr_fd(char *s, int fd)
+void	free_array(char **arr)
 {
-	if (!s)
+	int	i;
+
+	if (!arr)
 		return ;
-	while (*s)
-		write(fd, s++, 1);
+	i = 0;
+	while (arr[i])
+	{
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
 }

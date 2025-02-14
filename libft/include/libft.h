@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/04 14:24:10 by agoldber          #+#    #+#             */
-/*   Updated: 2024/10/10 18:34:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:12:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int		ft_isalnum(int c);
 int		ft_isascii(int c);
 int		ft_isprint(int c);
 int		ft_isspace(char *str);
+int		ft_isnum(char *str);
 size_t	ft_strlen(const char *s);
 void	*ft_memset(void *b, int c, size_t len);
 void	ft_bzero(void *s, size_t n);
@@ -98,4 +99,6 @@ int		ft_findchar(char c, char *str);
 char	*get_next_line(int fd);
 //ADDITIONAL FUNCTIONS
 void	ft_swap(int *i, int *j);
+void	free_array(char **arr);
+void	ft_free(void *pointer);
 #endif

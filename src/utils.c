@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/01/16 13:25:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:32:30 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,17 @@ void	free_token(t_token **token)
 		if (current->next)
 			current = current->next;
 		else
-		{
-			free(to_free);
 			break ;
-		}
 		if (to_free)
+		{
+			if (to_free->content)
+				free(to_free->content);
 			free(to_free);
+		}
 	}
+	if (to_free->content)
+		free(to_free->content);
+	free(to_free);
 	token = NULL;
 }
 
@@ -60,6 +64,8 @@ void	free_error_node(t_ast *node)
 {
 	if (node && node->content)
 		free(node->content);
+	if (node && node->arg)
+		free_array(node->arg);
 	if (node)
 		free(node);
 }
@@ -86,11 +92,11 @@ void	ft_strcat(char *src, char *dst)
 		j = 0;
 	else
 		j = ft_strlen(dst);
-	if (j > 0)
-	{
-		dst[j] = ' ';
-		j++;
-	}
+	// if (j > 0)
+	// {
+	// 	dst[j] = ' ';
+	// 	j++;
+	// }
 	//printf("strlen(dst) = %ld\ndst[j] = %c\n", j, dst[j]);
 	//printf("src = %s\n", src);
 	while (src[i])
@@ -129,4 +135,84 @@ void	ft_strcat_expander(char *src, char *dst)
 		i++;
 	}
 	// printf("dst : %s\n", dst);
+}
+
+int	count_pipes(t_token *token)
+{
+	int	i;
+
+	i = 0;
+	while (token)
+	{
+		if (token->type == PIPE)
+			i++;
+		if (token->next)
+			token = token->next;
+		else
+			break ;
+	}
+	return (i);
+}
+
+void	print_error(int shell_name, char *content, char *message)
+{
+	if (shell_name)
+		ft_putstr_fd("minishell: ", 2);
+	if (content)
+	{
+		ft_putstr_fd(content, 2);
+		ft_putstr_fd(": ", 2);
+	}
+	if (message)
+		ft_putendl_fd(message, 2);
+}
+
+char	**ft_arrdup(char **arr)
+{
+	char	**dest;
+	int		i;
+
+	i = 0;
+	while (arr[i])
+		i++;
+	dest = malloc((i + 1) * sizeof(char *));
+	if (!dest)
+		return (NULL);
+	i = 0;
+	while (arr[i])
+	{
+		dest[i] = ft_strdup(arr[i]);
+		if (!dest[i])
+			return (free_array(dest), NULL);
+		i++;
+	}
+	dest[i] = NULL;
+	return (dest);
+}
+
+t_free	get_to_free(char **name, t_token **token, t_ast **ast)
+{
+	t_free	to_free;
+
+	to_free.name = name;
+	to_free.token = token;
+	to_free.ast = ast;
+	return (to_free);
+}
+
+void	free_to_free(t_free to_free)
+{
+	if (*to_free.name)
+		free(*to_free.name);
+	if (*to_free.token)
+		free_token(to_free.token);
+	if (*to_free.name)
+		free_ast(*to_free.ast);
+}
+
+int	is_delimitation(char c)
+{
+	if (c == '|' || c == '<' || c == '>' || c == '\'' || c == '"' || c == '&' || c == ';')
+		return (1);
+	return (0);
 }
