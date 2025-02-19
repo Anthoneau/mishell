@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/14 14:55:23 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:54:22 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <sys/wait.h>
 # include <fcntl.h>
 # include <errno.h>
+# include <signal.h>
 
 # define RED "\e[0;31m"
 # define GREEN "\e[0;32m"
@@ -96,12 +97,6 @@ typedef struct s_command_array_and_info
 	int		num_of_cmds;
 }	t_cmd_info;
 
-typedef struct s_infile_outfile
-{
-	int	infile;
-	int	outfile;
-}	t_inout;
-
 typedef struct s_free
 {
 	char	**name;
@@ -162,7 +157,7 @@ int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
 
 int		do_heredoc(t_token *cur, char **env);
 int		modify_inpt(char **inpt, char **env);
-int		heredoc(char *delimiter, int expandble, char **env);
+int		heredoc(char *delimiter, int expandble, char **env, int fd[2]);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);
@@ -186,6 +181,9 @@ void	exit_builtin(char **arg);
 
 //EXEC
 void	exec(t_ast *ast, char **env, t_free to_free);
+
+//SIGNAL
+void	set_signal_action(int mode);
 
 //DISPLAY
 void	display_token(t_token **token);

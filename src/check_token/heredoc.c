@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/19 17:09:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,14 @@ int	modify_inpt(char **inpt, char **env)
 	return (1);
 }
 
-int	heredoc(char *delimiter, int expand, char **env)
+int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 {
 	char	*inpt;
-	int		fd[2];
+	// int		fd[2];
 
 	inpt = NULL;
-	if (pipe(fd) == -1)
-		return (print_error(1, "pipe", "Cannot allocate memory"), -1);
+	// if (pipe(fd) == -1)
+	// 	return (print_error(1, "pipe", "Cannot allocate memory"), -1);
 	while (1)
 	{
 		inpt = readline("heredoc > ");
@@ -56,7 +56,34 @@ int	heredoc(char *delimiter, int expand, char **env)
 
 int	do_heredoc(t_token *cur, char **env)
 {
-	cur->fd = heredoc(cur->next->content, cur->next->expand, env);
+	pid_t	pid = 0;
+	int		fd[2];
+	int		status;
+
+	pipe(fd);
+	pid = fork();
+	status = 0;
+	set_signal_action(2);
+	if (!pid)
+	{
+		set_signal_action(1);
+		heredoc(cur->next->content, cur->next->expand, env, fd);
+		close(fd[1]);
+		close(fd[0]);
+		exit(0);
+	}
+	waitpid(pid, &status, 0);
+	if (status != 0)
+	{
+		close(fd[1]);
+		close(fd[0]);
+		return (0);
+	}
+	set_signal_action(0);
+	close(fd[1]);
+	cur->fd = fd[0];
+	// close(fd[0]);
+	// cur->fd = heredoc(cur->next->content, cur->next->expand, env);
 	if (cur->fd == -1)
 		return (0);
 	return (1);

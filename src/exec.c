@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/14 14:55:09 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:02:23 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -355,7 +355,17 @@ void	display_cmds(t_cmd_info cmd)
 	while (i < cmd.num_of_cmds)
 	{
 		printf("%scommand[%d] :%s\n", BPURPLE, i, END);
-		printf("%s\tcontent -- %s%s\n", YELLOW, cmd.cmd[i].content, END);
+		if (cmd.cmd[i].content)
+			printf("%s\tcontent -- %s%s\n", YELLOW, cmd.cmd[i].content, END);
+		if (cmd.cmd[i].arg)
+		{
+			int j = 0;
+			while (cmd.cmd[i].arg[j])
+			{
+				printf("%s\targ[%d] -- %s\n%s", YELLOW, j, cmd.cmd[i].arg[j], END);
+				j++;
+			}
+		}
 		printf("%s\tfd_in   -- %d%s\n", YELLOW, cmd.cmd[i].fd_in, END);
 		printf("%s\tfd_out  -- %d%s\n", YELLOW, cmd.cmd[i].fd_out, END);
 		i++;
@@ -364,19 +374,10 @@ void	display_cmds(t_cmd_info cmd)
 
 int	is_buitin(char *content)
 {
-	if (!ft_strncmp(content, "echo", 4))
-		return (printf("echo\n"));
-	else if (!ft_strncmp(content, "cd", 4))
-		return (printf("cd\n"));
-	else if (!ft_strncmp(content, "pwd", 4))
-		return (printf("pwd\n"));
-	else if (!ft_strncmp(content, "export", 4))
-		return (printf("export\n"));
-	else if (!ft_strncmp(content, "unset", 4))
-		return (printf("unset\n"));
-	else if (!ft_strncmp(content, "env", 4))
-		return (printf("env\n"));
-	else if (!ft_strncmp(content, "exit", 4))
+	if (!ft_strncmp(content, "echo", 4) || !ft_strncmp(content, "cd", 4)
+		|| !ft_strncmp(content, "pwd", 4) || !ft_strncmp(content, "export", 4)
+		|| !ft_strncmp(content, "unset", 4) || !ft_strncmp(content, "env", 4)
+		|| !ft_strncmp(content, "exit", 4))
 		return (1);
 	return (0);
 }
@@ -398,6 +399,24 @@ int	do_builtins(char **arg)
 	else if (!ft_strncmp(arg[0], "exit", 4))
 		exit_builtin(arg);
 	return (0);
+}
+
+void	ah(int signal)
+{
+	extern int exit_code;
+
+	if (signal == SIGINT)
+		exit_code = 130;
+}
+
+void	set_signal_exec(void)
+{
+	struct sigaction	act;
+
+	ft_bzero(&act, sizeof(act));
+	act.sa_handler = &ah;
+	sigaction(SIGINT, &act, NULL);
+	sigaction(SIGQUIT, &act, NULL);
 }
 
 void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
@@ -455,6 +474,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 			}
 			if (!pid[i_pid])
 			{
+				set_signal_exec();
 				if (cmd.num_of_cmds > 1)
 				{
 					if (i == 0 && cmd.cmd[i].fd_out == -1)
@@ -499,12 +519,13 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 					close(oldpipefd);
 				free(pid);
 				free_to_free(to_free);
+				// if ()
 				execve(path, cmd.cmd[i].arg, env);
 				print_error(0, cmd.cmd[i].arg[0], "command not found");
 				free(path);
 				exit(127);
 			}
-		}
+		}		
 		free(path);
 		if (newpipefd[1] != -1)
 			close(newpipefd[1]);
@@ -545,6 +566,7 @@ void	exec(t_ast *ast, char **env, t_free to_free)
 	cmd = get_cmd_array(ast);
 	if (!cmd.cmd || !cmd.cmd->arg)
 		return ;//temp print
+	// display_cmds(cmd);
 	exec_cmds(cmd, env, to_free);
 	free_cmd(&cmd);
 }

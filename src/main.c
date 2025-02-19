@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/14 13:03:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/19 18:02:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	set_signal_action(0);
 	data.error = 0;
 	data.name = NULL;
 	data.inpt = NULL;

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:05:41 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:03:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	check_token(t_token **token, char **inpt, char **env)
 		if (cur->type != WORD && cur->type != PIPE && !cur->next)
 			return (solo_handler(cur), 0);
 		if (cur->type == R_HEREDOC && !do_heredoc(cur, env))
-			return (print_error(1, "heredoc", "Cannot allocate memory"), 0);
+			return (0);
 		if (cur->next)
 			cur = cur->next;
 		else if (cur->type == PIPE && !end_pipe_handler(&cur, inpt, env))
