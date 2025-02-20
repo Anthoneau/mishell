@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/19 17:09:27 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:50:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,15 @@ int	modify_inpt(char **inpt, char **env)
 	return (1);
 }
 
+void	print_eof(char *delimiter)
+{
+	print_error(1, "warning", NULL);
+	ft_putstr_fd("here-document at line 1 delimited ", 2);
+	ft_putstr_fd("by end-of-file (wanted `", 2);
+	ft_putstr_fd(delimiter, 2);
+	ft_putstr_fd("')\n", 2);
+}
+
 int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 {
 	char	*inpt;
@@ -40,7 +49,7 @@ int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 		{
 			close(fd[1]);
 			close(fd[0]);
-			return (print_error(1, "malloc", "Cannot allocate memory"), -1);
+			return (print_eof(delimiter), -1);
 		}
 		if (!(ft_strncmp(delimiter, inpt, ft_strlen(delimiter) + 1)))
 			break ;
@@ -59,6 +68,7 @@ int	do_heredoc(t_token *cur, char **env)
 	pid_t	pid = 0;
 	int		fd[2];
 	int		status;
+	extern int	exit_code;
 
 	pipe(fd);
 	pid = fork();
@@ -77,6 +87,7 @@ int	do_heredoc(t_token *cur, char **env)
 	{
 		close(fd[1]);
 		close(fd[0]);
+		exit_code = WEXITSTATUS(status);
 		return (0);
 	}
 	set_signal_action(0);

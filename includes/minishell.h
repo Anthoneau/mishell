@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/19 16:54:22 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/20 12:55:07 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,12 @@ typedef struct s_command_array_and_info
 	t_cmd	*cmd;
 	int		num_of_cmds;
 }	t_cmd_info;
+
+typedef struct s_infile_outfile
+{
+	int	infile;
+	int	outfile;
+}	t_inout;
 
 typedef struct s_free
 {

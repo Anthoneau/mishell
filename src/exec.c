@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/19 16:02:23 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:09:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 char	**get_path(char **full_env)
 {
@@ -401,24 +401,6 @@ int	do_builtins(char **arg)
 	return (0);
 }
 
-void	ah(int signal)
-{
-	extern int exit_code;
-
-	if (signal == SIGINT)
-		exit_code = 130;
-}
-
-void	set_signal_exec(void)
-{
-	struct sigaction	act;
-
-	ft_bzero(&act, sizeof(act));
-	act.sa_handler = &ah;
-	sigaction(SIGINT, &act, NULL);
-	sigaction(SIGQUIT, &act, NULL);
-}
-
 void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 {
 	char		*path;
@@ -446,6 +428,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 	}
 	while (i < cmd.num_of_cmds) //si execve foire, il faut free les tokens, l'ast, etc...
 	{
+		set_signal_action(0);
 		path = right_path(cmd.cmd[i].arg[0], env);
 		if (!path)
 		{
@@ -465,6 +448,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 		}
 		else
 		{
+			set_signal_action(2);
 			pid[i_pid] = fork();
 			if (pid[i_pid] == -1)
 			{
@@ -474,7 +458,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 			}
 			if (!pid[i_pid])
 			{
-				set_signal_exec();
+				// set_signal_action(3);
 				if (cmd.num_of_cmds > 1)
 				{
 					if (i == 0 && cmd.cmd[i].fd_out == -1)
@@ -519,13 +503,19 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 					close(oldpipefd);
 				free(pid);
 				free_to_free(to_free);
-				// if ()
-				execve(path, cmd.cmd[i].arg, env);
+				if (cmd.cmd[i].arg[0] && is_buitin(cmd.cmd[i].arg[0]))
+				{
+					free(path);
+					do_builtins(cmd.cmd[i].arg);
+					exit(0);
+				}
+				else
+					execve(path, cmd.cmd[i].arg, env);
 				print_error(0, cmd.cmd[i].arg[0], "command not found");
 				free(path);
 				exit(127);
 			}
-		}		
+		}
 		free(path);
 		if (newpipefd[1] != -1)
 			close(newpipefd[1]);
@@ -551,6 +541,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 	{
 		while (j < i_pid)
 		{
+			set_signal_action(3);
 			waitpid(pid[j], &status, 0);
 			j++;
 		}

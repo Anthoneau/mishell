@@ -6,18 +6,19 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/19 18:02:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:58:24 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 int	exit_code;
 
-int	do_minishell(t_data d)
+int	do_minishell(t_data d, int eof)
 {
-	while (1)
+	while (eof == 0)
 	{
+		set_signal_action(0);
 		d.name = minishell_name(d.env);
 		if (!d.name)
 			return (1);
@@ -35,9 +36,12 @@ int	do_minishell(t_data d)
 			add_history(d.inpt);
 			free_token(&d.token);
 		}
+		else if (!d.inpt)
+			eof = 1;
 		ft_free(d.inpt);
 		free(d.name);
 	}
+	printf("exit\n");
 	return (0);
 }
 
@@ -55,5 +59,5 @@ int	main(int ac, char **av, char **env)
 	data.ast = NULL;
 	data.env = env;
 	exit_code = 0;
-	return (do_minishell(data));
+	return (do_minishell(data, 0));
 }
