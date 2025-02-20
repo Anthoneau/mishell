@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:36:32 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/20 14:10:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:15:48 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,21 +56,25 @@ void	set_signal_action(int mode)
 	{
 		act_int.sa_handler = &handle_sigint;
 		act_quit.sa_handler = SIG_IGN;
+		// printf("mode 0 -- c pas \\\n");
 	}
 	else if (mode == 1)
 	{
 		act_int.sa_handler = &handle_heredoc;
 		act_quit.sa_handler = SIG_IGN;
+		// printf("mode 1 heredoc\n");
 	}
 	else if (mode == 2)
 	{
 		act_int.sa_handler = &ignore_signal;
 		act_quit.sa_handler = &ignore_signal;
+		// printf("mode 2 -- ignore\n");
 	}
 	else if (mode == 3)
 	{
-		act_int.sa_handler = &handle_execsig;
-		act_quit.sa_handler = &handle_sigint;
+		act_int.sa_handler = &handle_sigint;
+		act_quit.sa_handler = &handle_execsig;
+		// printf("mode 3 -- c et \\ \n");
 	}
 	sigaction(SIGINT, &act_int, NULL);
 	sigaction(SIGQUIT, &act_quit, NULL);
