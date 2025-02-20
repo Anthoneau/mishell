@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/20 13:50:21 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/20 19:26:25 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../includes/minishell.h"
 
 int	modify_inpt(char **inpt, char **env)
 {
@@ -25,10 +25,12 @@ int	modify_inpt(char **inpt, char **env)
 	return (1);
 }
 
-void	print_eof(char *delimiter)
+void	print_eof(char *delimiter, int line)
 {
 	print_error(1, "warning", NULL);
-	ft_putstr_fd("here-document at line 1 delimited ", 2);
+	ft_putstr_fd("here-document at line ", 2);
+	ft_putnbr_fd(line, 2);
+	ft_putstr_fd(" delimited ", 2);
 	ft_putstr_fd("by end-of-file (wanted `", 2);
 	ft_putstr_fd(delimiter, 2);
 	ft_putstr_fd("')\n", 2);
@@ -37,11 +39,10 @@ void	print_eof(char *delimiter)
 int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 {
 	char	*inpt;
-	// int		fd[2];
+	int		line;
 
 	inpt = NULL;
-	// if (pipe(fd) == -1)
-	// 	return (print_error(1, "pipe", "Cannot allocate memory"), -1);
+	line = 0;
 	while (1)
 	{
 		inpt = readline("heredoc > ");
@@ -49,7 +50,7 @@ int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 		{
 			close(fd[1]);
 			close(fd[0]);
-			return (print_eof(delimiter), -1);
+			return (print_eof(delimiter, line), -1);
 		}
 		if (!(ft_strncmp(delimiter, inpt, ft_strlen(delimiter) + 1)))
 			break ;
@@ -57,6 +58,7 @@ int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 			return (print_error(1, "malloc", "Cannot allocate memory"), -1);
 		ft_putendl_fd(inpt, fd[1]);
 		free(inpt);
+		line++;
 	}
 	close(fd[1]);
 	free(inpt);

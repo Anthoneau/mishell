@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/20 14:09:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/20 21:27:20 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -374,29 +374,29 @@ void	display_cmds(t_cmd_info cmd)
 
 int	is_buitin(char *content)
 {
-	if (!ft_strncmp(content, "echo", 4) || !ft_strncmp(content, "cd", 4)
-		|| !ft_strncmp(content, "pwd", 4) || !ft_strncmp(content, "export", 4)
-		|| !ft_strncmp(content, "unset", 4) || !ft_strncmp(content, "env", 4)
-		|| !ft_strncmp(content, "exit", 4))
+	if ((ft_strncmp(content, "echo", 5) == 0) || !ft_strncmp(content, "cd", 3)
+		|| !ft_strncmp(content, "pwd", 4) || !ft_strncmp(content, "export", 7)
+		|| !ft_strncmp(content, "unset", 6) || !ft_strncmp(content, "env", 4)
+		|| !ft_strncmp(content, "exit", 5))
 		return (1);
 	return (0);
 }
 
 int	do_builtins(char **arg)
 {
-	if (!ft_strncmp(arg[0], "echo", 4))
+	if (!ft_strncmp(arg[0], "echo", 5))
 		return (printf("echo\n"));
-	else if (!ft_strncmp(arg[0], "cd", 4))
+	else if (!ft_strncmp(arg[0], "cd", 3))
 		return (printf("cd\n"));
 	else if (!ft_strncmp(arg[0], "pwd", 4))
 		return (printf("pwd\n"));
-	else if (!ft_strncmp(arg[0], "export", 4))
+	else if (!ft_strncmp(arg[0], "export", 7))
 		return (printf("export\n"));
-	else if (!ft_strncmp(arg[0], "unset", 4))
+	else if (!ft_strncmp(arg[0], "unset", 6))
 		return (printf("unset\n"));
 	else if (!ft_strncmp(arg[0], "env", 4))
 		return (printf("env\n"));
-	else if (!ft_strncmp(arg[0], "exit", 4))
+	else if (!ft_strncmp(arg[0], "exit", 5))
 		exit_builtin(arg);
 	return (0);
 }
@@ -423,24 +423,16 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 	pid = malloc(cmd.num_of_cmds * sizeof(pid_t));
 	if (!pid)
 	{
-		print_error(1, "malloc", "Cannot allocate memory");
-		return ;
+		return (print_error(1, "malloc", "Cannot allocate memory"));
 	}
-	while (i < cmd.num_of_cmds) //si execve foire, il faut free les tokens, l'ast, etc...
+	while (i < cmd.num_of_cmds)
 	{
-		set_signal_action(0);
+		// set_signal_action(0);
 		path = right_path(cmd.cmd[i].arg[0], env);
 		if (!path)
-		{
-			print_error(1, "malloc", "Cannot allocate memory");
-			return ;
-		}
-		if (i < cmd.num_of_cmds - 1 && pipe(newpipefd) == -1) //line 1039
-		{
-			free(path);
-			print_error(1, "pipe", "Cannot allocate memory");
-			return ;
-		}
+			return (print_error(1, "malloc", "Cannot allocate memory"));
+		if (i < cmd.num_of_cmds - 1 && pipe(newpipefd) == -1)
+			return (free(path), print_error(1, "pipe", "Cannot allocate memory"));
 		if (cmd.num_of_cmds == 1 && is_buitin(cmd.cmd[0].arg[0]))
 		{
 			builtin = 1;
@@ -557,7 +549,7 @@ void	exec(t_ast *ast, char **env, t_free to_free)
 	cmd = get_cmd_array(ast);
 	if (!cmd.cmd || !cmd.cmd->arg)
 		return ;//temp print
-	// display_cmds(cmd);
+	display_cmds(cmd);
 	exec_cmds(cmd, env, to_free);
 	free_cmd(&cmd);
 }
