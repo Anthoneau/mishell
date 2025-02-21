@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/20 21:27:20 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:23:22 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -450,7 +450,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 			}
 			if (!pid[i_pid])
 			{
-				// set_signal_action(3);
+				set_signal_action(3);
 				if (cmd.num_of_cmds > 1)
 				{
 					if (i == 0 && cmd.cmd[i].fd_out == -1)
@@ -533,7 +533,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 	{
 		while (j < i_pid)
 		{
-			set_signal_action(3);
+			// set_signal_action(2);
 			waitpid(pid[j], &status, 0);
 			j++;
 		}
@@ -549,7 +549,7 @@ void	exec(t_ast *ast, char **env, t_free to_free)
 	cmd = get_cmd_array(ast);
 	if (!cmd.cmd || !cmd.cmd->arg)
 		return ;//temp print
-	display_cmds(cmd);
+	// display_cmds(cmd);
 	exec_cmds(cmd, env, to_free);
 	free_cmd(&cmd);
 }

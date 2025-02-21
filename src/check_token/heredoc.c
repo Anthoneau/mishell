@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/20 19:26:25 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:22:47 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,9 +73,9 @@ int	do_heredoc(t_token *cur, char **env)
 	extern int	exit_code;
 
 	pipe(fd);
+	set_signal_action(2);
 	pid = fork();
 	status = 0;
-	set_signal_action(2);
 	if (!pid)
 	{
 		set_signal_action(1);
