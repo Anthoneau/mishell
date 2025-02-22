@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:32:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 19:54:26 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -215,4 +215,23 @@ int	is_delimitation(char c)
 	if (c == '|' || c == '<' || c == '>' || c == '\'' || c == '"' || c == '&' || c == ';')
 		return (1);
 	return (0);
+}
+
+void	free_cmd(t_cmd_info *cmd)
+{
+	int	i;
+
+	if (!cmd || !cmd->cmd)
+		return ;
+	i = 0;
+	while (cmd->cmd && i < cmd->num_of_cmds)
+	{
+		if (cmd->cmd[i].content)
+			free(cmd->cmd[i].content);
+		if (cmd->cmd[i].arg)
+			free_array(cmd->cmd[i].arg);
+		i++;
+	}
+	free(cmd->cmd);
+	cmd->cmd = NULL;
 }

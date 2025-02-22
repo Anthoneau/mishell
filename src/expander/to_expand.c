@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/14 12:56:14 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 21:42:31 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*supp_content(char *content, int start, int end)
 
 	i = 0;
 	j = 0;
-	new = malloc(ft_strlen(content) - (end - start));
+	new = ft_calloc(ft_strlen(content) - (end - start) + 1, sizeof(char));
 	if (!new)
 		return (NULL);
 	while (content[i])
@@ -32,7 +32,6 @@ char	*supp_content(char *content, int start, int end)
 		}
 		i++;
 	}
-	new[j] = '\0';
 	free(content);
 	content = NULL;
 	return (new);
@@ -70,7 +69,7 @@ void	to_expand(char **content, char **env)
 	int		i;
 
 	i = 0;
-	while ((*content)[i])
+	while ((*content) && (*content)[i])
 	{
 		if ((*content)[i] == '$' && (i == 0 || ((*content)[i - 1]
 			&& (*content)[i - 1] != '\\' && (*content)[i - 1] != '\'')))

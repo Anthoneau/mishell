@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/20 12:55:07 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 21:58:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,17 @@ typedef struct s_data
 	char	**env;
 }	t_data;
 
+typedef struct s_exec
+{
+	char	*path;
+	pid_t	*pid;
+	int		i_pid;
+	int		i;
+	int		newpipefd[2];
+	int		oldpipefd;
+	int		builtin;
+}	t_exec;
+
 typedef struct s_array
 {
 	char	*arr1;
@@ -142,6 +153,7 @@ int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
 t_free	get_to_free(char **name, t_token **token, t_ast **ast);
 void	free_to_free(t_free to_free);
+void	free_cmd(t_cmd_info *cmd);
 
 t_token	*good_cur(t_token *current, int side, int type);
 void	put_error_to_one(int *error);
@@ -183,7 +195,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
-void	exit_builtin(char **arg);
+void	exit_builtin(char **arg, t_cmd_info *cmd);
 
 //EXEC
 void	exec(t_ast *ast, char **env, t_free to_free);

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/21 14:22:47 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 21:39:07 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 	}
 	close(fd[1]);
 	free(inpt);
-	return (fd[0]);
+	return (0);
 }
 
 int	do_heredoc(t_token *cur, char **env)
@@ -72,17 +72,23 @@ int	do_heredoc(t_token *cur, char **env)
 	int		status;
 	extern int	exit_code;
 
-	pipe(fd);
+	if (pipe(fd) == -1)
+		return (print_error(1, "heredoc", "Cannot allocate memory"), 0);
 	set_signal_action(2);
 	pid = fork();
+	if (pid == -1)
+		return (print_error(1, "heredoc", "Cannot allocate memory"), 0);
 	status = 0;
 	if (!pid)
 	{
+		int	nbr;
+
+		nbr = 0;
 		set_signal_action(1);
-		heredoc(cur->next->content, cur->next->expand, env, fd);
+		nbr = heredoc(cur->next->content, cur->next->expand, env, fd);
 		close(fd[1]);
 		close(fd[0]);
-		exit(0);
+		exit(nbr);
 	}
 	waitpid(pid, &status, 0);
 	if (status != 0)

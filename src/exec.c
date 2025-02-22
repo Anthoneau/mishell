@@ -6,11 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/21 14:23:22 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 23:06:23 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+extern int	exit_code;
 
 char	**get_path(char **full_env)
 {
@@ -315,25 +317,6 @@ size_t	get_cmd_number(t_ast *ast)
 	return (number);
 }
 
-void	free_cmd(t_cmd_info *cmd)
-{
-	int	i;
-
-	if (!cmd || !cmd->cmd)
-		return ;
-	i = 0;
-	while (cmd->cmd && i < cmd->num_of_cmds)
-	{
-		if (cmd->cmd[i].content) //ligne 745
-			free(cmd->cmd[i].content);
-		if (cmd->cmd[i].arg)
-			free_array(cmd->cmd[i].arg);
-		i++;
-	}
-	free(cmd->cmd);
-	cmd->cmd = NULL;
-}
-
 t_cmd_info	get_cmd_array(t_ast *ast)
 {
 	t_cmd_info	cmd;
@@ -372,7 +355,7 @@ void	display_cmds(t_cmd_info cmd)
 	}
 }
 
-int	is_buitin(char *content)
+int	is_builtin(char *content)
 {
 	if ((ft_strncmp(content, "echo", 5) == 0) || !ft_strncmp(content, "cd", 3)
 		|| !ft_strncmp(content, "pwd", 4) || !ft_strncmp(content, "export", 7)
@@ -382,7 +365,7 @@ int	is_buitin(char *content)
 	return (0);
 }
 
-int	do_builtins(char **arg)
+int	do_builtins(char **arg, t_cmd_info *cmd)
 {
 	if (!ft_strncmp(arg[0], "echo", 5))
 		return (printf("echo\n"));
@@ -397,150 +380,335 @@ int	do_builtins(char **arg)
 	else if (!ft_strncmp(arg[0], "env", 4))
 		return (printf("env\n"));
 	else if (!ft_strncmp(arg[0], "exit", 5))
-		exit_builtin(arg);
+		exit_builtin(arg, cmd);
 	return (0);
 }
 
-void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
+void	signal_exit_code(int status, t_cmd_info cmd)
 {
-	char		*path;
-	pid_t		*pid;
-	int			i_pid;
-	int			i;
-	int			newpipefd[2];
-	int			oldpipefd;
+	extern int	exit_code;
+	int			sig;
+
+	sig = WTERMSIG(status);
+	if (sig == SIGINT)
+	{
+		ft_putchar_fd('\n', 1);
+		exit_code = 130;
+	}
+	else if (sig == SIGQUIT)
+	{
+		if (cmd.num_of_cmds == 1)
+			ft_putstr_fd("Quit (core dumped)\n", 1);
+		exit_code = 131;
+	}
+}
+
+void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmd_info cmd)
+{
+	int			j;
 	int			status;
-	int			builtin;
 	extern int	exit_code;
 
-	i = 0;
-	i_pid = 0;
 	status = 0;
-	newpipefd[0] = -1;
-	newpipefd[1] = -1;
-	oldpipefd = -1;
-	builtin = 0;
-	pid = malloc(cmd.num_of_cmds * sizeof(pid_t));
-	if (!pid)
-	{
-		return (print_error(1, "malloc", "Cannot allocate memory"));
-	}
-	while (i < cmd.num_of_cmds)
-	{
-		// set_signal_action(0);
-		path = right_path(cmd.cmd[i].arg[0], env);
-		if (!path)
-			return (print_error(1, "malloc", "Cannot allocate memory"));
-		if (i < cmd.num_of_cmds - 1 && pipe(newpipefd) == -1)
-			return (free(path), print_error(1, "pipe", "Cannot allocate memory"));
-		if (cmd.num_of_cmds == 1 && is_buitin(cmd.cmd[0].arg[0]))
-		{
-			builtin = 1;
-			exit_code = do_builtins(cmd.cmd[0].arg);
-		}
-		else
-		{
-			set_signal_action(2);
-			pid[i_pid] = fork();
-			if (pid[i_pid] == -1)
-			{
-				free(path);
-				print_error(1, "fork", "Cannot allocate memory");
-				return ;
-			}
-			if (!pid[i_pid])
-			{
-				set_signal_action(3);
-				if (cmd.num_of_cmds > 1)
-				{
-					if (i == 0 && cmd.cmd[i].fd_out == -1)
-						cmd.cmd[i].fd_out = newpipefd[1];
-					else if (i == cmd.num_of_cmds - 1 && cmd.cmd[i].fd_in == -1)
-						cmd.cmd[i].fd_in = oldpipefd;
-					else if (i > 0 && i < cmd.num_of_cmds - 1)
-					{
-						if (cmd.cmd[i].fd_out == -1)
-							cmd.cmd[i].fd_out = newpipefd[1];
-						if (cmd.cmd[i].fd_in == -1)
-							cmd.cmd[i].fd_in = oldpipefd;
-					}
-				}
-				if (cmd.cmd[i].fd_in != -1)
-				{
-					if (dup2(cmd.cmd[i].fd_in, STDIN_FILENO) == -1)
-					{
-						free(pid);
-						free_to_free(to_free);
-						free(path);
-						exit(1);
-					}
-					close(cmd.cmd[i].fd_in);
-				}
-				if (cmd.cmd[i].fd_out != -1)
-				{
-					if (dup2(cmd.cmd[i].fd_out, STDOUT_FILENO) == -1)
-					{
-						free(pid);
-						free_to_free(to_free);
-						free(path);
-						exit(1);
-					}
-					close(cmd.cmd[i].fd_out);
-				}
-				if (newpipefd[0] != -1)
-					close(newpipefd[0]);
-				if (newpipefd[1] != -1)
-					close(newpipefd[1]);
-				if (oldpipefd != -1)
-					close(oldpipefd);
-				free(pid);
-				free_to_free(to_free);
-				if (cmd.cmd[i].arg[0] && is_buitin(cmd.cmd[i].arg[0]))
-				{
-					free(path);
-					do_builtins(cmd.cmd[i].arg);
-					exit(0);
-				}
-				else
-					execve(path, cmd.cmd[i].arg, env);
-				print_error(0, cmd.cmd[i].arg[0], "command not found");
-				free(path);
-				exit(127);
-			}
-		}
-		free(path);
-		if (newpipefd[1] != -1)
-			close(newpipefd[1]);
-		if (oldpipefd != -1)
-			close(oldpipefd);
-		if (newpipefd[0] != -1)
-		{
-			oldpipefd = dup(newpipefd[0]);
-			close(newpipefd[0]);
-			newpipefd[0] = -1;
-		}
-		if (cmd.cmd[i].fd_in != -1)
-			close(cmd.cmd[i].fd_in);
-		if (cmd.cmd[i].fd_out != -1)
-			close(cmd.cmd[i].fd_out);
-		i++;
-		i_pid++;
-	}
-	if (oldpipefd != -1)
-		close(oldpipefd);
-	int j = 0;
+	j = 0;
+	exit_code = 130;
 	if (!builtin)
 	{
 		while (j < i_pid)
 		{
-			// set_signal_action(2);
 			waitpid(pid[j], &status, 0);
+			if (WIFSIGNALED(status))
+				return (signal_exit_code(status, cmd));
 			j++;
 		}
 		exit_code = WEXITSTATUS(status);
 	}
-	free(pid);
 }
+
+t_exec	init_exec(t_cmd_info cmd)
+{
+	t_exec	exec;
+
+	exec.i = 0;
+	exec.i_pid = 0;
+	exec.newpipefd[0] = -1;
+	exec.newpipefd[1] = -1;
+	exec.oldpipefd = -1;
+	exec.builtin = 0;
+	exec.pid = malloc(cmd.num_of_cmds * sizeof(pid_t));
+	return (exec);
+}
+
+void	exec_builtins(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
+{
+	(void)env;
+	exec->builtin = 1;
+	if (!ft_strncmp(cmd->cmd[0].arg[0], "exit", 5))
+	{
+		free(exec->path);
+		free(exec->pid);
+		free_to_free(to_free);
+		// free(env);
+	}
+	exit_code = do_builtins(cmd->cmd[0].arg, cmd);
+}
+
+void	child_process(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
+{
+	if (cmd->num_of_cmds > 1)
+	{
+		if (exec->i == 0 && cmd->cmd[exec->i].fd_out == -1)
+			cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
+		else if (exec->i == cmd->num_of_cmds - 1 && cmd->cmd[exec->i].fd_in == -1)
+			cmd->cmd[exec->i].fd_in = exec->oldpipefd;
+		else if (exec->i > 0 && exec->i < cmd->num_of_cmds - 1)
+		{
+			if (cmd->cmd[exec->i].fd_out == -1)
+				cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
+			if (cmd->cmd[exec->i].fd_in == -1)
+				cmd->cmd[exec->i].fd_in = exec->oldpipefd;
+		}
+	}
+	if (cmd->cmd[exec->i].fd_in != -1)
+	{
+		if (dup2(cmd->cmd[exec->i].fd_in, STDIN_FILENO) == -1)
+		{
+			free(exec->pid);
+			free_to_free(to_free);
+			free(exec->path);
+			exit(1);
+		}
+		close(cmd->cmd[exec->i].fd_in);
+	}
+	if (cmd->cmd[exec->i].fd_out != -1)
+	{
+		if (dup2(cmd->cmd[exec->i].fd_out, STDOUT_FILENO) == -1)
+		{
+			free(exec->pid);
+			free_to_free(to_free);
+			free(exec->path);
+			exit(1);
+		}
+		close(cmd->cmd[exec->i].fd_out);
+	}
+	if (exec->newpipefd[0] != -1)
+		close(exec->newpipefd[0]);
+	if (exec->newpipefd[1] != -1)
+		close(exec->newpipefd[1]);
+	if (exec->oldpipefd != -1)
+		close(exec->oldpipefd);
+	free(exec->pid);
+	free_to_free(to_free);
+	if (cmd->cmd[exec->i].arg[0] && is_builtin(cmd->cmd[exec->i].arg[0]))
+	{
+		free(exec->path);
+		do_builtins(cmd->cmd[exec->i].arg, cmd);
+		exit(0);
+	}
+	else
+		execve(exec->path, cmd->cmd[exec->i].arg, env);
+	print_error(0, cmd->cmd[exec->i].arg[0], "command not found");
+	free(exec->path);
+	exit(127);
+}
+
+void	parent(t_exec *exec, t_cmd_info *cmd)
+{
+	free(exec->path);
+	if (exec->newpipefd[1] != -1)
+		close(exec->newpipefd[1]);
+	if (exec->oldpipefd != -1)
+		close(exec->oldpipefd);
+	if (exec->newpipefd[0] != -1)
+	{
+		exec->oldpipefd = dup(exec->newpipefd[0]);
+		close(exec->newpipefd[0]);
+		exec->newpipefd[0] = -1;
+	}
+	if (cmd->cmd[exec->i].fd_in != -1)
+		close(cmd->cmd[exec->i].fd_in);
+	if (cmd->cmd[exec->i].fd_out != -1)
+		close(cmd->cmd[exec->i].fd_out);
+}
+
+int	real_execution(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
+{
+	if (cmd->num_of_cmds == 1 && is_builtin(cmd->cmd[0].arg[0]))
+		exec_builtins(exec, cmd, to_free, env);
+	else
+	{
+		set_signal_action(2);
+		exec->pid[exec->i_pid] = fork();
+		if (exec->pid[exec->i_pid] == -1)
+		{
+			free(exec->path);
+			print_error(1, "fork", "Cannot allocate memory");
+			return (0);
+		}
+		if (!exec->pid[exec->i_pid])
+			child_process(exec, cmd, to_free, env);
+	}
+	return (1);
+}
+
+void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
+{
+	t_exec		exec;
+
+	exec = init_exec(cmd);
+	if (!exec.pid)
+		return (print_error(1, "malloc", "Cannot allocate memory"));
+	while (exec.i < cmd.num_of_cmds)
+	{
+		exec.path = right_path(cmd.cmd[exec.i].arg[0], env);
+		if (!exec.path)
+			return (print_error(1, "malloc", "Cannot allocate memory"));
+		if (exec.i < cmd.num_of_cmds - 1 && pipe(exec.newpipefd) == -1)
+			return (free(exec.path), print_error(1, "pipe", "Cannot allocate memory"));
+		if (!real_execution(&exec, &cmd, to_free, env))
+			return ;
+		parent(&exec, &cmd);
+		exec.i++;
+		exec.i_pid++;
+	}
+	if (exec.oldpipefd != -1)
+		close(exec.oldpipefd);
+	wait_cmds(exec.builtin, exec.pid, exec.i_pid, cmd);
+	free(exec.pid);
+}
+
+// void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
+// {
+// 	// pid_t		*pid;
+// 	t_exec		exec;
+// 	extern int	exit_code;
+
+// 	// exec.i = 0;
+// 	// exec.i_pid = 0;
+// 	// exec.newpipefd[0] = -1;
+// 	// exec.newpipefd[1] = -1;
+// 	// exec.oldpipefd = -1;
+// 	// exec.builtin = 0;
+// 	// exec.pid = malloc(cmd.num_of_cmds * sizeof(pid_t));
+// 	// if (!exec.pid)
+// 	// {
+// 	// 	return (print_error(1, "malloc", "Cannot allocate memory"));
+// 	// }
+// 	exec = init_exec(cmd);
+// 	if (!exec.pid)
+// 		return (print_error(1, "malloc", "Cannot allocate memory"));
+// 	while (exec.i < cmd.num_of_cmds)
+// 	{
+// 		// set_signal_action(0);
+// 		exec.path = right_path(cmd.cmd[exec.i].arg[0], env);
+// 		if (!exec.path)
+// 			return (print_error(1, "malloc", "Cannot allocate memory"));
+// 		if (exec.i < cmd.num_of_cmds - 1 && pipe(exec.newpipefd) == -1)
+// 			return (free(exec.path), print_error(1, "pipe", "Cannot allocate memory"));
+// 		if (cmd.num_of_cmds == 1 && is_builtin(cmd.cmd[0].arg[0]))
+// 		{
+// 			exec.builtin = 1;
+// 			if (!ft_strncmp(cmd.cmd[0].arg[0], "exit", 5))
+// 			{
+// 				free(exec.path);
+// 				free(exec.pid);
+// 				free_to_free(to_free);
+// 				// free(env);
+// 			}
+// 			exit_code = do_builtins(cmd.cmd[0].arg, &cmd);
+// 		}
+// 		else
+// 		{
+// 			set_signal_action(2);
+// 			exec.pid[exec.i_pid] = fork();
+// 			if (exec.pid[exec.i_pid] == -1)
+// 			{
+// 				free(exec.path);
+// 				print_error(1, "fork", "Cannot allocate memory");
+// 				return ;
+// 			}
+// 			if (!exec.pid[exec.i_pid])
+// 			{
+// 				if (cmd.num_of_cmds > 1)
+// 				{
+// 					if (exec.i == 0 && cmd.cmd[exec.i].fd_out == -1)
+// 						cmd.cmd[exec.i].fd_out = exec.newpipefd[1];
+// 					else if (exec.i == cmd.num_of_cmds - 1 && cmd.cmd[exec.i].fd_in == -1)
+// 						cmd.cmd[exec.i].fd_in = exec.oldpipefd;
+// 					else if (exec.i > 0 && exec.i < cmd.num_of_cmds - 1)
+// 					{
+// 						if (cmd.cmd[exec.i].fd_out == -1)
+// 							cmd.cmd[exec.i].fd_out = exec.newpipefd[1];
+// 						if (cmd.cmd[exec.i].fd_in == -1)
+// 							cmd.cmd[exec.i].fd_in = exec.oldpipefd;
+// 					}
+// 				}
+// 				if (cmd.cmd[exec.i].fd_in != -1)
+// 				{
+// 					if (dup2(cmd.cmd[exec.i].fd_in, STDIN_FILENO) == -1)
+// 					{
+// 						free(exec.pid);
+// 						free_to_free(to_free);
+// 						free(exec.path);
+// 						exit(1);
+// 					}
+// 					close(cmd.cmd[exec.i].fd_in);
+// 				}
+// 				if (cmd.cmd[exec.i].fd_out != -1)
+// 				{
+// 					if (dup2(cmd.cmd[exec.i].fd_out, STDOUT_FILENO) == -1)
+// 					{
+// 						free(exec.pid);
+// 						free_to_free(to_free);
+// 						free(exec.path);
+// 						exit(1);
+// 					}
+// 					close(cmd.cmd[exec.i].fd_out);
+// 				}
+// 				if (exec.newpipefd[0] != -1)
+// 					close(exec.newpipefd[0]);
+// 				if (exec.newpipefd[1] != -1)
+// 					close(exec.newpipefd[1]);
+// 				if (exec.oldpipefd != -1)
+// 					close(exec.oldpipefd);
+// 				free(exec.pid);
+// 				free_to_free(to_free);
+// 				if (cmd.cmd[exec.i].arg[0] && is_builtin(cmd.cmd[exec.i].arg[0]))
+// 				{
+// 					free(exec.path);
+// 					do_builtins(cmd.cmd[exec.i].arg, &cmd);
+// 					exit(0);
+// 				}
+// 				else
+// 					execve(exec.path, cmd.cmd[exec.i].arg, env);
+// 				print_error(0, cmd.cmd[exec.i].arg[0], "command not found");
+// 				free(exec.path);
+// 				exit(127);
+// 			}
+// 		}
+// 		free(exec.path);
+// 		if (exec.newpipefd[1] != -1)
+// 			close(exec.newpipefd[1]);
+// 		if (exec.oldpipefd != -1)
+// 			close(exec.oldpipefd);
+// 		if (exec.newpipefd[0] != -1)
+// 		{
+// 			exec.oldpipefd = dup(exec.newpipefd[0]);
+// 			close(exec.newpipefd[0]);
+// 			exec.newpipefd[0] = -1;
+// 		}
+// 		if (cmd.cmd[exec.i].fd_in != -1)
+// 			close(cmd.cmd[exec.i].fd_in);
+// 		if (cmd.cmd[exec.i].fd_out != -1)
+// 			close(cmd.cmd[exec.i].fd_out);
+// 		exec.i++;
+// 		exec.i_pid++;
+// 	}
+// 	if (exec.oldpipefd != -1)
+// 		close(exec.oldpipefd);
+// 	wait_cmds(exec.builtin, exec.pid, exec.i_pid, cmd);
+// 	free(exec.pid);
+// }
 
 void	exec(t_ast *ast, char **env, t_free to_free)
 {

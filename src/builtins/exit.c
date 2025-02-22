@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:17:41 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/14 15:14:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 19:20:54 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exit_builtin(char **arg)
+void	exit_builtin(char **arg, t_cmd_info *cmd)
 {
 	extern int	exit_code;
 	__uint8_t		nbr;
@@ -29,5 +29,6 @@ void	exit_builtin(char **arg)
 	if (arg[2])
 		return (print_error(1, "exit", "too many arguments"));
 	nbr = ft_atoi(arg[1]);
+	free_cmd(cmd);
 	exit(nbr);
 }

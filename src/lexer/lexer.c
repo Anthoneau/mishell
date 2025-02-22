@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 20:32:32 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	new_token(char	*content, int type, t_token **lst, long *i)
 	if (!token)
 	{
 		*i = -10;
-		return ;
+		return (print_error(1, "malloc", "Cannot allocate memory"));
 	}
 	if (content)
 	{
@@ -56,7 +56,7 @@ void	new_token(char	*content, int type, t_token **lst, long *i)
 		if (!token->content)
 		{
 			*i = -10;
-			return ;
+			return (print_error(1, "malloc", "Cannot allocate memory"));
 		}
 	}
 	else

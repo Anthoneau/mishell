@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:40:23 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:03:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 21:34:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,73 @@ char	*join_inpts(char *first_inpt, char *inpt)
 	return (res);
 }
 
+int	get_inpt_content(int fd[2])
+{
+	char	*inpt;
+
+	inpt = NULL;
+	while (1)
+	{
+		inpt = readline("pipe > ");
+		if (!inpt)
+		{
+			close(fd[1]);
+			close(fd[0]);
+			return (print_error(1, "malloc", "Cannot allocate memory"), -1);
+		}
+		if (*inpt && !ft_isspace(inpt))
+		{
+			ft_putstr_fd(inpt, fd[1]);
+			break ;
+		}
+		free(inpt);
+	}
+	close(fd[1]);
+	free(inpt);
+	return (0);
+}
+
+char	*get_inpt(void)
+{
+	int			fd[2];
+	pid_t		pid;
+	int			status;
+	extern int	exit_code;
+	char		*res;
+
+	status = 0;
+	if (pipe(fd) == -1)
+		return (print_error(1, "pipe", "Cannot allocate memory"), NULL);
+	set_signal_action(2);
+	pid = fork();
+	if (pid == -1)
+		return (print_error(1, "pipe", "Cannot allocate memory"), NULL);
+	if (!pid)
+	{
+		int	nbr;
+
+		nbr = 0;
+		set_signal_action(1);
+		nbr = get_inpt_content(fd);
+		close(fd[0]);
+		close(fd[1]);
+		exit (nbr);
+	}
+	waitpid(pid, &status, 0);
+	if (status != 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		exit_code = WEXITSTATUS(status);
+		return (NULL);
+	}
+	set_signal_action(0);
+	close(fd[1]);
+	res = get_next_line(fd[0]);
+	close(fd[0]);
+	return (res);
+}
+
 int	end_pipe_handler(t_token **last_token, char **first_inpt, char **env)
 {
 	char	*inpt;
@@ -43,7 +110,9 @@ int	end_pipe_handler(t_token **last_token, char **first_inpt, char **env)
 	t_token	*token;
 
 	replace_inpt = NULL;
-	inpt = readline("pipe > ");
+	inpt = get_inpt();
+	if (!inpt)
+		return (0);
 	token = lexer(inpt, env);
 	if (!token || !check_token(&token, &inpt, env))
 	{
