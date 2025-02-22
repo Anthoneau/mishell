@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 23:06:23 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/22 23:13:20 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -453,21 +453,37 @@ void	exec_builtins(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
 	exit_code = do_builtins(cmd->cmd[0].arg, cmd);
 }
 
+void	pipe_redirection(t_exec *exec, t_cmd_info *cmd)
+{
+	if (exec->i == 0 && cmd->cmd[exec->i].fd_out == -1)
+		cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
+	else if (exec->i == cmd->num_of_cmds - 1 && cmd->cmd[exec->i].fd_in == -1)
+		cmd->cmd[exec->i].fd_in = exec->oldpipefd;
+	else if (exec->i > 0 && exec->i < cmd->num_of_cmds - 1)
+	{
+		if (cmd->cmd[exec->i].fd_out == -1)
+			cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
+		if (cmd->cmd[exec->i].fd_in == -1)
+			cmd->cmd[exec->i].fd_in = exec->oldpipefd;
+	}
+}
+
 void	child_process(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
 {
 	if (cmd->num_of_cmds > 1)
 	{
-		if (exec->i == 0 && cmd->cmd[exec->i].fd_out == -1)
-			cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
-		else if (exec->i == cmd->num_of_cmds - 1 && cmd->cmd[exec->i].fd_in == -1)
-			cmd->cmd[exec->i].fd_in = exec->oldpipefd;
-		else if (exec->i > 0 && exec->i < cmd->num_of_cmds - 1)
-		{
-			if (cmd->cmd[exec->i].fd_out == -1)
-				cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
-			if (cmd->cmd[exec->i].fd_in == -1)
-				cmd->cmd[exec->i].fd_in = exec->oldpipefd;
-		}
+		// if (exec->i == 0 && cmd->cmd[exec->i].fd_out == -1)
+		// 	cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
+		// else if (exec->i == cmd->num_of_cmds - 1 && cmd->cmd[exec->i].fd_in == -1)
+		// 	cmd->cmd[exec->i].fd_in = exec->oldpipefd;
+		// else if (exec->i > 0 && exec->i < cmd->num_of_cmds - 1)
+		// {
+		// 	if (cmd->cmd[exec->i].fd_out == -1)
+		// 		cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
+		// 	if (cmd->cmd[exec->i].fd_in == -1)
+		// 		cmd->cmd[exec->i].fd_in = exec->oldpipefd;
+		// }
+		pipe_redirection(exec, cmd);
 	}
 	if (cmd->cmd[exec->i].fd_in != -1)
 	{
