@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:48:16 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:43:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,23 +40,23 @@
 
 # define END "\e[0m"
 
-enum type
+enum e_type
 {
 	WORD,
 	PIPE,
-	R_INPUT, //<
-	R_INPUT_TRUC, //<>
-	R_TRUNC, //>
-	R_TRUNC_NOCLOBBER, //>|
-	R_HEREDOC, //<<
-	R_APPEND, // >>
+	R_INPUT,
+	R_INPUT_TRUC,
+	R_TRUNC,
+	R_TRUNC_NOCLOBBER,
+	R_HEREDOC,
+	R_APPEND,
 	S_QUOTES,
 	D_QUOTES,
-	PIPE2, //||
-	AND, //&
-	AND2, //&&
-	DOT, //;
-	DOT2 //;;
+	PIPE2,
+	AND,
+	AND2,
+	DOT,
+	DOT2
 };
 
 typedef struct s_token
@@ -95,7 +95,7 @@ typedef struct s_command_array_and_info
 {
 	t_cmd	*cmd;
 	int		num_of_cmds;
-}	t_cmd_info;
+}	t_cmdin;
 
 typedef struct s_infile_outfile
 {
@@ -146,7 +146,6 @@ typedef struct s_array
 
 //UTILS
 char	*minishell_name(char **env);
-void	ft_exit(char *str, int exit_code); //?
 void	free_token(t_token **token);
 void	free_error_node(t_ast *node);
 void	free_ast(t_ast *ast);
@@ -159,7 +158,7 @@ int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
 t_free	get_to_free(char **name, t_token **token, t_ast **ast);
 void	free_to_free(t_free to_free);
-void	free_cmd(t_cmd_info *cmd);
+void	free_cmd(t_cmdin *cmd);
 t_token	*good_cur(t_token *current, int side, int type);
 void	put_error_to_one(int *error);
 
@@ -176,8 +175,7 @@ char	*word_in_delimitation(char *inpt, char c, long *flag);
 
 //CHECK TOKEN
 int		check_token(t_token **token, char **inpt, char **env);
-int		end_pipe_handler(t_token **last_token, char **first_inpt, char **env);
-
+int		end_pipe_handler(t_token **lst_tok, char **frst_inpt, char **env);
 int		do_heredoc(t_token *cur, char **env);
 int		modify_inpt(char **inpt, char **env);
 int		heredoc(char *delimiter, int expandble, char **env, int fd[2]);
@@ -189,37 +187,37 @@ void	to_expand(char **content, char **env);
 int		is_in_env(char *content, char **env, size_t len, int start);
 int		cmp_token(char *content, char *env, size_t len, size_t start);
 char	*change_content(char *content, int start, int end, char **env);
-char	*change_exit_code(char *content, int start, int end);
+char	*change_g_exit_code(char *content, int start, int end);
 char	*supp_content(char *content, int start, int end);
 int		contain_backslash(char *content);
 void	del_backslash(char *content);
 
 //PARSER
-t_ast	*create_ast(t_token **tokens, t_token *current, int after_explored, int *error);
+t_ast	*create_ast(t_token **tkn, t_token *cur, int side, int *error);
 t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
-int	exit_builtin(char **arg, t_cmd_info *cmd, t_freexit to_free);
+int		exit_builtin(char **arg, t_cmdin *cmd, t_freexit to_free);
 
 //EXEC
-char		*right_path(char *content, char **env);
-t_cmd_info	get_cmd_array(t_ast *ast);
-int			is_builtin(char *content);
-int			do_builtins(char **arg);
-void		exec_builtins(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env);
-void		child_process(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env);
-void		parent(t_exec *exec, t_cmd_info *cmd);
-void		exec(t_ast *ast, char **env, t_free to_free);
+char	*right_path(char *content, char **env);
+t_cmdin	get_cmd_array(t_ast *ast);
+int		is_builtin(char *content);
+int		do_builtins(char **arg);
+void	exec_builtins(t_exec *exc, t_cmdin *cmd, t_free tfree, char **env);
+void	child_process(t_exec *exec, t_cmdin *cmd, t_free to_free, char **env);
+void	parent(t_exec *exec, t_cmdin *cmd);
+void	exec(t_ast *ast, char **env, t_free to_free);
 
 //SIGNAL
-void	signal_exit_code(int status, t_cmd_info cmd);
+void	signal_g_exit_code(int status, t_cmdin cmd);
 void	set_signal_action(int mode);
 
 //DISPLAY
 void	display_token(t_token **token);
 void	display_node_ast(t_ast *ast, int i);
 void	draw_ast(t_ast *node, int depth);
-void	display_cmds(t_cmd_info cmd);
+void	display_cmds(t_cmdin cmd);
 
 #endif

@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:36:32 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:45:03 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
 void	handle_sigint(int sig)
 {
@@ -36,7 +36,7 @@ void	handle_heredoc(int sig)
 	exit(130);
 }
 
-void	signal_exit_code(int status, t_cmd_info cmd)
+void	signal_g_exit_code(int status, t_cmdin cmd)
 {
 	int			sig;
 
@@ -44,13 +44,13 @@ void	signal_exit_code(int status, t_cmd_info cmd)
 	if (sig == SIGINT)
 	{
 		ft_putchar_fd('\n', 1);
-		exit_code = 130;
+		g_exit_code = 130;
 	}
 	else if (sig == SIGQUIT)
 	{
 		if (cmd.num_of_cmds == 1)
 			ft_putstr_fd("Quit (core dumped)\n", 1);
-		exit_code = 131;
+		g_exit_code = 131;
 	}
 }
 

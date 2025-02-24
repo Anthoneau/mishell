@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:50:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:53:08 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,6 @@ int	main(int ac, char **av, char **env)
 	data.token = NULL;
 	data.ast = NULL;
 	data.env = env;
-	exit_code = 0;
+	g_exit_code = 0;
 	return (do_minishell(data, 0));
 }

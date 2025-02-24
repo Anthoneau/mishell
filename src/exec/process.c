@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   child.c                                            :+:      :+:    :+:   */
+/*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:17:15 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	pipe_redirection(t_exec *exec, t_cmd_info *cmd)
+void	pipe_redirection(t_exec *exec, t_cmdin *cmd)
 {
 	if (exec->i == 0 && cmd->cmd[exec->i].fd_out == -1)
 		cmd->cmd[exec->i].fd_out = exec->newpipefd[1];
@@ -27,7 +27,7 @@ void	pipe_redirection(t_exec *exec, t_cmd_info *cmd)
 	}
 }
 
-void	fdin_fdout(t_exec *exec, t_cmd_info *cmd, t_free to_free)
+void	fdin_fdout(t_exec *exec, t_cmdin *cmd, t_free to_free)
 {
 	if (cmd->cmd[exec->i].fd_in != -1)
 	{
@@ -53,7 +53,7 @@ void	fdin_fdout(t_exec *exec, t_cmd_info *cmd, t_free to_free)
 	}
 }
 
-void	child_process(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
+void	child_process(t_exec *exec, t_cmdin *cmd, t_free to_free, char **env)
 {
 	if (cmd->num_of_cmds > 1)
 		pipe_redirection(exec, cmd);
@@ -79,7 +79,7 @@ void	child_process(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
 	exit(127);
 }
 
-void	parent(t_exec *exec, t_cmd_info *cmd)
+void	parent(t_exec *exec, t_cmdin *cmd)
 {
 	free(exec->path);
 	if (exec->newpipefd[1] != -1)

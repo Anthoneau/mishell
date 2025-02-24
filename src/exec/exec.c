@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:50:16 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 extern int	g_exit_code;
 
-void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmd_info cmd)
+void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin cmd)
 {
 	int			j;
 	int			status;
@@ -23,25 +23,20 @@ void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmd_info cmd)
 	j = 0;
 	if (!builtin)
 	{
-		exit_code = 130;
+		g_exit_code = 130;
 		while (j < i_pid)
 		{
 			waitpid(pid[j], &status, 0);
 			if (WIFSIGNALED(status))
-				return (signal_exit_code(status, cmd));
+				return (signal_g_exit_code(status, cmd));
 			j++;
 		}
-		exit_code = WEXITSTATUS(status);
+		g_exit_code = WEXITSTATUS(status);
 	}
 }
 
-int	real_execution(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
+int	real_execution(t_exec *exec, t_cmdin *cmd, t_free to_free, char **env)
 {
-	// if (cmd->num_of_cmds == 1 && !ft_strncmp(cmd->cmd[0].arg[0], "exit", 5))
-	// {
-	// 	do_builtins(cmd->cmd[0].arg, cmd);
-	// 	exit_code = 1;
-	// }
 	if (cmd->num_of_cmds == 1 && is_builtin(cmd->cmd[0].arg[0]))
 		exec_builtins(exec, cmd, to_free, env);
 	else
@@ -60,7 +55,7 @@ int	real_execution(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
 	return (1);
 }
 
-t_exec	init_exec(t_cmd_info cmd)
+t_exec	init_exec(t_cmdin cmd)
 {
 	t_exec	exec;
 
@@ -74,7 +69,7 @@ t_exec	init_exec(t_cmd_info cmd)
 	return (exec);
 }
 
-void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
+void	exec_cmds(t_cmdin cmd, char **env, t_free to_free)
 {
 	t_exec		exec;
 
@@ -102,7 +97,7 @@ void	exec_cmds(t_cmd_info cmd, char **env, t_free to_free)
 
 void	exec(t_ast *ast, char **env, t_free to_free)
 {
-	t_cmd_info	cmd;
+	t_cmdin	cmd;
 
 	cmd = get_cmd_array(ast);
 	if (!cmd.cmd || !cmd.cmd->arg)

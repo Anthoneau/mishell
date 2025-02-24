@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:14:09 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 16:14:15 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,7 +120,7 @@ void	find_current_pipe(t_ast **current)
 	}
 }
 
-int	get_arg_and_fd(t_ast **current, t_cmd_info **cmd, t_inout fd, int i)
+int	get_arg_and_fd(t_ast **current, t_cmdin **cmd, t_inout fd, int i)
 {
 	(*current)->done = 1;
 	(*cmd)->cmd[i].arg = ft_arrdup((*current)->arg);
@@ -143,7 +143,7 @@ int	get_cmds_inputs(t_ast **current, t_inout *fd)
 	return (1);
 }
 
-int	create_cmds_array(t_cmd_info *cmd, t_ast *ast)
+int	create_cmds_array(t_cmdin *cmd, t_ast *ast)
 {
 	t_ast	*current;
 	t_inout	fd;
@@ -184,9 +184,9 @@ size_t	get_cmd_number(t_ast *ast)
 	return (number);
 }
 
-t_cmd_info	get_cmd_array(t_ast *ast)
+t_cmdin	get_cmd_array(t_ast *ast)
 {
-	t_cmd_info	cmd;
+	t_cmdin	cmd;
 
 	cmd.num_of_cmds = get_cmd_number(ast);
 	cmd.cmd = ft_calloc(cmd.num_of_cmds + 1, sizeof(t_cmd));

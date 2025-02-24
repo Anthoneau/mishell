@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:50:12 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:44:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,15 +53,14 @@ t_freexit	get_freexit(t_exec *exec, t_free to_free, char **env)
 	return (free_exit);
 }
 
-void	exec_builtins(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env)
+void	exec_builtins(t_exec *exc, t_cmdin *cmd, t_free tfree, char **env)
 {
-	exec->builtin = 1;
+	exc->builtin = 1;
 	if (!ft_strncmp(cmd->cmd[0].arg[0], "exit", 5))
 	{
-		exit_builtin(cmd->cmd[0].arg, cmd, get_freexit(exec, to_free, env));
-		// do_builtins(cmd->cmd[0].arg, cmd);
-		exit_code = 1;
+		exit_builtin(cmd->cmd[0].arg, cmd, get_freexit(exc, tfree, env));
+		g_exit_code = 1;
 		return ;
 	}
-	exit_code = do_builtins(cmd->cmd[0].arg);
+	g_exit_code = do_builtins(cmd->cmd[0].arg);
 }

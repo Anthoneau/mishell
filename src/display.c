@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:03:15 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 16:16:38 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void draw_ast(t_ast *node, int depth)
     }
 }
 
-void	display_cmds(t_cmd_info cmd)
+void	display_cmds(t_cmdin cmd)
 {
 	int	i;
 

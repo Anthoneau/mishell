@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:45:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:52:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
 int	modify_inpt(char **inpt, char **env)
 {
@@ -96,7 +96,7 @@ int	do_heredoc(t_token *cur, char **env)
 	{
 		close(fd[1]);
 		close(fd[0]);
-		exit_code = WEXITSTATUS(status);
+		g_exit_code = WEXITSTATUS(status);
 		return (0);
 	}
 	set_signal_action(0);

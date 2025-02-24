@@ -6,18 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 19:54:26 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	ft_exit(char *str, int exit_code)
-{
-	if (str)
-		ft_putstr_fd(str, 2);
-	exit(exit_code);
-}
 
 void	free_token(t_token **token)
 {
@@ -217,7 +210,7 @@ int	is_delimitation(char c)
 	return (0);
 }
 
-void	free_cmd(t_cmd_info *cmd)
+void	free_cmd(t_cmdin *cmd)
 {
 	int	i;
 

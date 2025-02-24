@@ -6,13 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:17:41 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:45:15 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 19:12:51 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern int	exit_code;
 
 void	free_exit(t_freexit to_free)
 {
@@ -22,13 +20,14 @@ void	free_exit(t_freexit to_free)
 	// free(to_free.env);
 }
 
-int	exit_builtin(char **arg, t_cmd_info *cmd, t_freexit to_free)
+int	exit_builtin(char **arg, t_cmdin *cmd, t_freexit to_free)
 {
-	__uint8_t		nbr;
+	extern int	g_exit_code;
+	__uint8_t	nbr;
 
 	ft_putstr_fd("exit\n", 1);
 	if (!arg[1])
-		exit(exit_code);
+		exit(g_exit_code);
 	if (!ft_isnum(arg[1]))
 	{
 		print_error(1, "exit", NULL);

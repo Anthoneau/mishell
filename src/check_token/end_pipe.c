@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:40:23 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:45:28 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 19:13:53 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int	exit_code;
+extern int	g_exit_code;
 
 char	*join_inpts(char *first_inpt, char *inpt)
 {
@@ -94,7 +94,7 @@ char	*get_inpt(void)
 	{
 		close(fd[0]);
 		close(fd[1]);
-		exit_code = WEXITSTATUS(status);
+		g_exit_code = WEXITSTATUS(status);
 		return (NULL);
 	}
 	set_signal_action(0);
@@ -104,7 +104,7 @@ char	*get_inpt(void)
 	return (res);
 }
 
-int	end_pipe_handler(t_token **last_token, char **first_inpt, char **env)
+int	end_pipe_handler(t_token **lst_tok, char **frst_inpt, char **env)
 {
 	char	*inpt;
 	char	*replace_inpt;
@@ -121,14 +121,14 @@ int	end_pipe_handler(t_token **last_token, char **first_inpt, char **env)
 			free_token(&token);
 		return (0);
 	}
-	(*last_token)->next = token;
-	token->prev = (*last_token);
-	replace_inpt = join_inpts(*first_inpt, inpt);
+	(*lst_tok)->next = token;
+	token->prev = (*lst_tok);
+	replace_inpt = join_inpts(*frst_inpt, inpt);
 	free(inpt);
 	if (replace_inpt)
 	{
-		free(*first_inpt);
-		(*first_inpt) = replace_inpt;
+		free(*frst_inpt);
+		(*frst_inpt) = replace_inpt;
 	}
 	return (1);
 }

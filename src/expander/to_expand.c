@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 21:42:31 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:52:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	transform_content(char **content, int *pos, char **env)
 		(*content) = change_content(*content, start, end, env);
 	}
 	else if ((*content)[start] == '?')
-		(*content) = change_exit_code(*content, start, end);
+		(*content) = change_g_exit_code(*content, start, end);
 	else
 		(*content) = supp_content(*content, start, end);
 }
