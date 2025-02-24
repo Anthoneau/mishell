@@ -6,11 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:36:32 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 19:10:57 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:45:03 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+extern int	exit_code;
 
 void	handle_sigint(int sig)
 {
@@ -21,33 +23,10 @@ void	handle_sigint(int sig)
 	rl_redisplay();
 }
 
-// void	handle_execsig(int sig)
-// {
-// 	(void)sig;
-// 	rl_replace_line("", 0);
-// 	if (sig == SIGQUIT)
-// 		ft_putstr_fd("Quit (core dumped)\n", 1);
-// 	ft_putchar_fd('\n', 1);
-// 	if (sig == SIGINT)
-// 		exit(130);
-// 	else if (sig == SIGQUIT)
-// 		exit(131);
-// }
-
 void	ignore_signal(int sig)
 {
 	(void)sig;
 }
-
-// void	handle_exit(int sig)
-// {
-// 	(void)sig;
-// 	rl_on_new_line();
-// 	ft_putchar_fd('\n', 1);
-// 	rl_replace_line("", 0);
-// 	rl_redisplay();
-// 	exit(130);
-// }
 
 void	handle_heredoc(int sig)
 {
@@ -57,6 +36,23 @@ void	handle_heredoc(int sig)
 	exit(130);
 }
 
+void	signal_exit_code(int status, t_cmd_info cmd)
+{
+	int			sig;
+
+	sig = WTERMSIG(status);
+	if (sig == SIGINT)
+	{
+		ft_putchar_fd('\n', 1);
+		exit_code = 130;
+	}
+	else if (sig == SIGQUIT)
+	{
+		if (cmd.num_of_cmds == 1)
+			ft_putstr_fd("Quit (core dumped)\n", 1);
+		exit_code = 131;
+	}
+}
 
 void	set_signal_action(int mode)
 {
@@ -82,11 +78,6 @@ void	set_signal_action(int mode)
 		act_int.sa_handler = &ignore_signal;
 		act_quit.sa_handler = &ignore_signal;
 	}
-	// else if (mode == 3)
-	// {
-	// 	act_int.sa_handler = &handle_execsig;
-	// 	act_quit.sa_handler = &handle_execsig;
-	// }
 	sigaction(SIGINT, &act_int, NULL);
 	sigaction(SIGQUIT, &act_quit, NULL);
 }

@@ -6,11 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:40:23 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 21:34:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:45:28 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern int	exit_code;
 
 char	*join_inpts(char *first_inpt, char *inpt)
 {
@@ -67,7 +69,6 @@ char	*get_inpt(void)
 	int			fd[2];
 	pid_t		pid;
 	int			status;
-	extern int	exit_code;
 	char		*res;
 
 	status = 0;

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 21:58:27 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:48:16 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,12 +131,18 @@ typedef struct s_exec
 	int		builtin;
 }	t_exec;
 
+typedef struct s_free_exit
+{
+	t_exec	*exec;
+	t_free	to_free;
+	char	**env;
+}	t_freexit;
+
 typedef struct s_array
 {
 	char	*arr1;
 	char	**arr2;
 }	t_arr;
-
 
 //UTILS
 char	*minishell_name(char **env);
@@ -154,7 +160,6 @@ char	**ft_arrdup(char **arr);
 t_free	get_to_free(char **name, t_token **token, t_ast **ast);
 void	free_to_free(t_free to_free);
 void	free_cmd(t_cmd_info *cmd);
-
 t_token	*good_cur(t_token *current, int side, int type);
 void	put_error_to_one(int *error);
 
@@ -195,18 +200,26 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
-void	exit_builtin(char **arg, t_cmd_info *cmd);
+int	exit_builtin(char **arg, t_cmd_info *cmd, t_freexit to_free);
 
 //EXEC
-void	exec(t_ast *ast, char **env, t_free to_free);
+char		*right_path(char *content, char **env);
+t_cmd_info	get_cmd_array(t_ast *ast);
+int			is_builtin(char *content);
+int			do_builtins(char **arg);
+void		exec_builtins(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env);
+void		child_process(t_exec *exec, t_cmd_info *cmd, t_free to_free, char **env);
+void		parent(t_exec *exec, t_cmd_info *cmd);
+void		exec(t_ast *ast, char **env, t_free to_free);
 
 //SIGNAL
+void	signal_exit_code(int status, t_cmd_info cmd);
 void	set_signal_action(int mode);
 
 //DISPLAY
 void	display_token(t_token **token);
 void	display_node_ast(t_ast *ast, int i);
 void	draw_ast(t_ast *node, int depth);
+void	display_cmds(t_cmd_info cmd);
 
 #endif
-//access cat X_OK

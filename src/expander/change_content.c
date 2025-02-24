@@ -6,11 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:31:01 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 10:31:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:49:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+extern int	g_exit_code;
 
 int	find_env_i(char **env, int start, int end, char *env_value)
 {
@@ -107,7 +109,6 @@ char	*change_exit_code(char *content, int start, int end)
 {
 	char		*new;
 	char		*value;
-	extern int	exit_code;
 
 	value = ft_itoa(exit_code);
 	if (!value)

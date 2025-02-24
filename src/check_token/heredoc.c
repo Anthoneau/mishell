@@ -6,11 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 21:39:07 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:45:39 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+extern int	exit_code;
 
 int	modify_inpt(char **inpt, char **env)
 {
@@ -70,7 +72,6 @@ int	do_heredoc(t_token *cur, char **env)
 	pid_t	pid = 0;
 	int		fd[2];
 	int		status;
-	extern int	exit_code;
 
 	if (pipe(fd) == -1)
 		return (print_error(1, "heredoc", "Cannot allocate memory"), 0);

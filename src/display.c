@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:03:15 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/07 15:04:08 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 16:16:38 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,9 @@ void draw_ast(t_ast *node, int depth)
 
     // Print indentation based on depth
     for (int i = 0; i < depth; i++)
+	{
         printf("    ");
+	}
 
     // Print the node content and type
 	if (node->type != WORD)
@@ -86,3 +88,27 @@ void draw_ast(t_ast *node, int depth)
     }
 }
 
+void	display_cmds(t_cmd_info cmd)
+{
+	int	i;
+
+	i = 0;
+	while (i < cmd.num_of_cmds)
+	{
+		printf("%scommand[%d] :%s\n", BPURPLE, i, END);
+		if (cmd.cmd[i].content)
+			printf("%s\tcontent -- %s%s\n", YELLOW, cmd.cmd[i].content, END);
+		if (cmd.cmd[i].arg)
+		{
+			int j = 0;
+			while (cmd.cmd[i].arg[j])
+			{
+				printf("%s\targ[%d] -- %s\n%s", YELLOW, j, cmd.cmd[i].arg[j], END);
+				j++;
+			}
+		}
+		printf("%s\tfd_in   -- %d%s\n", YELLOW, cmd.cmd[i].fd_in, END);
+		printf("%s\tfd_out  -- %d%s\n", YELLOW, cmd.cmd[i].fd_out, END);
+		i++;
+	}
+}

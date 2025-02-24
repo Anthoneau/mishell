@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 20:28:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 17:50:04 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	exit_code;
+int	g_exit_code;
 
 int	do_minishell(t_data d, int eof)
 {
@@ -41,7 +41,8 @@ int	do_minishell(t_data d, int eof)
 		ft_free(d.inpt);
 		free(d.name);
 	}
-	printf("exit\n");
+	rl_clear_history();
+	ft_putstr_fd("exit\n", 1);
 	return (0);
 }
 
@@ -51,7 +52,6 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
-	set_signal_action(0);
 	data.error = 0;
 	data.name = NULL;
 	data.inpt = NULL;
