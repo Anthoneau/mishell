@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 18:43:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:32:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,7 +153,7 @@ void	ft_strcat(char *src, char *dst);
 void	ft_strcat_expander(char *src, char *dst);
 int		count_lst(t_token *lst);
 int		count_pipes(t_token *token);
-void	print_error(int shell_name, char *content, char *message);
+void	print_error(int shell_name, char *content, int memory, char *message);
 int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
 t_free	get_to_free(char **name, t_token **token, t_ast **ast);
@@ -161,6 +161,7 @@ void	free_to_free(t_free to_free);
 void	free_cmd(t_cmdin *cmd);
 t_token	*good_cur(t_token *current, int side, int type);
 void	put_error_to_one(int *error);
+void	print_open_error(char *content);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
@@ -201,6 +202,7 @@ t_ast	*word_node(t_token *current, int *error);
 int		exit_builtin(char **arg, t_cmdin *cmd, t_freexit to_free);
 
 //EXEC
+int		get_cmds_inputs(t_ast **current, t_inout *fd);
 char	*right_path(char *content, char **env);
 t_cmdin	get_cmd_array(t_ast *ast);
 int		is_builtin(char *content);

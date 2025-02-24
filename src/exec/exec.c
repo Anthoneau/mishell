@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:24:58 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	real_execution(t_exec *exec, t_cmdin *cmd, t_free to_free, char **env)
 		if (exec->pid[exec->i_pid] == -1)
 		{
 			free(exec->path);
-			print_error(1, "fork", "Cannot allocate memory");
+			print_error(1, "fork", 1, "");
 			return (0);
 		}
 		if (!exec->pid[exec->i_pid])
@@ -75,14 +75,14 @@ void	exec_cmds(t_cmdin cmd, char **env, t_free to_free)
 
 	exec = init_exec(cmd);
 	if (!exec.pid)
-		return (print_error(1, "malloc", "Cannot allocate memory"));
+		return (print_error(1, "malloc", 1, ""));
 	while (exec.i < cmd.num_of_cmds)
 	{
 		exec.path = right_path(cmd.cmd[exec.i].arg[0], env);
 		if (!exec.path)
-			return (print_error(1, "malloc", "Cannot allocate memory"));
+			return (print_error(1, "malloc", 1, ""));
 		if (exec.i < cmd.num_of_cmds - 1 && pipe(exec.newpipefd) == -1)
-			return (free(exec.path), print_error(1, "pipe", "Cannot allocate memory"));
+			return (free(exec.path), print_error(1, "pipe", 1, ""));
 		if (!real_execution(&exec, &cmd, to_free, env))
 			return ;
 		parent(&exec, &cmd);
@@ -102,7 +102,6 @@ void	exec(t_ast *ast, char **env, t_free to_free)
 	cmd = get_cmd_array(ast);
 	if (!cmd.cmd || !cmd.cmd->arg)
 		return ;
-	// display_cmds(cmd);
 	exec_cmds(cmd, env, to_free);
 	free_cmd(&cmd);
 }

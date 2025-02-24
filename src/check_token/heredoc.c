@@ -6,13 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:52:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:10:39 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-extern int	g_exit_code;
 
 int	modify_inpt(char **inpt, char **env)
 {
@@ -29,7 +27,7 @@ int	modify_inpt(char **inpt, char **env)
 
 void	print_eof(char *delimiter, int line)
 {
-	print_error(1, "warning", NULL);
+	print_error(1, "warning", 0, NULL);
 	ft_putstr_fd("here-document at line ", 2);
 	ft_putnbr_fd(line, 2);
 	ft_putstr_fd(" delimited ", 2);
@@ -57,7 +55,7 @@ int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 		if (!(ft_strncmp(delimiter, inpt, ft_strlen(delimiter) + 1)))
 			break ;
 		if (expand && !modify_inpt(&inpt, env))
-			return (print_error(1, "malloc", "Cannot allocate memory"), -1);
+			return (print_error(1, "malloc", 1, ""), -1);
 		ft_putendl_fd(inpt, fd[1]);
 		free(inpt);
 		line++;
@@ -67,23 +65,15 @@ int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 	return (0);
 }
 
-int	do_heredoc(t_token *cur, char **env)
+int	heredoc_child(pid_t pid, t_token *cur, char **env, int fd[2])
 {
-	pid_t	pid = 0;
-	int		fd[2];
-	int		status;
+	int			status;
+	int			nbr;
+	extern int	g_exit_code;
 
-	if (pipe(fd) == -1)
-		return (print_error(1, "heredoc", "Cannot allocate memory"), 0);
-	set_signal_action(2);
-	pid = fork();
-	if (pid == -1)
-		return (print_error(1, "heredoc", "Cannot allocate memory"), 0);
 	status = 0;
 	if (!pid)
 	{
-		int	nbr;
-
 		nbr = 0;
 		set_signal_action(1);
 		nbr = heredoc(cur->next->content, cur->next->expand, env, fd);
@@ -99,11 +89,26 @@ int	do_heredoc(t_token *cur, char **env)
 		g_exit_code = WEXITSTATUS(status);
 		return (0);
 	}
+	return (1);
+}
+
+int	do_heredoc(t_token *cur, char **env)
+{
+	pid_t	pid;
+	int		fd[2];
+
+	pid = 0;
+	if (pipe(fd) == -1)
+		return (print_error(1, "heredoc", 1, ""), 0);
+	set_signal_action(2);
+	pid = fork();
+	if (pid == -1)
+		return (print_error(1, "heredoc", 1, ""), 0);
+	if (!heredoc_child(pid, cur, env, fd))
+		return (0);
 	set_signal_action(0);
 	close(fd[1]);
 	cur->fd = fd[0];
-	// close(fd[0]);
-	// cur->fd = heredoc(cur->next->content, cur->next->expand, env);
 	if (cur->fd == -1)
 		return (0);
 	return (1);

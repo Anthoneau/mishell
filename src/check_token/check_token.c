@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/19 16:03:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:09:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,17 +77,17 @@ int	forbidden_token(t_token **token)
 	while (current)
 	{
 		if (current->type == R_INPUT_TRUC)
-			return (print_error(1, NULL, "unknown token `<>'"), 1);
+			return (print_error(1, NULL, 0, "unknown token `<>'"), 1);
 		if (current->type == PIPE2)
-			return (print_error(1, NULL, "unknown token `||'"), 1);
+			return (print_error(1, NULL, 0, "unknown token `||'"), 1);
 		if (current->type == AND)
-			return (print_error(1, NULL, "unknown token `&'"), 1);
+			return (print_error(1, NULL, 0, "unknown token `&'"), 1);
 		if (current->type == AND2)
-			return (print_error(1, NULL, "unknown token `&&'"), 1);
+			return (print_error(1, NULL, 0, "unknown token `&&'"), 1);
 		if (current->type == DOT)
-			return (print_error(1, NULL, "unknown token `;'"), 1);
+			return (print_error(1, NULL, 0, "unknown token `;'"), 1);
 		if (current->type == DOT2)
-			return (print_error(1, NULL, "unknown token `;;'"), 1);
+			return (print_error(1, NULL, 0, "unknown token `;;'"), 1);
 		if (current->next)
 			current = current->next;
 		else

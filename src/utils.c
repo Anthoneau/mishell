@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:26:28 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,7 @@ int	count_pipes(t_token *token)
 	return (i);
 }
 
-void	print_error(int shell_name, char *content, char *message)
+void	print_error(int shell_name, char *content, int memory, char *message)
 {
 	if (shell_name)
 		ft_putstr_fd("minishell: ", 2);
@@ -156,6 +156,8 @@ void	print_error(int shell_name, char *content, char *message)
 		ft_putstr_fd(content, 2);
 		ft_putstr_fd(": ", 2);
 	}
+	if (memory)
+		ft_putstr_fd("Cannot allocate memory", 2);
 	if (message)
 		ft_putendl_fd(message, 2);
 }
@@ -227,4 +229,18 @@ void	free_cmd(t_cmdin *cmd)
 	}
 	free(cmd->cmd);
 	cmd->cmd = NULL;
+}
+
+void	print_open_error(char *content)
+{
+	if (errno == ENOENT)
+		print_error(1, content, 0, "No such file or directory");
+	else if (errno == EISDIR)
+		print_error(1, content, 0, "Is a directory");
+	else if (errno == EACCES)
+		print_error(1, content, 0, "Permission denied");
+	else if (errno == EMFILE || errno == ENFILE)
+		print_error(1, NULL, 0, "Too many open files");
+	else
+		print_error(1, NULL, 0, "Error opening file");
 }

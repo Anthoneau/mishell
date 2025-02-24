@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:53:08 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:23:43 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	do_minishell(t_data d, int eof)
 		set_signal_action(0);
 		d.name = minishell_name(d.env);
 		if (!d.name)
-			return (print_error(1, "malloc", "Cannot allocate memory"), 1);
+			return (print_error(1, "malloc", 1, ""), 1);
 		d.inpt = readline(d.name);
 		if (d.inpt && *d.inpt && !ft_isspace(d.inpt))
 		{

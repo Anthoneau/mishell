@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 16:24:24 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 20:35:45 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:12:34 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*word_in_delimitation(char *inpt, char c, long *flag)
 	if (!new)
 	{
 		*flag = -10;
-		return (print_error(1, "malloc", "Cannot allocate memory"), NULL);
+		return (print_error(1, "malloc", 1, ""), NULL);
 	}
 	i = 0;
 	if (inpt[i] == c)
@@ -55,7 +55,7 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag)
 	if (!new)
 	{
 		*flag = -10;
-		return (print_error(1, "malloc", "Cannot allocate memory"), NULL);
+		return (print_error(1, "malloc", 1, ""), NULL);
 	}
 	i = 0;
 	while (inpt[i] && !is_delimitation(inpt[i]))

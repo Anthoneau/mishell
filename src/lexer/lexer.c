@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/22 20:32:32 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:12:24 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	new_token(char	*content, int type, t_token **lst, long *i)
 	if (!token)
 	{
 		*i = -10;
-		return (print_error(1, "malloc", "Cannot allocate memory"));
+		return (print_error(1, "malloc", 1, ""));
 	}
 	if (content)
 	{
@@ -56,7 +56,7 @@ void	new_token(char	*content, int type, t_token **lst, long *i)
 		if (!token->content)
 		{
 			*i = -10;
-			return (print_error(1, "malloc", "Cannot allocate memory"));
+			return (print_error(1, "malloc", 1, ""));
 		}
 	}
 	else
@@ -99,7 +99,7 @@ t_token	*lexer(char *inpt, char **env)
 	i = 0;
 	token = NULL;
 	if (!inpt || !check_quote(inpt))
-		return (print_error(1, "quote", "error"), NULL);
+		return (print_error(1, "quote", 0, "error"), NULL);
 	while (inpt[i])
 	{
 		if (i < 0)

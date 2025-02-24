@@ -6,13 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:40:23 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 19:13:53 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/24 20:10:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-extern int	g_exit_code;
 
 char	*join_inpts(char *first_inpt, char *inpt)
 {
@@ -29,12 +27,12 @@ char	*join_inpts(char *first_inpt, char *inpt)
 	{
 		temp = ft_strjoin(first_inpt, " ");
 		if (!temp)
-			return (print_error(1, "pipe", "Cannot allocate memory"), NULL);
+			return (print_error(1, "pipe", 1, ""), NULL);
 		res = ft_strjoin(temp, inpt);
 		free(temp);
 	}
 	if (!res)
-		return (print_error(1, "pipe", "Cannot allocate memory"), NULL);
+		return (print_error(1, "pipe", 1, ""), NULL);
 	return (res);
 }
 
@@ -50,7 +48,7 @@ int	get_inpt_content(int fd[2])
 		{
 			close(fd[1]);
 			close(fd[0]);
-			return (print_error(1, "malloc", "Cannot allocate memory"), -1);
+			return (print_error(1, "malloc", 1, ""), -1);
 		}
 		if (*inpt && !ft_isspace(inpt))
 		{
@@ -64,24 +62,15 @@ int	get_inpt_content(int fd[2])
 	return (0);
 }
 
-char	*get_inpt(void)
+int	pipe_child(pid_t pid, int fd[2])
 {
-	int			fd[2];
-	pid_t		pid;
+	int			nbr;
 	int			status;
-	char		*res;
+	extern int	g_exit_code;
 
 	status = 0;
-	if (pipe(fd) == -1)
-		return (print_error(1, "pipe", "Cannot allocate memory"), NULL);
-	set_signal_action(2);
-	pid = fork();
-	if (pid == -1)
-		return (print_error(1, "pipe", "Cannot allocate memory"), NULL);
 	if (!pid)
 	{
-		int	nbr;
-
 		nbr = 0;
 		set_signal_action(1);
 		nbr = get_inpt_content(fd);
@@ -95,8 +84,25 @@ char	*get_inpt(void)
 		close(fd[0]);
 		close(fd[1]);
 		g_exit_code = WEXITSTATUS(status);
-		return (NULL);
+		return (0);
 	}
+	return (1);
+}
+
+char	*get_inpt(void)
+{
+	int			fd[2];
+	pid_t		pid;
+	char		*res;
+
+	if (pipe(fd) == -1)
+		return (print_error(1, "pipe", 1, ""), NULL);
+	set_signal_action(2);
+	pid = fork();
+	if (pid == -1)
+		return (print_error(1, "pipe", 1, ""), NULL);
+	if (!pipe_child(pid, fd))
+		return (NULL);
 	set_signal_action(0);
 	close(fd[1]);
 	res = get_next_line(fd[0]);
