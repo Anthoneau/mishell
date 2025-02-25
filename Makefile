@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/25 13:00:24 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/25 13:24:51 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -84,7 +84,7 @@ PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
 BUILTINS		=	${addprefix ${BUILTINS_DIR}, ${BUILTINS_FILES}}
 EXEC			=	${addprefix ${EXEC_DIR}, ${EXEC_FILES}}
 
-FILES			=	main ${UTILS} ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} ${BUILTINS} ${EXEC} display get_name signals
+FILES			=	main ${UTILS} ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} ${BUILTINS} ${EXEC} get_name signals
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}

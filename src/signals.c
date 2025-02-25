@@ -6,13 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:36:32 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 12:56:36 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:21:42 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-extern int	g_exit_code;
 
 void	handle_sigint(int sig)
 {
@@ -39,6 +37,7 @@ void	handle_heredoc(int sig)
 void	signal_g_exit_code(int status, t_cmdin cmd)
 {
 	int			sig;
+	extern int	g_exit_code;
 
 	sig = WTERMSIG(status);
 	if (sig == SIGINT)

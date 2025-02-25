@@ -6,18 +6,17 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:24:58 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:23:48 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-extern int	g_exit_code;
-
 void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin cmd)
 {
 	int			j;
 	int			status;
+	extern int	g_exit_code;
 
 	status = 0;
 	j = 0;
