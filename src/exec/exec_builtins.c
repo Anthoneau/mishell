@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 18:44:11 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:35:04 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-extern int g_exit_code;
+extern int	g_exit_code;
 
 int	is_builtin(char *content)
 {
@@ -38,8 +38,6 @@ int	do_builtins(char **arg)
 		return (printf("unset\n"));
 	else if (!ft_strncmp(arg[0], "env", 4))
 		return (printf("env\n"));
-	// else if (!ft_strncmp(arg[0], "exit", 5))
-	// 	return (exit_builtin(arg, cmd));
 	return (0);
 }
 

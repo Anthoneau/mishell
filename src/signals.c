@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:36:32 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:56:36 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ void	signal_g_exit_code(int status, t_cmdin cmd)
 
 void	set_signal_action(int mode)
 {
-	struct sigaction act_int;
-	struct sigaction act_quit;
+	struct sigaction	act_int;
+	struct sigaction	act_quit;
 
 	sigemptyset(&act_int.sa_mask);
 	sigemptyset(&act_quit.sa_mask);

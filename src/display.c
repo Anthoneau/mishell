@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 18:03:15 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 18:41:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:08:01 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,11 @@ void draw_ast(t_ast *node, int depth)
     if (!node)
         return;
 
-    // Print indentation based on depth
     for (int i = 0; i < depth; i++)
 	{
         printf("    ");
 	}
 
-    // Print the node content and type
 	if (node->type != WORD)
 	    printf("%sType%s: %d, Content: %s\n", BPURPLE, END, node->type, node->content ? node->content : "(null)");
 	else
@@ -74,7 +72,6 @@ void draw_ast(t_ast *node, int depth)
 			i++;
 		}
 	}
-    // Recursively draw the left and right children
     if (node->left || node->right) {
         for (int i = 0; i < depth; i++)
             printf("    ");

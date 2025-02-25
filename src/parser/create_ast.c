@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/02 12:18:52 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 18:37:55 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:45:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,18 +109,17 @@ t_ast	*pipe_node(t_token **tokens, t_token *current, int *error)
 
 t_ast	*create_ast(t_token **tkn, t_token *cur, int side, int *error)
 {
-	t_token	*check;
 	t_ast	*node;
 
 	node = NULL;
-	if ((check = search_type(tkn, cur, PIPE, side)) && *error == 0)
-		node = pipe_node(tkn, check, error);
-	else if ((check = search_type(tkn, cur, R_HEREDOC, side)) && *error == 0)
-		node = redir_node(tkn, check, error);
-	else if ((check = search_type(tkn, cur, 2, side)) && *error == 0)
-		node = redir_node(tkn, check, error);
-	else if ((check = search_type(tkn, cur, WORD, side)) && *error == 0)
-		node = word_node(check, error);
+	if (search_type(tkn, cur, PIPE, side) && *error == 0)
+		node = pipe_node(tkn, search_type(tkn, cur, PIPE, side), error);
+	else if (search_type(tkn, cur, R_HEREDOC, side) && *error == 0)
+		node = redir_node(tkn, search_type(tkn, cur, R_HEREDOC, side), error);
+	else if (search_type(tkn, cur, 2, side) && *error == 0)
+		node = redir_node(tkn, search_type(tkn, cur, 2, side), error);
+	else if (search_type(tkn, cur, WORD, side) && *error == 0)
+		node = word_node(search_type(tkn, cur, WORD, side), error);
 	if (*error == 1)
 		return (free_error_node(node), NULL);
 	if (node)

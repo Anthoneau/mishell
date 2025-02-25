@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:23:43 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:06:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,13 @@ int	do_minishell(t_data d, int eof)
 		ft_free(d.inpt);
 		free(d.name);
 	}
-	rl_clear_history();
-	ft_putstr_fd("exit\n", 1);
 	return (0);
 }
 
 int	main(int ac, char **av, char **env)
 {
 	t_data data;
+	int		res;
 
 	(void)ac;
 	(void)av;
@@ -59,5 +58,8 @@ int	main(int ac, char **av, char **env)
 	data.ast = NULL;
 	data.env = env;
 	g_exit_code = 0;
-	return (do_minishell(data, 0));
+	res = do_minishell(data, 0);
+	rl_clear_history();
+	ft_putstr_fd("exit\n", 1);
+	return (res);
 }

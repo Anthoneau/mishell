@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 20:31:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:31:36 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:34:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,11 @@ void	change_redir(t_ast *ast, t_inout *fd)
 		if (fd->outfile != -1)
 			close(fd->outfile);
 		if (ast->type == R_APPEND)
-			fd->outfile = open(ast->content, O_WRONLY | O_CREAT |O_APPEND, 0644);
+			fd->outfile = open(ast->content, O_WRONLY
+					| O_CREAT | O_APPEND, 0644);
 		else
-			fd->outfile = open(ast->content, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+			fd->outfile = open(ast->content, O_WRONLY
+					| O_CREAT | O_TRUNC, 0644);
 		if (fd->outfile == -1)
 			redir_error(ast, fd);
 	}
@@ -66,7 +68,8 @@ t_inout	get_fd(t_ast *ast)
 		ast->done = 1;
 		if (ast->left && ast->left->type >= R_INPUT && ast->left->done == 0)
 			ast = ast->left;
-		else if (ast->right && ast->right->type >= R_INPUT && ast->right->done == 0)
+		else if (ast->right && ast->right->type >= R_INPUT
+			&& ast->right->done == 0)
 			ast = ast->right;
 		else if (ast->top && ast->top->type != PIPE)
 			ast = ast->top;

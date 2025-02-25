@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/24 20:32:22 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/25 13:00:24 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ endif
 
 NAME			=	minishell
 INCLUDES		=	includes
+UTILS_DIR		=	utils/
 LEXER_DIR		=	lexer/
 CHECK_TKN_DIR	=	check_token/
 EXPANDER_DIR	=	expander/
@@ -67,6 +68,7 @@ endef
 
 #SOURCES
 
+UTILS_FILES		=	utils utils2 utils3
 LEXER_FILES		=	lexer create_word word which_token
 CHECK_TKN_FILES	=	check_token end_pipe heredoc
 EXPANDER_FILES	=	expander to_expand change_content expander_utils
@@ -74,6 +76,7 @@ PARSER_FILES	=	create_ast redir word ast_utils
 BUILTINS_FILES	=	exit
 EXEC_FILES		=	exec path get_cmd exec_builtins process get_cmd_input
 
+UTILS			=	${addprefix ${UTILS_DIR}, ${UTILS_FILES}}
 LEXER			=	${addprefix ${LEXER_DIR}, ${LEXER_FILES}}
 CHECK_TKN		=	${addprefix ${CHECK_TKN_DIR}, ${CHECK_TKN_FILES}}
 EXPANDER		=	${addprefix ${EXPANDER_DIR}, ${EXPANDER_FILES}}
@@ -81,7 +84,7 @@ PARSER			=	${addprefix ${PARSER_DIR}, ${PARSER_FILES}}
 BUILTINS		=	${addprefix ${BUILTINS_DIR}, ${BUILTINS_FILES}}
 EXEC			=	${addprefix ${EXEC_DIR}, ${EXEC_FILES}}
 
-FILES			=	main utils ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} ${BUILTINS} ${EXEC} display get_name signals
+FILES			=	main ${UTILS} ${LEXER} ${EXPANDER} ${PARSER} ${CHECK_TKN} ${BUILTINS} ${EXEC} display get_name signals
 
 SRCS			=	${addprefix ${SRCS_DIR}, ${addsuffix .c, ${FILES}}}
 OBJS			=	${addprefix ${OBJS_DIR}, ${addsuffix .o, ${FILES}}}
