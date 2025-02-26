@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 12:58:58 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/26 09:41:21 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ void	free_error_node(t_ast *node)
 
 void	free_ast(t_ast *ast)
 {
+	if (!ast)
+		return ;
 	if (ast && ast->left)
 		free_ast(ast->left);
 	if (ast && ast->right)

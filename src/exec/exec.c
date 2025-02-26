@@ -6,13 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 13:23:48 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:21:02 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin cmd)
+void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin *cmd)
 {
 	int			j;
 	int			status;
@@ -34,10 +34,10 @@ void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin cmd)
 	}
 }
 
-int	real_execution(t_exec *exec, t_cmdin *cmd, t_free to_free, char **env)
+int	real_execution(t_exec *exec, t_cmdin **cmd, char **env)
 {
-	if (cmd->num_of_cmds == 1 && is_builtin(cmd->cmd[0].arg[0]))
-		exec_builtins(exec, cmd, to_free, env);
+	if ((*cmd)->num_of_cmds == 1 && is_builtin((*cmd)->cmd[0].arg[0]))
+		return (exec_builtins(exec, cmd, env));
 	else
 	{
 		set_signal_action(2);
@@ -49,7 +49,7 @@ int	real_execution(t_exec *exec, t_cmdin *cmd, t_free to_free, char **env)
 			return (0);
 		}
 		if (!exec->pid[exec->i_pid])
-			child_process(exec, cmd, to_free, env);
+			child_process(exec, cmd, env);
 	}
 	return (1);
 }
@@ -68,23 +68,23 @@ t_exec	init_exec(t_cmdin cmd)
 	return (exec);
 }
 
-void	exec_cmds(t_cmdin cmd, char **env, t_free to_free)
+void	exec_cmds(t_cmdin *cmd, char **env)
 {
 	t_exec		exec;
 
-	exec = init_exec(cmd);
+	exec = init_exec(*cmd);
 	if (!exec.pid)
 		return (print_error(1, "malloc", 1, ""));
-	while (exec.i < cmd.num_of_cmds)
+	while (exec.i < cmd->num_of_cmds)
 	{
-		exec.path = right_path(cmd.cmd[exec.i].arg[0], env);
+		exec.path = right_path(cmd->cmd[exec.i].arg[0], env);
 		if (!exec.path)
 			return (print_error(1, "malloc", 1, ""));
-		if (exec.i < cmd.num_of_cmds - 1 && pipe(exec.newpipefd) == -1)
+		if (exec.i < cmd->num_of_cmds - 1 && pipe(exec.newpipefd) == -1)
 			return (free(exec.path), print_error(1, "pipe", 1, ""));
-		if (!real_execution(&exec, &cmd, to_free, env))
+		if (!real_execution(&exec, &cmd, env))
 			return ;
-		parent(&exec, &cmd);
+		parent(&exec, cmd);
 		exec.i++;
 		exec.i_pid++;
 	}
@@ -94,13 +94,16 @@ void	exec_cmds(t_cmdin cmd, char **env, t_free to_free)
 	free(exec.pid);
 }
 
-void	exec(t_ast *ast, char **env, t_free to_free)
+void	exec(t_ast *ast, char **env)
 {
 	t_cmdin	cmd;
 
 	cmd = get_cmd_array(ast);
-	if (!cmd.cmd || !cmd.cmd->arg)
+	free_ast(ast);
+	if (!cmd.cmd)
 		return ;
-	exec_cmds(cmd, env, to_free);
+	if (!cmd.cmd->arg)
+		return (free(cmd.cmd));
+	exec_cmds(&cmd, env);
 	free_cmd(&cmd);
 }

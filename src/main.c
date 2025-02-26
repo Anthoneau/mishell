@@ -6,11 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 13:20:41 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:40:53 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "minishell.h"
 
 int	g_exit_code;
 
@@ -30,23 +30,22 @@ int	do_minishell(t_data d, int eof)
 		if (!get_name(&d))
 			return (1);
 		d.inpt = readline(d.name);
+		free(d.name);
 		if (d.inpt && *d.inpt && !ft_isspace(d.inpt))
 		{
 			d.token = lexer(d.inpt, d.env);
 			if (d.token && check_token(&d.token, &d.inpt, d.env))
 			{
 				d.ast = create_ast(&d.token, NULL, 0, &d.error);
+				free_token(&d.token);
 				if (d.ast)
-					exec(d.ast, d.env, get_to_free(&d.name, &d.token, &d.ast));
-				free_ast(d.ast);
+					exec(d.ast, d.env);
 			}
 			add_history(d.inpt);
-			free_token(&d.token);
 		}
 		else if (!d.inpt)
 			eof = 1;
 		ft_free(d.inpt);
-		free(d.name);
 	}
 	return (0);
 }

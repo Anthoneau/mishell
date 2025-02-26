@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:58:28 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 12:58:37 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/26 09:36:51 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,11 @@ t_free	get_to_free(char **name, t_token **token, t_ast **ast)
 {
 	t_free	to_free;
 
-	to_free.name = name;
-	to_free.token = token;
-	to_free.ast = ast;
+	(void)name;
+	to_free.name = NULL;
+	(void)token;
+	to_free.token = NULL;
+	(void)ast;
+	to_free.ast = NULL;
 	return (to_free);
 }

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 13:23:38 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:49:54 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	is_builtin(char *content)
 int	do_builtins(char **arg)
 {
 	if (!ft_strncmp(arg[0], "echo", 5))
-		return (printf("echo\n"));
+		return (echo(arg));
 	else if (!ft_strncmp(arg[0], "cd", 3))
 		return (printf("cd\n"));
 	else if (!ft_strncmp(arg[0], "pwd", 4))
@@ -39,26 +39,20 @@ int	do_builtins(char **arg)
 	return (0);
 }
 
-t_freexit	get_freexit(t_exec *exec, t_free to_free, char **env)
-{
-	t_freexit	free_exit;
-
-	free_exit.exec = exec;
-	free_exit.to_free = to_free;
-	free_exit.env = env;
-	return (free_exit);
-}
-
-void	exec_builtins(t_exec *exc, t_cmdin *cmd, t_free tfree, char **env)
+int	exec_builtins(t_exec *exc, t_cmdin **cmd, char **env)
 {
 	extern int	g_exit_code;
 
+	(void)env;
 	exc->builtin = 1;
-	if (!ft_strncmp(cmd->cmd[0].arg[0], "exit", 5))
+	if (!ft_strncmp((*cmd)->cmd[0].arg[0], "exit", 5))
 	{
-		exit_builtin(cmd->cmd[0].arg, cmd, get_freexit(exc, tfree, env));
+		ft_free(exc->pid);
+		ft_free(exc->path);
+		exit_builtin((*cmd)->cmd[0].arg, cmd);
 		g_exit_code = 1;
-		return ;
+		return (0);
 	}
-	g_exit_code = do_builtins(cmd->cmd[0].arg);
+	g_exit_code = do_builtins((*cmd)->cmd[0].arg);
+	return (1);
 }

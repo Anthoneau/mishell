@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 13:20:23 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:49:20 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,13 +131,6 @@ typedef struct s_exec
 	int		builtin;
 }	t_exec;
 
-typedef struct s_free_exit
-{
-	t_exec	*exec;
-	t_free	to_free;
-	char	**env;
-}	t_freexit;
-
 typedef struct s_array
 {
 	char	*arr1;
@@ -199,7 +192,8 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
-int		exit_builtin(char **arg, t_cmdin *cmd, t_freexit to_free);
+int		exit_builtin(char **arg, t_cmdin **cmd);
+int		echo(char **arg);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);
@@ -207,13 +201,13 @@ char	*right_path(char *content, char **env);
 t_cmdin	get_cmd_array(t_ast *ast);
 int		is_builtin(char *content);
 int		do_builtins(char **arg);
-void	exec_builtins(t_exec *exc, t_cmdin *cmd, t_free tfree, char **env);
-void	child_process(t_exec *exec, t_cmdin *cmd, t_free to_free, char **env);
+int		exec_builtins(t_exec *exc, t_cmdin **cmd, char **env);
+void	child_process(t_exec *exec, t_cmdin **cmd, char **env);
 void	parent(t_exec *exec, t_cmdin *cmd);
-void	exec(t_ast *ast, char **env, t_free to_free);
+void	exec(t_ast *ast, char **env);
 
 //SIGNAL
-void	signal_g_exit_code(int status, t_cmdin cmd);
+void	signal_g_exit_code(int status, t_cmdin *cmd);
 void	set_signal_action(int mode);
 
 //DISPLAY

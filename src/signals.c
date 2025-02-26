@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:36:32 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 13:21:42 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:57:53 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	handle_heredoc(int sig)
 	exit(130);
 }
 
-void	signal_g_exit_code(int status, t_cmdin cmd)
+void	signal_g_exit_code(int status, t_cmdin *cmd)
 {
 	int			sig;
 	extern int	g_exit_code;
@@ -47,7 +47,7 @@ void	signal_g_exit_code(int status, t_cmdin cmd)
 	}
 	else if (sig == SIGQUIT)
 	{
-		if (cmd.num_of_cmds == 1)
+		if (cmd->num_of_cmds == 1)
 			ft_putstr_fd("Quit (core dumped)\n", 1);
 		g_exit_code = 131;
 	}

@@ -6,7 +6,7 @@
 #    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/25 13:24:51 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/26 11:50:09 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -71,9 +71,9 @@ endef
 UTILS_FILES		=	utils utils2 utils3
 LEXER_FILES		=	lexer create_word word which_token
 CHECK_TKN_FILES	=	check_token end_pipe heredoc
-EXPANDER_FILES	=	expander to_expand change_content expander_utils
+EXPANDER_FILES	=	to_expand change_content expander_utils
 PARSER_FILES	=	create_ast redir word ast_utils
-BUILTINS_FILES	=	exit
+BUILTINS_FILES	=	exit echo
 EXEC_FILES		=	exec path get_cmd exec_builtins process get_cmd_input
 
 UTILS			=	${addprefix ${UTILS_DIR}, ${UTILS_FILES}}
