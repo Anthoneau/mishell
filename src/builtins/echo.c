@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:42:17 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 12:02:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/26 12:10:31 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ int	echo(char **arg)
 	int	i;
 	int	newline;
 
+	if (!arg[1])
+		return (ft_putchar_fd('\n', 1), 0);
 	newline = check_newline(arg);
 	if (newline == 0)
 		i = 2;
