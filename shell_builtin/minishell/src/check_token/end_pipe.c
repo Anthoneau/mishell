@@ -1,0 +1,140 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   end_pipe.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/23 15:40:23 by agoldber          #+#    #+#             */
+/*   Updated: 2025/02/24 20:10:13 by agoldber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "minishell.h"
+
+char	*join_inpts(char *first_inpt, char *inpt)
+{
+	int		i;
+	char	*res;
+	char	*temp;
+
+	i = ft_strlen(first_inpt);
+	res = NULL;
+	temp = NULL;
+	if (inpt[i] == ' ')
+		res = ft_strjoin(first_inpt, inpt);
+	else
+	{
+		temp = ft_strjoin(first_inpt, " ");
+		if (!temp)
+			return (print_error(1, "pipe", 1, ""), NULL);
+		res = ft_strjoin(temp, inpt);
+		free(temp);
+	}
+	if (!res)
+		return (print_error(1, "pipe", 1, ""), NULL);
+	return (res);
+}
+
+int	get_inpt_content(int fd[2])
+{
+	char	*inpt;
+
+	inpt = NULL;
+	while (1)
+	{
+		inpt = readline("pipe > ");
+		if (!inpt)
+		{
+			close(fd[1]);
+			close(fd[0]);
+			return (print_error(1, "malloc", 1, ""), -1);
+		}
+		if (*inpt && !ft_isspace(inpt))
+		{
+			ft_putstr_fd(inpt, fd[1]);
+			break ;
+		}
+		free(inpt);
+	}
+	close(fd[1]);
+	free(inpt);
+	return (0);
+}
+
+int	pipe_child(pid_t pid, int fd[2])
+{
+	int			nbr;
+	int			status;
+	extern int	g_exit_code;
+
+	status = 0;
+	if (!pid)
+	{
+		nbr = 0;
+		set_signal_action(1);
+		nbr = get_inpt_content(fd);
+		close(fd[0]);
+		close(fd[1]);
+		exit (nbr);
+	}
+	waitpid(pid, &status, 0);
+	if (status != 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
+		g_exit_code = WEXITSTATUS(status);
+		return (0);
+	}
+	return (1);
+}
+
+char	*get_inpt(void)
+{
+	int			fd[2];
+	pid_t		pid;
+	char		*res;
+
+	if (pipe(fd) == -1)
+		return (print_error(1, "pipe", 1, ""), NULL);
+	set_signal_action(2);
+	pid = fork();
+	if (pid == -1)
+		return (print_error(1, "pipe", 1, ""), NULL);
+	if (!pipe_child(pid, fd))
+		return (NULL);
+	set_signal_action(0);
+	close(fd[1]);
+	res = get_next_line(fd[0]);
+	close(fd[0]);
+	return (res);
+}
+
+int	end_pipe_handler(t_token **lst_tok, char **frst_inpt, char **env)
+{
+	char	*inpt;
+	char	*replace_inpt;
+	t_token	*token;
+
+	replace_inpt = NULL;
+	inpt = get_inpt();
+	if (!inpt)
+		return (0);
+	token = lexer(inpt, env);
+	if (!token || !check_token(&token, &inpt, env))
+	{
+		if (token)
+			free_token(&token);
+		return (0);
+	}
+	(*lst_tok)->next = token;
+	token->prev = (*lst_tok);
+	replace_inpt = join_inpts(*frst_inpt, inpt);
+	free(inpt);
+	if (replace_inpt)
+	{
+		free(*frst_inpt);
+		(*frst_inpt) = replace_inpt;
+	}
+	return (1);
+}
