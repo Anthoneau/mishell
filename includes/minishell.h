@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 11:49:20 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:08:11 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <fcntl.h>
 # include <errno.h>
 # include <signal.h>
+# include <stdbool.h>
 
 # define RED "\e[0;31m"
 # define GREEN "\e[0;32m"
@@ -110,6 +111,23 @@ typedef struct s_free
 	t_ast	**ast;
 }	t_free;
 
+typedef struct s_node
+{
+	char			*key;
+	char			*value;
+	struct s_node 	*next;
+	struct s_node 	*prev;
+}	t_node;
+
+typedef struct s_list
+{
+	t_node			*head;
+	t_node			*tail;
+	t_node			*pwd;
+	t_node			*oldpd;
+	int				size;
+}	t_list;
+
 typedef struct s_data
 {
 	int		error;
@@ -117,7 +135,8 @@ typedef struct s_data
 	char	*inpt;
 	t_token	*token;
 	t_ast	*ast;
-	char	**env;
+	// char	**env;
+	t_list	*env;
 }	t_data;
 
 typedef struct s_exec
@@ -155,6 +174,9 @@ void	free_cmd(t_cmdin *cmd);
 t_token	*good_cur(t_token *current, int side, int type);
 void	put_error_to_one(int *error);
 void	print_open_error(char *content);
+char	*ft_strldup(const char *s1, int len);
+int		strllen(char *s, char c);
+void	free_list(t_list *env);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
@@ -194,17 +216,23 @@ t_ast	*word_node(t_token *current, int *error);
 //BUILTINS
 int		exit_builtin(char **arg, t_cmdin **cmd);
 int		echo(char **arg);
+int		call_env(t_list *list);
+char	**get_env(t_list *list);
+int		export_order(t_list *list);
+void	make_list(t_list *list, char **env);
+void	sort(char **arr, int size);
+int		unset(t_list *list, char *s);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);
-char	*right_path(char *content, char **env);
+char	*right_path(char *content, t_list **env);
 t_cmdin	get_cmd_array(t_ast *ast);
 int		is_builtin(char *content);
-int		do_builtins(char **arg);
-int		exec_builtins(t_exec *exc, t_cmdin **cmd, char **env);
-void	child_process(t_exec *exec, t_cmdin **cmd, char **env);
+int		do_builtins(char **arg, t_list **env);
+int		exec_builtins(t_exec *exc, t_cmdin **cmd, t_list **env);
+void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env);
 void	parent(t_exec *exec, t_cmdin *cmd);
-void	exec(t_ast *ast, char **env);
+void	exec(t_ast *ast, t_list **env);
 
 //SIGNAL
 void	signal_g_exit_code(int status, t_cmdin *cmd);

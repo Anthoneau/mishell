@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 11:21:02 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/27 19:55:43 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin *cmd)
 	}
 }
 
-int	real_execution(t_exec *exec, t_cmdin **cmd, char **env)
+int	real_execution(t_exec *exec, t_cmdin **cmd, t_list **env)
 {
 	if ((*cmd)->num_of_cmds == 1 && is_builtin((*cmd)->cmd[0].arg[0]))
 		return (exec_builtins(exec, cmd, env));
@@ -68,7 +68,7 @@ t_exec	init_exec(t_cmdin cmd)
 	return (exec);
 }
 
-void	exec_cmds(t_cmdin *cmd, char **env)
+void	exec_cmds(t_cmdin *cmd, t_list **env)
 {
 	t_exec		exec;
 
@@ -94,7 +94,7 @@ void	exec_cmds(t_cmdin *cmd, char **env)
 	free(exec.pid);
 }
 
-void	exec(t_ast *ast, char **env)
+void	exec(t_ast *ast, t_list **env)
 {
 	t_cmdin	cmd;
 
@@ -106,4 +106,5 @@ void	exec(t_ast *ast, char **env)
 		return (free(cmd.cmd));
 	exec_cmds(&cmd, env);
 	free_cmd(&cmd);
+	free_list(*env);
 }

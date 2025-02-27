@@ -14,8 +14,8 @@ int	unset(t_list *list, char *s)
 		if (cmp == 0)
 		{
 			/////////////
-			printf("\n\nXXXXXXXXXXXXXXXX\n");
-			printf("ptr = <%s> ptr->prev = <%s>, ptr->next = %p\n", ptr->key, ptr->prev->key, ptr->next); 
+			// printf("\n\nXXXXXXXXXXXXXXXX\n");
+			// printf("ptr = <%s> ptr->prev = <%s>, ptr->next = %p\n", ptr->key, ptr->prev->key, ptr->next); 
 			////////////
 			if (ptr->prev != NULL)
 			{
@@ -25,7 +25,7 @@ int	unset(t_list *list, char *s)
 					list->tail = tmp;
 			}
 			/////////////
-			printf("tmp = <%s> tmp->next = <%s>\n", tmp->key, tmp->next->key);
+			// printf("tmp = <%s> tmp->next = <%s>\n", tmp->key, tmp->next->key);
 			// printf("{tail->next = NULL} tmp = <%s> tmp->next = %p\n", tmp->key, tmp->next);
 			////////////
 			if (ptr->next != NULL)
@@ -36,13 +36,14 @@ int	unset(t_list *list, char *s)
 					list->head = tmp;
 			}
 			////////////
-			printf("tmp = <%s> tmp->prev = <%s>\n", tmp->key, tmp->prev->key);
+			// printf("tmp = <%s> tmp->prev = <%s>\n", tmp->key, tmp->prev->key);
 			// printf("{head->prev = NULL} tmp = <%s> tmp->prev = %p\n", tmp->key, tmp->prev);
-			printf("XXXXXXXXXXXXXXXX\n\n");
+			// printf("XXXXXXXXXXXXXXXX\n\n");
 			////////////
 			free(ptr);
 			return (0);
 		}
 		ptr = ptr->next;
 	}
+	return (0);
 }

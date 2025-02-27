@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:21:22 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 16:21:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/27 19:55:14 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,25 @@ char	**get_path(char **full_env)
 	int		i;
 
 	i = 0;
+	if (!full_env)
+		return (NULL);
 	while (full_env[i])
 	{
 		if (ft_strnstr(full_env[i], "PATH", 5))
 		{
 			env = ft_strdup(full_env[i]);
 			if (!env)
-				return (NULL);
+				return (free_array(full_env), NULL);
 			temp_env = env;
 			while (*temp_env != '/')
 				temp_env++;
 			res = ft_split(temp_env, ':');
 			free(env);
-			return (res);
+			return (free_array(full_env), res);
 		}
 		i++;
 	}
-	return (NULL);
+	return (free_array(full_env), NULL);
 }
 
 char	*get_full_path(char *path, char *content)
@@ -77,7 +79,7 @@ char	*get_cmd(char *content)
 	return (cmd);
 }
 
-t_arr	get_arr(char *content, char **env)
+t_arr	get_arr(char *content, t_list **env)
 {
 	t_arr	arr;
 
@@ -88,13 +90,13 @@ t_arr	get_arr(char *content, char **env)
 	arr.arr1 = get_cmd(content);
 	if (!arr.arr1)
 		return (arr);
-	arr.arr2 = get_path(env);
+	arr.arr2 = get_path(get_env(*env));
 	if (!arr.arr2)
 		return (free(arr.arr1), arr);
 	return (arr);
 }
 
-char	*right_path(char *content, char **env)
+char	*right_path(char *content, t_list **env)
 {
 	char	*full_path;
 	t_arr	arr;

@@ -2,10 +2,21 @@
 
 char	*fill_tab(t_node *list)
 {
+	char	*key;
 	char	*str;
 
-	str = ft_strjoin(list->key, "=");
-	str = ft_strjoin(str, list->value);
+	if (!list || !list->value || !list->key)
+		return (NULL);
+	key = ft_strjoin(list->key, "=");
+	if (!key)
+		return (NULL);
+	// printf("list->key : %s\n", list->key);
+	// printf("list->value : %s\n", list->value);
+	// printf("key : %s\n", key);
+	str = ft_strjoin(key, list->value);
+	free(key);
+	if (!str)
+		return (NULL);
 	return (str);
 }
 
@@ -23,6 +34,8 @@ char	**get_env(t_list *list)
 	while (ptr != NULL)
 	{
 		tab[i] = fill_tab(ptr);
+		if (!tab[i])
+			return (free_array(tab), NULL);
 		i++;
 		ptr = ptr->next;
 	}
@@ -40,6 +53,7 @@ int	export_order(t_list *list)
 	i = 0;
 	while (export[i])
 		printf("declare -x %s\n", export[i++]);
-	ft_free(export);
+	// ft_free(export);
+	free_array(export);
 	return (0);
 }

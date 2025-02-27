@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 11:19:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:07:41 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	fdin_fdout(t_exec *exec, t_cmdin *cmd)
 	}
 }
 
-void	child_process(t_exec *exec, t_cmdin **cmd, char **env)
+void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 {
 	if ((*cmd)->num_of_cmds > 1)
 		pipe_redirection(exec, *cmd);
@@ -70,7 +70,7 @@ void	child_process(t_exec *exec, t_cmdin **cmd, char **env)
 		exit(0);
 	}
 	else
-		execve(exec->path, (*cmd)->cmd[exec->i].arg, env);
+		execve(exec->path, (*cmd)->cmd[exec->i].arg, get_env(*env));
 	print_error(0, (*cmd)->cmd[exec->i].arg[0], 0, "command not found");
 	free(exec->path);
 	free_cmd(*cmd);

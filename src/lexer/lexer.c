@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:12:24 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:35:28 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ t_token	*lexer(char *inpt, char **env)
 
 	i = 0;
 	token = NULL;
+	if (!env)
+		return (NULL);
 	if (!inpt || !check_quote(inpt))
 		return (print_error(1, "quote", 0, "error"), NULL);
 	while (inpt[i])
@@ -115,5 +117,6 @@ t_token	*lexer(char *inpt, char **env)
 		else if (inpt[i])
 			create_word(inpt, &i, &token, env);
 	}
+	free_array(env);
 	return (token);
 }

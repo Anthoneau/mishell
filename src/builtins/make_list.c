@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   make_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/02/25 17:39:47 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:10:20 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,12 +33,13 @@ char	*get_value(char *str, bool button)
 	int	len;
 	char	*s;
 
+	s = NULL;
 	len = strllen(str, '=');
 	if (button == false)
 	{
 		s = ft_strldup(str, len);
 	}
-	else if (button == true)
+	else
 		s = ft_strldup(str + (len + 1), ft_strlen(str + (len + 1)));
 	return (s);
 }
@@ -49,7 +50,7 @@ void	get_list(t_list *list, char *str)
 
 	new_node = malloc(sizeof(t_node));
 	if (!new_node)
-	return ;
+		return ;
 	new_node->key = get_value(str, false);
 	new_node->value = get_value(str, true);
 	new_node->next = NULL;

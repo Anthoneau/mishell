@@ -32,15 +32,33 @@ char	*ft_strldup(const char *s1, int len)
 	return (str);
 }
 
-void	ft_free(char **arr)
+void	free_list(t_list *env)
 {
-	int	i;
+	t_node	*ptr;
+	t_node	*next;
 
-	i = 0;
-	while (arr[i])
+	ptr = env->head;
+	next = ptr->next;
+	while (ptr != NULL)
 	{
-		free(arr[i]);
-		i++;
+		free(ptr->key);
+		free(ptr->value);
+		free(ptr);
+		ptr = next;
+		if (ptr != NULL)
+			next = ptr->next;
 	}
-	free(arr);
 }
+
+// void	ft_free(char **arr)
+// {
+// 	int	i;
+
+// 	i = 0;
+// 	while (arr[i])
+// 	{
+// 		free(arr[i]);
+// 		i++;
+// 	}
+// 	free(arr);
+// }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   check_token.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:09:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/27 20:35:45 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,8 @@ int	check_token(t_token **token, char **inpt, char **env)
 {
 	t_token	*cur;
 
+	if (!env)
+		return (0);
 	cur = *token;
 	if ((cur->type != WORD && !cur->next))
 		return (solo_handler(cur), 0);
@@ -120,6 +122,7 @@ int	check_token(t_token **token, char **inpt, char **env)
 		else
 			break ;
 	}
+	free_array(env);
 	if (forbidden_token(token))
 		return (0);
 	return (1);

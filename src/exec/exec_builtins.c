@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 11:49:54 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/27 19:58:34 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	is_builtin(char *content)
 	return (0);
 }
 
-int	do_builtins(char **arg)
+int	do_builtins(char **arg, t_list **env)
 {
 	if (!ft_strncmp(arg[0], "echo", 5))
 		return (echo(arg));
@@ -31,15 +31,15 @@ int	do_builtins(char **arg)
 	else if (!ft_strncmp(arg[0], "pwd", 4))
 		return (printf("pwd\n"));
 	else if (!ft_strncmp(arg[0], "export", 7))
-		return (printf("export\n"));
+		return (export_order(*env));
 	else if (!ft_strncmp(arg[0], "unset", 6))
-		return (printf("unset\n"));
+		return (unset(*env, arg[1]));
 	else if (!ft_strncmp(arg[0], "env", 4))
-		return (printf("env\n"));
+		return (call_env(*env));
 	return (0);
 }
 
-int	exec_builtins(t_exec *exc, t_cmdin **cmd, char **env)
+int	exec_builtins(t_exec *exc, t_cmdin **cmd, t_list **env)
 {
 	extern int	g_exit_code;
 
@@ -49,10 +49,11 @@ int	exec_builtins(t_exec *exc, t_cmdin **cmd, char **env)
 	{
 		ft_free(exc->pid);
 		ft_free(exc->path);
+		free_list(*env);
 		exit_builtin((*cmd)->cmd[0].arg, cmd);
 		g_exit_code = 1;
 		return (0);
 	}
-	g_exit_code = do_builtins((*cmd)->cmd[0].arg);
+	g_exit_code = do_builtins((*cmd)->cmd[0].arg, env);
 	return (1);
 }
