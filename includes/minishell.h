@@ -219,7 +219,7 @@ int		echo(char **arg);
 int		call_env(t_list *list);
 char	**get_env(t_list *list);
 int		export_order(t_list *list);
-void	make_list(t_list *list, char **env);
+t_list	*make_list(char **env);
 void	sort(char **arr, int size);
 int		unset(t_list *list, char *s);
 

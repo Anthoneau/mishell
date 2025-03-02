@@ -106,5 +106,4 @@ void	exec(t_ast *ast, t_list **env)
 		return (free(cmd.cmd));
 	exec_cmds(&cmd, env);
 	free_cmd(&cmd);
-	free_list(*env);
 }

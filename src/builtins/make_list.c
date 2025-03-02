@@ -36,9 +36,7 @@ char	*get_value(char *str, bool button)
 	s = NULL;
 	len = strllen(str, '=');
 	if (button == false)
-	{
 		s = ft_strldup(str, len);
-	}
 	else
 		s = ft_strldup(str + (len + 1), ft_strlen(str + (len + 1)));
 	return (s);
@@ -75,10 +73,12 @@ void	init_list(t_list *list)
 	list->size = 0;
 }
 
-void	make_list(t_list *list, char **env)
+t_list	*make_list(char **env)
 {
-	int	i;
+	int		i;
+	t_list	*list;
 
+	list = malloc(sizeof(t_list));
 	init_list(list);
 	i = 0;
 	while (env[i])
@@ -88,4 +88,5 @@ void	make_list(t_list *list, char **env)
 	}
 	list->pwd = get_node(list, "PWD");
 	list->oldpd = get_node(list, "OLDPWD");
+	return (list);
 }
