@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/03 13:54:42 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:50:57 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,13 +216,14 @@ t_ast	*word_node(t_token *current, int *error);
 //BUILTINS
 int		exit_builtin(char **arg, t_cmdin **cmd);
 int		pwd(t_list *env);
+int		cd(char **arg, t_list **env);
 int		echo(char **arg);
 int		call_env(t_list *list);
 char	**get_env(t_list *list);
 int		export_order(t_list *list);
 t_list	*make_list(char **env);
 void	sort(char **arr, int size);
-int		unset(t_list *list, char *s);
+int		unset(t_list **list, char *s);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);

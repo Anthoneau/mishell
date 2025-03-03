@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/03 13:53:24 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/03 14:51:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,13 @@ int	do_builtins(char **arg, t_list **env)
 	if (!ft_strncmp(arg[0], "echo", 5))
 		return (echo(arg));
 	else if (!ft_strncmp(arg[0], "cd", 3))
-		return (printf("cd\n"));
+		return (cd(arg, env));
 	else if (!ft_strncmp(arg[0], "pwd", 4))
 		return (pwd(*env));
 	else if (!ft_strncmp(arg[0], "export", 7))
 		return (export_order(*env));
 	else if (!ft_strncmp(arg[0], "unset", 6))
-		return (unset(*env, arg[1]));
+		return (unset(env, arg[1]));
 	else if (!ft_strncmp(arg[0], "env", 4))
 		return (call_env(*env));
 	return (0);
