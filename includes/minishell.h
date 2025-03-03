@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/27 20:08:11 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:54:42 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ typedef struct s_data
 	char	*inpt;
 	t_token	*token;
 	t_ast	*ast;
-	// char	**env;
+	char	**env_list;
 	t_list	*env;
 }	t_data;
 
@@ -215,6 +215,7 @@ t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
 int		exit_builtin(char **arg, t_cmdin **cmd);
+int		pwd(t_list *env);
 int		echo(char **arg);
 int		call_env(t_list *list);
 char	**get_env(t_list *list);

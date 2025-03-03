@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/27 19:58:34 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:53:24 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	do_builtins(char **arg, t_list **env)
 	else if (!ft_strncmp(arg[0], "cd", 3))
 		return (printf("cd\n"));
 	else if (!ft_strncmp(arg[0], "pwd", 4))
-		return (printf("pwd\n"));
+		return (pwd(*env));
 	else if (!ft_strncmp(arg[0], "export", 7))
 		return (export_order(*env));
 	else if (!ft_strncmp(arg[0], "unset", 6))

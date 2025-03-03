@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/27 20:01:01 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/03 13:41:06 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,9 @@ int	g_exit_code;
 
 int	get_name(t_data *d)
 {
-	char	**env;
-
-	env = get_env(d->env);
-	if (!env)
+	if (!d->env_list)
 		return (print_error(1, "malloc", 1, ""), 0);
-	d->name = minishell_name(env);
-	free_array(env);
+	d->name = minishell_name(d->env_list);
 	if (!d->name)
 		return (print_error(1, "malloc", 1, ""), 0);
 	return (1);
@@ -32,6 +28,7 @@ int	do_minishell(t_data *d, int eof)
 {
 	while (eof == 0)
 	{
+		d->env_list = get_env(d->env);
 		set_signal_action(0);
 		if (!get_name(d))
 			return (1);
@@ -39,9 +36,10 @@ int	do_minishell(t_data *d, int eof)
 		free(d->name);
 		if (d->inpt && *d->inpt && !ft_isspace(d->inpt))
 		{
-			d->token = lexer(d->inpt, get_env(d->env));
-			if (d->token && check_token(&d->token, &d->inpt, get_env(d->env)))
+			d->token = lexer(d->inpt, d->env_list);
+			if (d->token && check_token(&d->token, &d->inpt, d->env_list))
 			{
+				free_array(d->env_list);
 				d->ast = create_ast(&d->token, NULL, 0, &d->error);
 				free_token(&d->token);
 				if (d->ast)
@@ -76,7 +74,7 @@ int	main(int ac, char **av, char **env)
 	res = do_minishell(&data, 0);
 	if (g_exit_code != 0)
 		res = g_exit_code;
-	// rl_clear_history();
+	rl_clear_history();
 	ft_putstr_fd("exit\n", 1);
 	return (res);
 }
