@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/03 17:24:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/03 17:49:36 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,11 @@ int	ft_strsrch(char	*str, char	*search)
 
 int	go_to_oldpwd(t_list **env)
 {
-	// char	*oldpwd;
+	char	*oldpwd;
 	char	*temp;
 
-	// oldpwd = get_path_cd(env, "OLDPWD");
-	if (!(*env)->oldpd && !(*env)->oldpd->key && !(*env)->oldpd->value)
+	oldpwd = get_path_cd(env, "OLDPWD");
+	if (!oldpwd)
 		return (print_error(1, "cd", 0, "OLDPWD not set"), 1);
 	if (chdir((*env)->oldpd->value) == -1)
 		return (print_error_cd((*env)->oldpd->value), 1);
@@ -129,7 +129,7 @@ int	change_directory(char **arg, t_list **env)
 
 int	cd(char **arg, t_list **env)
 {
-	if (!arg[1])
+	if (!arg[1] || (!arg[2] && ft_strsrch(arg[1], "~")))
 		return (go_to_home(env));
 	else if (arg[2])
 		return (print_error(1, "cd", 0, "too many arguments"), 1);
