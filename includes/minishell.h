@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/03 14:50:57 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:16:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ typedef struct s_array
 }	t_arr;
 
 //UTILS
-char	*minishell_name(char **env);
+char	*minishell_name(t_data *data);
 void	free_token(t_token **token);
 void	free_error_node(t_ast *node);
 void	free_ast(t_ast *ast);

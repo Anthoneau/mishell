@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/03 13:41:06 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:14:46 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	get_name(t_data *d)
 {
 	if (!d->env_list)
 		return (print_error(1, "malloc", 1, ""), 0);
-	d->name = minishell_name(d->env_list);
+	d->name = minishell_name(d);
 	if (!d->name)
 		return (print_error(1, "malloc", 1, ""), 0);
 	return (1);

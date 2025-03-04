@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/03 17:49:36 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 16:59:33 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,18 +112,27 @@ int	go_to_oldpwd(t_list **env)
 
 int	change_directory(char **arg, t_list **env)
 {
+	// char	*buf;
+
+	// buf = getcwd(NULL, 0);
+	// printf("buf : %s\n", buf);
+	// free(buf);
 	if (chdir(arg[1]) == -1)
 		return (print_error_cd(arg[1]), 1);
+	// buf = getcwd(NULL, 0);
+	// printf("buf : %s\n", buf);
+	// free(buf);
 	// printf("pwd : %s=%s\n", (*env)->pwd->key, (*env)->pwd->value);
 	// printf("oldpwd : %s=%s\n\n", (*env)->oldpd->key, (*env)->oldpd->value);
 	free((*env)->oldpd->value);
 	(*env)->oldpd->value = ft_strdup((*env)->pwd->value);
 	// (*env)->oldpd->value = NULL;
 	free((*env)->pwd->value);
-	(*env)->pwd->value = ft_strdup(arg[1]);
+	// (*env)->pwd->value = ft_strdup(arg[1]);
+	(*env)->pwd->value  = getcwd(NULL, 0);
 	// (*env)->pwd->value = NULL;
-	// printf("pwd : %s=%s\n", (*env)->pwd->key, (*env)->pwd->value);
-	// printf("oldpwd : %s=%s\n\n", (*env)->oldpd->key, (*env)->oldpd->value);
+	printf("pwd : %s=%s\n", (*env)->pwd->key, (*env)->pwd->value);
+	printf("oldpwd : %s=%s\n\n", (*env)->oldpd->key, (*env)->oldpd->value);
 	return (0);
 }
 
