@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/03 13:37:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:34:48 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,10 @@ void	print_syntax_error(char *c)
 	ft_putendl_fd("'", 2);
 }
 
-void	solo_handler(t_token *current)
+void	solo_handler(t_token *current, char **env)
 {
+	if (!env)
+		return ;
 	if (current->type != PIPE && current->type != PIPE2
 		&& current->type != AND && current->type != AND2
 		&& current->type != DOT && current->type != DOT2)
@@ -100,11 +102,9 @@ int	check_token(t_token **token, char **inpt, char **env)
 {
 	t_token	*cur;
 
-	if (!env)
-		return (0);
 	cur = *token;
-	if ((cur->type != WORD && !cur->next))
-		return (solo_handler(cur), 0);
+	if (!env || (cur->type != WORD && !cur->next))
+		return (solo_handler(cur, env), 0);
 	while (cur)
 	{
 		if (cur->next && ((cur->type != WORD && cur->type != PIPE
@@ -112,7 +112,7 @@ int	check_token(t_token **token, char **inpt, char **env)
 					&& cur->next->type == PIPE)))
 			return (error_handler(cur), 0);
 		if (cur->type != WORD && cur->type != PIPE && !cur->next)
-			return (solo_handler(cur), 0);
+			return (solo_handler(cur, env), 0);
 		if (cur->type == R_HEREDOC && !do_heredoc(cur, env))
 			return (0);
 		if (cur->next)

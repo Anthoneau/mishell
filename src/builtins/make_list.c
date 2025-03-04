@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/04 14:56:01 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:59:34 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_node	*get_node(t_list *list, char *s)
 {
-	t_node *ptr;
+	t_node	*ptr;
 	int		cmp;
 
 	ptr = list->head;
@@ -30,7 +30,7 @@ t_node	*get_node(t_list *list, char *s)
 
 char	*get_value(char *str, bool button)
 {
-	int	len;
+	int		len;
 	char	*s;
 
 	s = NULL;

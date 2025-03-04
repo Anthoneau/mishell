@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   list_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
+/*   Updated: 2025/03/04 17:36:46 by agoldber         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 int	strllen(char *s, char c)
@@ -7,14 +19,13 @@ int	strllen(char *s, char c)
 	i = 0;
 	if (!s)
 		return (0);
-	while(s[i] && s[i] != c)
+	while (s[i] && s[i] != c)
 		i++;
 	return (i);
 }
 
 char	*ft_strldup(const char *s1, int len)
 {
-	//printf("<%s> len=<%d>\n", s1, len);
 	int		i;
 	char	*str;
 
@@ -28,7 +39,6 @@ char	*ft_strldup(const char *s1, int len)
 		i++;
 	}
 	str[i] = '\0';
-	//printf("final str<%s>\n", str);
 	return (str);
 }
 
@@ -49,16 +59,3 @@ void	free_list(t_list *env)
 			next = ptr->next;
 	}
 }
-
-// void	ft_free(char **arr)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (arr[i])
-// 	{
-// 		free(arr[i]);
-// 		i++;
-// 	}
-// 	free(arr);
-// }

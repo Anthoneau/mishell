@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:24:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:56:56 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,8 +115,8 @@ typedef struct s_node
 {
 	char			*key;
 	char			*value;
-	struct s_node 	*next;
-	struct s_node 	*prev;
+	struct s_node	*next;
+	struct s_node	*prev;
 }	t_node;
 
 typedef struct s_list2
@@ -186,7 +186,7 @@ void	print_open_error(char *content);
 char	*ft_strldup(const char *s1, int len);
 int		strllen(char *s, char c);
 void	free_list(t_list *env);
-int 	list_len(t_list2 **list);
+int		list_len(t_list2 **list);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
@@ -227,6 +227,8 @@ t_ast	*word_node(t_token *current, int *error);
 int		exit_builtin(char **arg, t_cmdin **cmd);
 int		pwd(t_list *env);
 int		cd(char **arg, t_list **env);
+void	print_error_cd(char *name);
+int		ft_strsrch(char	*str, char	*search);
 int		echo(char **arg);
 int		call_env(t_list *list);
 char	**get_env(t_list *list);

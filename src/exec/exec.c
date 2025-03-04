@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/03 15:50:25 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:32:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ void	exec(t_ast *ast, t_list **env)
 		return ;
 	if (!cmd.cmd->arg)
 		return (free(cmd.cmd));
-	
 	exec_cmds(&cmd, env);
 	free_cmd(&cmd);
 }

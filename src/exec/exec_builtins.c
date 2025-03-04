@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_builtins.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 14:13:55 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:33:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ int	do_builtins(char **arg, t_list **env)
 		return (unset(*env, arg + 1));
 	else if (!ft_strncmp(arg[0], "env", 4))
 		return (call_env(*env));
-	
 	return (0);
 }
 

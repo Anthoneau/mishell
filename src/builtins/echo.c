@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:42:17 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 12:10:31 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:59:00 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ int	check_newline(char **arg)
 		while (arg[1][i])
 		{
 			if (arg[1][i] != 'n')
-			{
 				return (1);
-				break;
-			}
 			i++;
 		}
 		return (0);

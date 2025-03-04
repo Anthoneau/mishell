@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:14:46 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:34:24 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ int	g_exit_code;
 
 int	get_name(t_data *d)
 {
+	set_signal_action(0);
+	d->env_list = get_env(d->env);
 	if (!d->env_list)
 		return (print_error(1, "malloc", 1, ""), 0);
 	d->name = minishell_name(d);
@@ -28,8 +30,6 @@ int	do_minishell(t_data *d, int eof)
 {
 	while (eof == 0)
 	{
-		d->env_list = get_env(d->env);
-		set_signal_action(0);
 		if (!get_name(d))
 			return (1);
 		d->inpt = readline(d->name);
@@ -67,8 +67,6 @@ int	main(int ac, char **av, char **env)
 	data.inpt = NULL;
 	data.token = NULL;
 	data.ast = NULL;
-	// data.env = env;
-	// make_list(data.env, env);
 	data.env = make_list(env);
 	g_exit_code = 0;
 	res = do_minishell(&data, 0);

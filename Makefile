@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+         #
+#    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/03/04 15:04:36 by mel-bout         ###   ########.fr        #
+#    Updated: 2025/03/04 17:57:15 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -73,7 +73,7 @@ LEXER_FILES		=	lexer create_word word which_token
 CHECK_TKN_FILES	=	check_token end_pipe heredoc
 EXPANDER_FILES	=	to_expand change_content expander_utils
 PARSER_FILES	=	create_ast redir word ast_utils
-BUILTINS_FILES	=	exit echo env_call export make_list sort unset pwd cd export_add
+BUILTINS_FILES	=	exit echo env_call export make_list sort unset pwd cd cd_utils export_add
 EXEC_FILES		=	exec path get_cmd exec_builtins process get_cmd_input
 
 UTILS			=	${addprefix ${UTILS_DIR}, ${UTILS_FILES}}
