@@ -42,7 +42,7 @@ char	**get_env(t_list *list)
 	return (tab);
 }
 
-int	export_order(t_list *list)
+void	export_order(t_list *list)
 {
 	char	**export;
 	int     i;
@@ -51,7 +51,65 @@ int	export_order(t_list *list)
 	sort(export, list->size);
 	i = 0;
 	while (export[i])
-		printf("declare -x %s\n", export[i++]);
+		printf("declare -x %s\"\n", export[i++]);
 	free_array(export);
-	return (0);
+}
+
+void	add_node(t_list2 **add_key, char *str)
+{
+	t_list2	*new_node;
+	t_list2 *ptr;
+
+	new_node = malloc(sizeof(t_list2));
+	if (!new_node)
+		return ;
+	new_node->key = ft_strdup(str);
+	new_node->value = NULL;
+	new_node->next = NULL;
+	ptr = (*add_key);
+	if ((*add_key) != NULL)
+	{
+		printf("list = %p ptr = %p node++\n", (*add_key), ptr);
+		while(ptr->next != NULL)
+			ptr = ptr->next;
+		printf("%p\n", ptr);
+		ptr->next = new_node;
+	}
+	if ((*add_key) == NULL)
+	{
+		printf("first node\n");
+		(*add_key) = new_node;
+	}
+}
+
+int	export(t_list *list, char **arg)
+{
+	int		i;
+	t_list2	*ptr;
+
+	i = 0;
+	if (arg[i] == NULL)
+	{
+		export_order(list);
+		// if (list->add_key)
+		// 	export_order(list->add_key);
+		return (0);
+	}
+	else
+	{
+		while(arg[i])
+		{
+			add_node(&list->add_key, arg[i++]);
+		}
+		ptr = list->add_key;
+		while (ptr != NULL)
+		{
+			printf("%s\n", ptr->key);
+			ptr = ptr->next;
+		}
+		printf("%p key = %s and %d\n", list->add_key, list->add_key->key, list_len(&list->add_key));
+		printf("fin add_node\n");
+		return (0);
+	}
+	return (1);
 }
