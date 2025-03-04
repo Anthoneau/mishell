@@ -1,6 +1,6 @@
 #include "minishell.h"
 
-int	unset(t_list *list, char *s)
+void	do_unset(t_list *list, char *s)
 {
 	printf("unset\n");
 	t_node  *ptr;
@@ -10,7 +10,7 @@ int	unset(t_list *list, char *s)
 	ptr = list->head;
 	while (ptr != NULL)
 	{
-		cmp = ft_strncmp(s, ptr->key, ft_strlen(s));
+		cmp = ft_strncmp(s, ptr->key, ft_strlen(s) + 1);
 		if (cmp == 0)
 		{
 			/////////////
@@ -41,9 +41,21 @@ int	unset(t_list *list, char *s)
 			// printf("XXXXXXXXXXXXXXXX\n\n");
 			////////////
 			free(ptr);
-			return (0);
+			list->size--;
+			return ;
 		}
 		ptr = ptr->next;
+	}
+}
+int	unset(t_list *list, char **arg)
+{
+	int	i;
+
+	i = 0;
+	while(arg[i])
+	{
+		do_unset(list, arg[i]);
+		i++;
 	}
 	return (0);
 }

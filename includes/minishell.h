@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:16:11 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/04 17:24:30 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,12 +119,21 @@ typedef struct s_node
 	struct s_node 	*prev;
 }	t_node;
 
+typedef struct s_list2
+{
+	char			*key;
+	char			*value;
+	struct s_list2	*next;
+	int				size;
+}	t_list2;
+
 typedef struct s_list
 {
 	t_node			*head;
 	t_node			*tail;
 	t_node			*pwd;
 	t_node			*oldpd;
+	t_list2			*add_key;
 	int				size;
 }	t_list;
 
@@ -177,6 +186,7 @@ void	print_open_error(char *content);
 char	*ft_strldup(const char *s1, int len);
 int		strllen(char *s, char c);
 void	free_list(t_list *env);
+int 	list_len(t_list2 **list);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
@@ -220,10 +230,10 @@ int		cd(char **arg, t_list **env);
 int		echo(char **arg);
 int		call_env(t_list *list);
 char	**get_env(t_list *list);
-int		export_order(t_list *list);
+int		export(t_list *list, char **arg);
 t_list	*make_list(char **env);
 void	sort(char **arr, int size);
-int		unset(t_list **list, char *s);
+int		unset(t_list *list, char **arg);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);

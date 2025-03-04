@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/02/27 20:10:20 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:56:01 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ void	init_list(t_list *list)
 	list->tail = NULL;
 	list->pwd = NULL;
 	list->oldpd = NULL;
+	list->add_key = NULL;
 	list->size = 0;
 }
 
