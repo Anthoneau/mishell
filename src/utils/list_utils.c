@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/04 17:36:46 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/05 15:15:54 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,8 @@ char	*ft_strldup(const char *s1, int len)
 	int		i;
 	char	*str;
 
+	if (!s1)
+	return (NULL);
 	i = 0;
 	str = malloc(sizeof(char) * (len + 1));
 	if (!str)

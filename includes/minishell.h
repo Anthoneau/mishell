@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:56:56 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:10:19 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,13 +119,13 @@ typedef struct s_node
 	struct s_node	*prev;
 }	t_node;
 
-typedef struct s_list2
-{
-	char			*key;
-	char			*value;
-	struct s_list2	*next;
-	int				size;
-}	t_list2;
+// typedef struct s_list2
+// {
+// 	char			*key;
+// 	char			*value;
+// 	struct s_list2	*next;
+// 	int				size;
+// }	t_list2;
 
 typedef struct s_list
 {
@@ -133,7 +133,7 @@ typedef struct s_list
 	t_node			*tail;
 	t_node			*pwd;
 	t_node			*oldpd;
-	t_list2			*add_key;
+	// t_list2			*add_key;
 	int				size;
 }	t_list;
 
@@ -186,7 +186,9 @@ void	print_open_error(char *content);
 char	*ft_strldup(const char *s1, int len);
 int		strllen(char *s, char c);
 void	free_list(t_list *env);
-int		list_len(t_list2 **list);
+char	*get_value(char *str, bool button);
+char	*fill_value(char *str, bool button);
+void	get_list(t_list *list, char *str);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
