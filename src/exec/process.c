@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/27 20:07:41 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:50:49 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,14 +65,17 @@ void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 	free(exec->pid);
 	if ((*cmd)->cmd[exec->i].arg[0] && is_builtin((*cmd)->cmd[exec->i].arg[0]))
 	{
-		free(exec->path);
+		ft_free(exec->path);
 		exec_builtins(exec, cmd, env);
 		exit(0);
 	}
-	else
+	else if (exec->path)
 		execve(exec->path, (*cmd)->cmd[exec->i].arg, get_env(*env));
-	print_error(0, (*cmd)->cmd[exec->i].arg[0], 0, "command not found");
-	free(exec->path);
+	if (exec->path)
+		print_error(0, (*cmd)->cmd[exec->i].arg[0], 0, "command not found");
+	else
+		print_error(1, (*cmd)->cmd[exec->i].arg[0], 0, "No such file or directory");
+	ft_free(exec->path);
 	free_cmd(*cmd);
 	exit(127);
 }
