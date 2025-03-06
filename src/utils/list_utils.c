@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/05 15:15:54 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:15:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,18 @@ void	free_list(t_list *env)
 
 	ptr = env->head;
 	next = ptr->next;
-	while (ptr != NULL)
+	while (ptr)
 	{
-		free(ptr->key);
-		free(ptr->value);
+		if (ptr->key)
+			free(ptr->key);
+		if (ptr->value)
+			free(ptr->value);
 		free(ptr);
 		ptr = next;
-		if (ptr != NULL)
+		if (ptr)
 			next = ptr->next;
 	}
+	if (env->pwd)
+		free(env->pwd);
+	free(env);
 }

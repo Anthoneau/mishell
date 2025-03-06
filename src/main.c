@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/06 16:32:42 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/06 17:15:41 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@ int	main(int ac, char **av, char **env)
 	data.token = NULL;
 	data.ast = NULL;
 	data.env = make_list(env);
+	if (!data.env)
+		return (print_error(1, "malloc", 1, NULL), 1);
 	g_exit_code = 0;
 	res = do_minishell(&data, 0);
 	if (g_exit_code != 0)
