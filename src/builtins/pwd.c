@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:56 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/03 13:55:46 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:58:02 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	pwd(t_list *env)
 {
-	if (env->pwd->value)
+	if (env->pwd)
 	{
-		ft_putendl_fd(env->pwd->value, 1);
+		ft_putendl_fd(env->pwd, 1);
 		return (0);
 	}
 	return (1);

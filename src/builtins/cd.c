@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/04 17:58:25 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:58:53 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ int	go_to_home(t_list **env)
 	if (chdir(home) == -1)
 		return (print_error_cd(home), 1);
 	free((*env)->oldpd->value);
-	(*env)->oldpd->value = ft_strdup((*env)->pwd->value);
-	free((*env)->pwd->value);
-	(*env)->pwd->value = ft_strdup(home);
+	(*env)->oldpd->value = ft_strdup((*env)->pwd);
+	free((*env)->pwd);
+	(*env)->pwd = ft_strdup(home);
 	return (0);
 }
 
@@ -51,8 +51,8 @@ int	go_to_oldpwd(t_list **env)
 	if (chdir((*env)->oldpd->value) == -1)
 		return (print_error_cd((*env)->oldpd->value), 1);
 	temp = (*env)->oldpd->value;
-	(*env)->oldpd->value = (*env)->pwd->value;
-	(*env)->pwd->value = temp;
+	(*env)->oldpd->value = (*env)->pwd;
+	(*env)->pwd = temp;
 	return (0);
 }
 
@@ -61,9 +61,9 @@ int	change_directory(char **arg, t_list **env)
 	if (chdir(arg[1]) == -1)
 		return (print_error_cd(arg[1]), 1);
 	free((*env)->oldpd->value);
-	(*env)->oldpd->value = ft_strdup((*env)->pwd->value);
-	free((*env)->pwd->value);
-	(*env)->pwd->value = getcwd(NULL, 0);
+	(*env)->oldpd->value = ft_strdup((*env)->pwd);
+	free((*env)->pwd);
+	(*env)->pwd = getcwd(NULL, 0);
 	return (0);
 }
 

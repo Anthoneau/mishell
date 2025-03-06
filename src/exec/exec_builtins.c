@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/05 15:04:20 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/06 15:46:26 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ int	exec_builtins(t_exec *exc, t_cmdin **cmd, t_list **env)
 {
 	extern int	g_exit_code;
 
-	(void)env;
 	exc->builtin = 1;
 	if (!ft_strncmp((*cmd)->cmd[0].arg[0], "exit", 5))
 	{

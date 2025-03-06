@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_name.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:22:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:51:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:57:39 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char	*minishell_name(t_data *data)
 	char	*res;
 	int		i;
 
-	buf = ft_strdup(data->env->pwd->value);
+	buf = ft_strdup(data->env->pwd);
 	if (!buf)
 		return (NULL);
 	home = get_home(data->env_list);

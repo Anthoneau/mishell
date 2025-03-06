@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/05 17:37:36 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:54:00 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,22 @@ t_node	*get_node(t_list *list, char *s)
 		cmp = ft_strncmp(s, ptr->key, ft_strlen(s));
 		if (cmp == 0)
 			return (ptr);
+		ptr = ptr->next;
+	}
+	return (NULL);
+}
+
+char	*get_char(t_list *list, char *s)
+{
+	t_node	*ptr;
+	int		cmp;
+
+	ptr = list->head;
+	while (ptr != NULL)
+	{
+		cmp = ft_strncmp(s, ptr->key, ft_strlen(s));
+		if (cmp == 0)
+			return (ft_strdup(ptr->value));
 		ptr = ptr->next;
 	}
 	return (NULL);
@@ -86,7 +102,7 @@ t_list	*make_list(char **env)
 		get_list(list, env[i]);
 		i++;
 	}
-	list->pwd = get_node(list, "PWD");
+	list->pwd = get_char(list, "PWD");
 	list->oldpd = get_node(list, "OLDPWD");
 	return (list);
 }
