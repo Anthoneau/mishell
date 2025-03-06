@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/06 17:13:45 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:31:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,11 @@ void	get_list(t_list *list, char *str)
 	if (!new_node)
 		return ;
 	new_node->key = fill_value(str, false);
+	if (!new_node->key)
+		return (free(new_node));
 	new_node->value = fill_value(str, true);
+	if (!new_node->value)
+		return (free(new_node->key), free(new_node));
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	if (list->tail != NULL)

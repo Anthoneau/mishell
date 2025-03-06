@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:02:27 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/06 16:02:31 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/06 18:33:53 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ int	export(t_list *list, char **arg)
 		while(arg[i])
 		{
 			get_list(list, arg[i++]);
+			if (!list->tail)
+				return (free_list(list), 1);
 		}
 		ptr = list->head;
 		while (ptr != NULL)
