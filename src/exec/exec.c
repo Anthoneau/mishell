@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:32:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:47:54 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	real_execution(t_exec *exec, t_cmdin **cmd, t_list **env)
 		exec->pid[exec->i_pid] = fork();
 		if (exec->pid[exec->i_pid] == -1)
 		{
-			free(exec->path);
+			ft_free(exec->path);
 			print_error(1, "fork", 1, "");
 			return (0);
 		}
@@ -78,10 +78,10 @@ void	exec_cmds(t_cmdin *cmd, t_list **env)
 	while (exec.i < cmd->num_of_cmds)
 	{
 		exec.path = right_path(cmd->cmd[exec.i].arg[0], env);
-		if (!exec.path)
-			return (print_error(1, "malloc", 1, ""));
+		// if (!exec.path)
+		// 	return (print_error(1, "malloc", 1, ""));
 		if (exec.i < cmd->num_of_cmds - 1 && pipe(exec.newpipefd) == -1)
-			return (free(exec.path), print_error(1, "pipe", 1, ""));
+			return (ft_free(exec.path), print_error(1, "pipe", 1, ""));
 		if (!real_execution(&exec, &cmd, env))
 			return ;
 		parent(&exec, cmd);

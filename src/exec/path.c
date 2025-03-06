@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:21:22 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/27 19:55:14 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/06 14:45:38 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,9 +103,11 @@ char	*right_path(char *content, t_list **env)
 	int		i;
 
 	full_path = NULL;
+	if (!content)
+		return (NULL);
 	arr = get_arr(content, env);
-	if (!content || !arr.arr1 || !arr.arr2)
-		return (ft_free(arr.arr1), free_array(arr.arr2), NULL);
+	if (!arr.arr1 || !arr.arr2)
+		return (NULL);
 	i = 0;
 	while (!full_path || access(full_path, R_OK) == -1)
 	{
