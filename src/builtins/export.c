@@ -1,12 +1,14 @@
 #include "minishell.h"
 
-char	*fill_tab(t_node *list)
+char	*fill_export(t_node *list)
 {
 	char	*key;
 	char	*str;
 
-	if (!list || !list->value || !list->key)
+	if (!list || !list->key)
 		return (NULL);
+	if (!list->value)
+		return (ft_strdup(list->key));
 	key = ft_strjoin(list->key, "=");
 	if (!key)
 		return (NULL);
@@ -17,7 +19,7 @@ char	*fill_tab(t_node *list)
 	return (str);
 }
 
-char	**get_env(t_list *list)
+char	**export_arr(t_list *list)
 {
 	t_node	*ptr;
 	char	**tab;
@@ -32,7 +34,9 @@ char	**get_env(t_list *list)
 		return (NULL);
 	while (ptr)
 	{
-		tab[i] = fill_tab(ptr);
+		printf("key = %s\n", ptr->key);
+		tab[i] = fill_export(ptr);
+		printf("tab = %s i = <%d>\n", tab[i], i);
 		if (!tab[i])
 			return (free_array(tab), NULL);
 		i++;
@@ -47,67 +51,54 @@ void	export_order(t_list *list)
 	char	**export;
 	int     i;
 
-	export = get_env(list);
+	export = export_arr(list);
 	sort(export, list->size);
 	i = 0;
 	while (export[i])
-		printf("declare -x %s\"\n", export[i++]);
+		printf("declare -x %s\n", export[i++]);
 	free_array(export);
 }
 
-void	add_node(t_list2 **add_key, char *str)
+char	*fill_value(char *str, bool button)
 {
-	t_list2	*new_node;
-	t_list2 *ptr;
-
-	new_node = malloc(sizeof(t_list2));
-	if (!new_node)
-		return ;
-	new_node->key = ft_strdup(str);
-	new_node->value = NULL;
-	new_node->next = NULL;
-	ptr = (*add_key);
-	if ((*add_key) != NULL)
+	if (ft_strchr(str, '='))
+		return (get_value(str, button));
+	else
 	{
-		printf("list = %p ptr = %p node++\n", (*add_key), ptr);
-		while(ptr->next != NULL)
-			ptr = ptr->next;
-		printf("%p\n", ptr);
-		ptr->next = new_node;
-	}
-	if ((*add_key) == NULL)
-	{
-		printf("first node\n");
-		(*add_key) = new_node;
+		if (button == false)
+			return (ft_strdup(str));
+		else
+			return (NULL);
 	}
 }
+
+
 
 int	export(t_list *list, char **arg)
 {
 	int		i;
-	t_list2	*ptr;
+	t_node	*ptr;
 
 	i = 0;
 	if (arg[i] == NULL)
 	{
 		export_order(list);
-		// if (list->add_key)
-		// 	export_order(list->add_key);
 		return (0);
 	}
 	else
 	{
 		while(arg[i])
 		{
-			add_node(&list->add_key, arg[i++]);
+			get_list(list, arg[i++]);
 		}
-		ptr = list->add_key;
+		ptr = list->head;
 		while (ptr != NULL)
 		{
 			printf("%s\n", ptr->key);
 			ptr = ptr->next;
 		}
-		printf("%p key = %s and %d\n", list->add_key, list->add_key->key, list_len(&list->add_key));
+		// printf("%p key = %s and %d\n", list->add_key, list->add_key->key, list_len(&list->add_key));
+		printf("list size = %d\n", list->size);
 		printf("fin add_node\n");
 		return (0);
 	}

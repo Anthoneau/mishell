@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/04 17:59:34 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/05 17:37:36 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ void	get_list(t_list *list, char *str)
 	new_node = malloc(sizeof(t_node));
 	if (!new_node)
 		return ;
-	new_node->key = get_value(str, false);
-	new_node->value = get_value(str, true);
+	new_node->key = fill_value(str, false);
+	new_node->value = fill_value(str, true);
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	if (list->tail != NULL)
@@ -70,7 +70,6 @@ void	init_list(t_list *list)
 	list->tail = NULL;
 	list->pwd = NULL;
 	list->oldpd = NULL;
-	list->add_key = NULL;
 	list->size = 0;
 }
 
