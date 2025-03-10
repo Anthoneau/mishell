@@ -12,16 +12,16 @@
 
 #include "minishell.h"
 
-void	swap(char **s1, char **s2)
+void	swap(t_tab **s1, t_tab **s2)
 {
-	char	*tmp;
+	t_tab	*tmp;
 
 	tmp = *s1;
 	*s1 = *s2;
 	*s2 = tmp;
 }
 
-void	sort(char **arr, int size)
+void	sort(t_tab **arr, int size)
 {
 	int	cmp;
 	int	i;
@@ -33,7 +33,7 @@ void	sort(char **arr, int size)
 		j = 0;
 		while (j < i)
 		{
-			cmp = ft_strncmp(arr[j], arr[j + 1], ft_strlen(arr[j]) + 1);
+			cmp = ft_strncmp(arr[j]->key, arr[j + 1]->key, ft_strlen(arr[j]->key) + 1);
 			if (cmp > 0)
 				swap(&arr[j], &arr[j + 1]);
 			j++;

@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/06 16:50:10 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/08 17:14:21 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,13 +119,11 @@ typedef struct s_node
 	struct s_node	*prev;
 }	t_node;
 
-// typedef struct s_list2
-// {
-// 	char			*key;
-// 	char			*value;
-// 	struct s_list2	*next;
-// 	int				size;
-// }	t_list2;
+typedef struct s_tab
+{
+	char			*key;
+	char			*value;
+}	t_tab;
 
 typedef struct s_list
 {
@@ -133,7 +131,7 @@ typedef struct s_list
 	t_node			*tail;
 	char			*pwd;
 	t_node			*oldpd;
-	// t_list2			*add_key;
+	t_tab			**arr;
 	int				size;
 }	t_list;
 
@@ -236,7 +234,7 @@ int		call_env(t_list *list);
 char	**get_env(t_list *list);
 int		export(t_list *list, char **arg);
 t_list	*make_list(char **env);
-void	sort(char **arr, int size);
+void	sort(t_tab **arr, int size);
 int		unset(t_list *list, char **arg);
 
 //EXEC
