@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 17:52:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:18:51 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,13 @@ void	to_expand(char **content, char **env)
 	i = 0;
 	while ((*content) && (*content)[i])
 	{
-		if ((*content)[i] == '$' && (i == 0 || ((*content)[i - 1]
+		if ((*content)[i] == '$' && (!(*content)[i + 1]
+				|| (*content)[i + 1] == ' '))
+		{
+			i++;
+			continue ;
+		}
+		else if ((*content)[i] == '$' && (i == 0 || ((*content)[i - 1]
 			&& (*content)[i - 1] != '\\' && (*content)[i - 1] != '\'')))
 		{
 			i++;

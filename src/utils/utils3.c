@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:09 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 12:59:14 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/07 14:11:15 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	print_open_error(char *content)
 		print_error(1, content, 0, "Permission denied");
 	else if (errno == EMFILE || errno == ENFILE)
 		print_error(1, NULL, 0, "Too many open files");
+	else if (errno == EBUSY || errno == ETXTBSY)
+		print_error(1, content, 0, "Text file busy");
 	else
 		print_error(1, NULL, 0, "Error opening file");
 }
