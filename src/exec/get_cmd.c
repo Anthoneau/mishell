@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:14:09 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:36:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/10 14:49:42 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,8 @@ t_cmdin	get_cmd_array(t_ast *ast)
 	t_cmdin	cmd;
 
 	cmd.num_of_cmds = get_cmd_number(ast);
+	if (!cmd.num_of_cmds)
+		cmd.num_of_cmds = 1;
 	cmd.cmd = ft_calloc(cmd.num_of_cmds + 1, sizeof(t_cmd));
 	if (!cmd.cmd)
 		return (cmd);

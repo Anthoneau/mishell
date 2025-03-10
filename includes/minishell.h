@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/06 16:50:10 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:25:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -227,12 +227,13 @@ t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
 int		exit_builtin(char **arg, t_cmdin **cmd);
-int		pwd(t_list *env);
+int		pwd(t_list *env, int output);
 int		cd(char **arg, t_list **env);
 void	print_error_cd(char *name);
 int		ft_strsrch(char	*str, char	*search);
-int		echo(char **arg);
-int		call_env(t_list *list);
+int		echo(t_cmd *cmd);
+// int		call_env(t_list *list);
+int		call_env(t_list *list, int output);
 char	**get_env(t_list *list);
 int		export(t_list *list, char **arg);
 t_list	*make_list(char **env);
@@ -244,7 +245,7 @@ int		get_cmds_inputs(t_ast **current, t_inout *fd);
 char	*right_path(char *content, t_list **env);
 t_cmdin	get_cmd_array(t_ast *ast);
 int		is_builtin(char *content);
-int		do_builtins(char **arg, t_list **env);
+int		do_builtins(t_cmd *cmd, t_list **env);
 int		exec_builtins(t_exec *exc, t_cmdin **cmd, t_list **env);
 void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env);
 void	parent(t_exec *exec, t_cmdin *cmd);
