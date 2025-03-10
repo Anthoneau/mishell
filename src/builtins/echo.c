@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:42:17 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:59:00 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:27:30 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,26 +31,31 @@ int	check_newline(char **arg)
 	return (1);
 }
 
-int	echo(char **arg)
+int	echo(t_cmd *cmd)
 {
 	int	i;
 	int	newline;
+	int	output;
 
-	if (!arg[1])
-		return (ft_putchar_fd('\n', 1), 0);
-	newline = check_newline(arg);
+	if (cmd->fd_out == -1)
+		output = 1;
+	else
+		output = cmd->fd_out;
+	if (!cmd->arg[1])
+		return (ft_putchar_fd('\n', output), 0);
+	newline = check_newline(cmd->arg);
 	if (newline == 0)
 		i = 2;
 	else
 		i = 1;
-	while (arg[i])
+	while (cmd->arg[i])
 	{
-		ft_putstr_fd(arg[i], 1);
+		ft_putstr_fd(cmd->arg[i], output);
 		i++;
-		if (arg[i])
-			ft_putchar_fd(' ', 1);
+		if (cmd->arg[i])
+			ft_putchar_fd(' ', output);
 	}
 	if (newline == 1)
-		ft_putchar_fd('\n', 1);
+		ft_putchar_fd('\n', output);
 	return (0);
 }

@@ -3,20 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:56 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/06 16:58:02 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/10 15:25:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	pwd(t_list *env)
+int	pwd(t_list *env, int output)
 {
+	if (output == -1)
+		output = 1;
 	if (env->pwd)
 	{
-		ft_putendl_fd(env->pwd, 1);
+		ft_putendl_fd(env->pwd, output);
 		return (0);
 	}
 	return (1);
