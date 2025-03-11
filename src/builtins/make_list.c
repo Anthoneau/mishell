@@ -51,10 +51,18 @@ char	*get_value(char *str, bool button)
 
 	s = NULL;
 	len = strllen(str, '=');
+	if (str[len - 1] == '+')
+		len--;
 	if (button == false)
 		s = ft_strldup(str, len);
 	else
+	{
+		if (str[len] == '+')
+			len++;
+		if (str[len + 1] == '\0')
+			return (ft_strdup(""));
 		s = ft_strldup(str + (len + 1), ft_strlen(str + (len + 1)));
+	}
 	return (s);
 }
 

@@ -105,7 +105,7 @@ display_logo:
 			$(gradient_logo)
 
 ${NAME}: ${LIBFT} ${OBJS}
-			@${CC} ${OBJS} ${LIBFT} ${LDFLAGS} -o ${NAME}
+			@${CC} ${OBJS} ${LIBFT} ${LDFLAGS} -o ${NAME} -lreadline
 			@echo "\n${BGREEN}Minishell compiled!${COLOR_END}"
 
 ${LIBFT}:

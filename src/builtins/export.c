@@ -58,6 +58,31 @@ char	**export_arr(t_list *list)
 	return (tab);
 }
 
+void	export_add(t_list *list, t_tab *arr)
+{
+	t_node	*new_node;
+
+	new_node = malloc(sizeof(t_node));
+	if (!new_node)
+		return ;
+	new_node->key = ft_strdup(arr->key);
+	if (!new_node->key)
+		return (free(new_node));
+	new_node->value = ft_strdup(arr->value);
+	if (!new_node->value && arr->value)
+		return (free(new_node->key), free(new_node));
+	new_node->next = NULL;
+	new_node->prev = NULL;
+	if (list->tail != NULL)
+	{
+		new_node->prev = list->tail;
+		list->tail->next = new_node;
+	}
+	list->tail = new_node;
+	list->size++;
+	if (list->head == NULL)
+		list->head = new_node;
+}
 // void	export_order(t_list *list)
 // {
 // 	char	**export;
@@ -86,36 +111,37 @@ char	*fill_value(char *str, bool button)
 
 t_node	*check_env(t_list *list, char *str)
 {
-	char	*s;
-	int		len;
 	t_node  *curr;
 
-	len = strllen(str, '=');
-	s = ft_strldup(str, len);
 	curr = list->head;
 	while (curr)
 	{
-		if (!ft_strncmp(s, curr->key, ft_strlen(s) + 1))
-		{
-			free(s);
+		if (!ft_strncmp(str, curr->key, ft_strlen(str) + 1))
 			return (curr);
-		}
 		curr = curr->next;
 	}
-	free(s);
 	return (NULL);
 }
 
-void	change_value(t_node *curr, char *str)
+void	change_value(t_node *curr, t_tab *arr)
 {
-	int		len;
+	char	*tmp;
 
-	len = strllen(str, '=');
-	if (curr->value)
+	if (!arr->value)
+		return ;
+	if (arr->lever == true)
 	{
-		free(curr->value);
-		curr->value = ft_strldup(str + (len + 1), ft_strlen(str + (len + 1)));	
+		if (curr->value)
+		{
+			tmp = ft_strjoin(curr->value, arr->value);
+			free(curr->value);
+			curr->value = tmp;
+		}
+		else
+			curr->value = ft_strdup(arr->value);
 	}
+	else
+		curr->value = ft_strdup(arr->value);
 }
 int	word_count(char **arg)
 {
@@ -126,47 +152,74 @@ int	word_count(char **arg)
 		i++;
 	return (i);	
 }
-void	free_struct(t_tab *arr, char *s)
-{
-	if (arr->key)
-		free(arr->key);
-	if (arr->value)
-		free(arr->value);
-	free(arr);
-	printf("`%s\': not a valid identifier\n", s);
-}
 
-void	tab_fill(t_tab **arr, char **arg)
+void	tab_fill(t_tab ***arr, char **arg)
 {
 	int	i;
 	int	count;
+	int	len;
 
 	i = 0;
 	count = word_count(arg);
 	printf("%d\n", count);
-	arr = malloc(sizeof(t_tab *) * (count + 1));
+	(*arr) = malloc(sizeof(t_tab *) * (count + 1));
 	if (!arr)
 		return ;
 	while (arg[i])
 	{
-		arr[i] = malloc(sizeof(t_tab)); // protection
-		arr[i]->key = get_value(arg[i], false); // protection
-		arr[i]->value = get_value(arg[i], true); // protection
-			i++;
+		(*arr)[i] = malloc(sizeof(t_tab)); // protection
+		if (!ft_strchr(arg[i], '='))
+		{
+			(*arr)[i]->key = get_value(arg[i], false); // protection
+			(*arr)[i]->value = NULL;
+		}
+		else if (ft_isalpha(arg[i][0]) || arg[i][0] == '_')
+		{
+			if (ft_strchr(arg[i], '+'))
+			{
+				len = strllen(arg[i], '=');
+				if (arg[i][len - 1] == '+')
+					(*arr)[i]->lever = true;
+			}
+			(*arr)[i]->key = get_value(arg[i], false); // protection
+			(*arr)[i]->value = get_value(arg[i], true); // protection
+		}
+		else
+		{
+			printf("minishell: export: `%s\': not a valid identifier\n", arg[i]);
+			(*arr)[i]->key = NULL;
+			(*arr)[i]->value = get_value(arg[i], true); // protection
+		}
+		i++;
 	}
-	arr[i] = NULL;
-	////////////////////
+	(*arr)[i] = NULL;
+	//////////////////
+	i = 0;
+	while ((*arr)[i])
+	{
+		printf("<%s>  <%s>\n", (*arr)[i]->key, (*arr)[i]->value);
+		i++;
+	}
+	///////////////////
+}
+void	print_export(t_tab **arr)
+{
+	int	i;
+
 	i = 0;
 	while (arr[i])
 	{
-		if (!*arr[i]->value)
-			printf("c'est la valeur 0\n");
-		else if (!*arr[i]->key)
-			printf("key = 0\n");
-		printf("<%s>  <%s>\n", arr[i]->key, arr[i]->value);
-		i++;
+		if (!arr[i]->value)
+		{
+			printf("declare -x %s\n", arr[i]->key);
+			i++;
+		}
+		else
+		{
+			printf("declare -x %s=\"%s\"\n", arr[i]->key, arr[i]->value);
+			i++;
+		}
 	}
-	/////////////////////
 }
 void	export_order(t_list *list)
 {
@@ -188,18 +241,30 @@ void	export_order(t_list *list)
 	}
 	list->arr[i] = NULL;
 	sort(list->arr, list->size);
+	print_export(list->arr);
+}
+// void	check_export(t_list *s_list, t_tab ***arr)
+// {
+// 	if ()
+// }
+int	check_key(t_tab *arr)
+{
+	int	i;
+
 	i = 0;
-	while (list->arr[i])
+	while (arr->key[i])
 	{
-		printf("declare -x %s=\"%p\"\n", list->arr[i]->key, list->arr[i]);
+		if (!ft_isalnum(arr->key[i]) && !(arr->key[i] == '_'))
+			return (1);
 		i++;
-	}  // il faut free
+	}
+	return (0);
 }
 
 int	export(t_list *list, char **arg)
 {
 	int		i;
-	// t_node	*ptr;
+	t_node	*ptr;
 
 	i = 0;
 	if (arg[i] == NULL)
@@ -209,7 +274,34 @@ int	export(t_list *list, char **arg)
 	}
 	else
 	{
-		tab_fill(list->arr, arg);
+		tab_fill(&list->arr, arg);
+		while (list->arr[i])
+		{
+			if (!list->arr[i]->key)
+				i++;
+			else
+			{
+				ptr = check_env(list, list->arr[i]->key);
+				if (!ptr)
+				{
+					if (check_key(list->arr[i]))
+					{
+						printf("minishell: export: `%s\': not a valid identifier\n", arg[i]);
+						i++;
+					}
+					else
+					{
+						export_add(list, list->arr[i]);
+						i++;
+					}
+				}
+				else
+				{
+					change_value(ptr, list->arr[i]);
+					i++;
+				}
+			}
+		}
 		// while(arg[i])
 		// {
 		// 	ptr = check_env(list, arg[i]);

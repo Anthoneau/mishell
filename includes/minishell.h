@@ -123,6 +123,7 @@ typedef struct s_tab
 {
 	char			*key;
 	char			*value;
+	bool			lever;
 }	t_tab;
 
 typedef struct s_list
