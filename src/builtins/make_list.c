@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/08 17:14:35 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/12 16:39:39 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,6 @@ t_list	*make_list(char **env)
 	list->pwd = get_char(list, "PWD");
 	if (!list->pwd)
 		return (free_list(list), NULL);
-	list->oldpd = get_node(list, "OLDPWD");
+	list->oldpd = get_char(list, "OLDPWD");
 	return (list);
 }

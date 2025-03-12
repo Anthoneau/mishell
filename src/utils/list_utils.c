@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/10 17:00:45 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/12 18:50:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,25 @@ char	*ft_strldup(const char *s1, int len)
 	return (str);
 }
 
+void	free_tab_arr(t_tab **arr)
+{
+	int	i;
+
+	i = 0;
+	if (!arr)
+		return ;
+	while (arr[i])
+	{
+		if (arr[i]->key)
+			free(arr[i]->key);
+		if (arr[i]->value)
+			free(arr[i]->value);
+		free(arr[i]);
+		i++;
+	}
+	free(arr);
+}
+
 void	free_list(t_list *env)
 {
 	t_node	*ptr;
@@ -64,5 +83,8 @@ void	free_list(t_list *env)
 	}
 	if (env->pwd)
 		free(env->pwd);
+	if (env->oldpd)
+		free(env->oldpd);
+	free_tab_arr(env->arr);
 	free(env);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/10 16:04:06 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:11:04 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <errno.h>
 # include <signal.h>
 # include <stdbool.h>
+#include <sys/stat.h>
 
 # define RED "\e[0;31m"
 # define GREEN "\e[0;32m"
@@ -121,19 +122,20 @@ typedef struct s_node
 
 typedef struct s_tab
 {
-	char			*key;
-	char			*value;
-	bool			lever;
+	char	*key;
+	char	*value;
+	bool	lever;
 }	t_tab;
 
 typedef struct s_list
 {
-	t_node			*head;
-	t_node			*tail;
-	char			*pwd;
-	t_node			*oldpd;
-	t_tab			**arr;
-	int				size;
+	char	**env_c;
+	t_node	*head;
+	t_node	*tail;
+	char	*pwd;
+	char	*oldpd;
+	t_tab	**arr;
+	int		size;
 }	t_list;
 
 typedef struct s_data
@@ -143,7 +145,6 @@ typedef struct s_data
 	char	*inpt;
 	t_token	*token;
 	t_ast	*ast;
-	char	**env_list;
 	t_list	*env;
 }	t_data;
 
@@ -230,7 +231,7 @@ int		pwd(t_list *env, int output);
 int		cd(char **arg, t_list **env);
 void	print_error_cd(char *name);
 int		ft_strsrch(char	*str, char	*search);
-int		echo(t_cmd *cmd);
+int		echo(t_cmd *cmd, int output);
 // int		call_env(t_list *list);
 int		call_env(t_list *list, int output);
 char	**get_env(t_list *list);

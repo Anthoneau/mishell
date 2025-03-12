@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:02:57 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/06 16:02:58 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:06:38 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,10 @@ void	do_unset(t_list *list, char *s)
 			// printf("{head->prev = NULL} tmp = <%s> tmp->prev = %p\n", tmp->key, tmp->prev);
 			// printf("XXXXXXXXXXXXXXXX\n\n");
 			////////////
+			if (ptr->key)
+				free(ptr->key);
+			if (ptr->value)
+				free(ptr->value);
 			free(ptr);
 			list->size--;
 			return ;
@@ -59,6 +63,7 @@ void	do_unset(t_list *list, char *s)
 		ptr = ptr->next;
 	}
 }
+
 int	unset(t_list *list, char **arg)
 {
 	int	i;
@@ -66,6 +71,8 @@ int	unset(t_list *list, char **arg)
 	i = 0;
 	while(arg[i])
 	{
+		// if (list->oldpd && ft_strsrch(arg[i], "OLDPWD"))
+		// 	free(list->oldpd);
 		do_unset(list, arg[i]);
 		i++;
 	}

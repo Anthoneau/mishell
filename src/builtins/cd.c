@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/06 16:58:53 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:01:32 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,42 +28,63 @@ int	go_to_home(t_list **env)
 {
 	char	*home;
 
+	printf("go to home\n");
 	home = get_path_cd(env, "HOME");
 	if (!home)
 		return (print_error(1, "cd", 0, "HOME not set"), 1);
 	if (chdir(home) == -1)
 		return (print_error_cd(home), 1);
-	free((*env)->oldpd->value);
-	(*env)->oldpd->value = ft_strdup((*env)->pwd);
-	free((*env)->pwd);
-	(*env)->pwd = ft_strdup(home);
+	if ((*env)->oldpd)
+	{
+		printf("oldpd existe\n");
+		ft_free((*env)->oldpd);
+	}
+	if ((*env)->pwd)
+	{
+		(*env)->oldpd = ft_strdup((*env)->pwd);
+		free((*env)->pwd);
+	}
+	if (home)
+		(*env)->pwd = ft_strdup(home);
+	printf("fin go to home\n");
 	return (0);
 }
 
 int	go_to_oldpwd(t_list **env)
 {
-	char	*oldpwd;
 	char	*temp;
 
-	oldpwd = get_path_cd(env, "OLDPWD");
-	if (!oldpwd)
+	if (!(*env)->oldpd || !get_path_cd(env, "OLDPWD"))
 		return (print_error(1, "cd", 0, "OLDPWD not set"), 1);
-	if (chdir((*env)->oldpd->value) == -1)
-		return (print_error_cd((*env)->oldpd->value), 1);
-	temp = (*env)->oldpd->value;
-	(*env)->oldpd->value = (*env)->pwd;
+	if (chdir((*env)->oldpd) == -1)
+		return (print_error_cd((*env)->oldpd), 1);
+	temp = (*env)->oldpd;
+	(*env)->oldpd = (*env)->pwd;
 	(*env)->pwd = temp;
 	return (0);
 }
 
 int	change_directory(char **arg, t_list **env)
 {
+	printf("debut de change dir\n");
 	if (chdir(arg[1]) == -1)
 		return (print_error_cd(arg[1]), 1);
-	free((*env)->oldpd->value);
-	(*env)->oldpd->value = ft_strdup((*env)->pwd);
-	free((*env)->pwd);
+	printf("change dir ok\n");
+	if ((*env)->oldpd)
+	{
+		printf("free de old\n");
+		free((*env)->oldpd);
+	}
+	(*env)->oldpd = ft_strdup((*env)->pwd);
+	printf("strdup de old\n");
+	if ((*env)->pwd)
+	{
+		free((*env)->pwd);
+		printf("free de pwd\n");
+	}
+	printf("pwd est NULL\n");
 	(*env)->pwd = getcwd(NULL, 0);
+	printf("fin de change_directory\n");
 	return (0);
 }
 

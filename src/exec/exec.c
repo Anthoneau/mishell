@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/06 17:08:15 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:19:50 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin *cmd)
 int	real_execution(t_exec *exec, t_cmdin **cmd, t_list **env)
 {
 	if ((*cmd)->num_of_cmds == 1 && is_builtin((*cmd)->cmd[0].arg[0]))
-		return (exec_builtins(exec, cmd, env));
+		return (free_array((*env)->env_c), exec_builtins(exec, cmd, env));
 	else
 	{
 		set_signal_action(2);

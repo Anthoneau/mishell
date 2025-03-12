@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/10 15:18:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:21:50 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,10 @@ void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 		close(exec->newpipefd[1]);
 	if (exec->oldpipefd != -1)
 		close(exec->oldpipefd);
-	free(exec->pid);
+	ft_free(exec->pid);
 	if ((*cmd)->cmd[exec->i].arg[0] && is_builtin((*cmd)->cmd[exec->i].arg[0]))
 	{
-		ft_free(exec->path);
+		free_array((*env)->env_c);
 		exec_builtins(exec, cmd, env);
 		exit(0);
 	}

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/06 17:15:41 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:16:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	g_exit_code;
 int	get_name(t_data *d)
 {
 	set_signal_action(0);
-	d->env_list = get_env(d->env);
-	if (!d->env_list)
+	d->env->env_c = get_env(d->env);
+	if (!d->env->env_c)
 		return (print_error(1, "malloc", 1, ""), 0);
 	d->name = minishell_name(d);
 	if (!d->name)
-		return (print_error(1, "malloc", 1, ""), 0);
+		return (free_array(d->env->env_c), print_error(1, "malloc", 1, ""), 0);
 	return (1);
 }
 
@@ -36,10 +36,9 @@ int	do_minishell(t_data *d, int eof)
 		free(d->name);
 		if (d->inpt && *d->inpt && !ft_isspace(d->inpt))
 		{
-			d->token = lexer(d->inpt, d->env_list);
-			if (d->token && check_token(&d->token, &d->inpt, d->env_list))
+			d->token = lexer(d->inpt, d->env->env_c);
+			if (d->token && check_token(&d->token, &d->inpt, d->env->env_c))
 			{
-				free_array(d->env_list);
 				d->ast = create_ast(&d->token, NULL, 0, &d->error);
 				free_token(&d->token);
 				if (d->ast)
@@ -50,6 +49,7 @@ int	do_minishell(t_data *d, int eof)
 		else if (!d->inpt)
 			eof = 1;
 		ft_free(d->inpt);
+		free_array(d->env->env_c);
 	}
 	free_list(d->env);
 	return (0);

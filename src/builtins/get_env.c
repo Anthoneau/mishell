@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_env.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:50:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/06 17:02:26 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/12 17:49:52 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ char	*fill_tab(t_node *list)
 		return (NULL);
 	if (!list->value)
 		return (ft_strdup(list->key));
+	// printf("list->key : %s\n", list->key);
 	key = ft_strjoin(list->key, "=");
 	if (!key)
 		return (NULL);
@@ -58,7 +59,7 @@ char	**get_env(t_list *list)
 	ptr = list->head;
 	i = 0;
 	len = list_len(list);
-	printf(">>%d && %d\n", len, list->size);
+	// printf(">>%d && %d\n", len, list->size);
 	tab = malloc(sizeof(char *) * (len + 1));
 	if (!tab)
 		return (NULL);
@@ -67,6 +68,7 @@ char	**get_env(t_list *list)
 		if (ptr->value)
 		{
 			tab[i] = fill_tab(ptr);
+			// printf("tab[%d] : %s\n", i, tab[i]);
 			if (!tab[i])
 				return (free_array(tab), NULL);
 			i++;

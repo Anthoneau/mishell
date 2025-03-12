@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/10 15:24:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:19:37 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	is_builtin(char *content)
 int	do_builtins(t_cmd *cmd, t_list **env)
 {
 	if (!ft_strncmp(cmd->arg[0], "echo", 5))
-		return (echo(cmd));
+		return (echo(cmd, cmd->fd_out));
 	else if (!ft_strncmp(cmd->arg[0], "cd", 3))
 		return (cd(cmd->arg, env));
 	else if (!ft_strncmp(cmd->arg[0], "pwd", 4))
