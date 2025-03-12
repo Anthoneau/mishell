@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:54:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:28:00 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	do_builtins(t_cmd *cmd, t_list **env)
 	if (!ft_strncmp(cmd->arg[0], "echo", 5))
 		return (echo(cmd, cmd->fd_out));
 	else if (!ft_strncmp(cmd->arg[0], "cd", 3))
-		return (cd(cmd->arg, env));
+		return (cd(cmd->arg, env, cmd->fd_out));
 	else if (!ft_strncmp(cmd->arg[0], "pwd", 4))
 		return (pwd(*env, cmd->fd_out));
 	else if (!ft_strncmp(cmd->arg[0], "export", 7))

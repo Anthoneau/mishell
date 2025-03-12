@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:52:26 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:06:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 	ft_free(exec->pid);
 	if ((*cmd)->cmd[exec->i].arg[0] && is_builtin((*cmd)->cmd[exec->i].arg[0]))
 	{
-		free_array((*env)->env_c);
 		builtins_child(exec, cmd, env);
 		exit(0);
 	}

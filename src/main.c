@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:50:22 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:07:30 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ int	g_exit_code;
 int	get_name(t_data *d)
 {
 	set_signal_action(0);
-	if (d->env->env_c)
-		free(d->env->env_c);
 	d->env->env_c = get_env(d->env);
 	if (!d->env->env_c)
 		return (print_e(1, "malloc", 1, ""), 0);
@@ -51,7 +49,6 @@ int	do_minishell(t_data *d, int eof)
 		else if (!d->inpt)
 			eof = 1;
 		ft_free(d->inpt);
-		// free_array(d->env->env_c);
 	}
 	free_list(d->env);
 	return (0);

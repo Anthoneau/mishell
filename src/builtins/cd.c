@@ -6,11 +6,13 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/12 19:29:48 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 20:28:10 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// int	add_value_oldpwd
 
 char	*get_path_cd(t_list **env, char *path)
 {
@@ -28,17 +30,13 @@ int	go_to_home(t_list **env)
 {
 	char	*home;
 
-	printf("go to home\n");
 	home = get_path_cd(env, "HOME");
 	if (!home)
 		return (print_e(1, "cd", 0, "HOME not set"), 1);
 	if (chdir(home) == -1)
 		return (print_error_cd(home), 1);
 	if ((*env)->oldpd)
-	{
-		printf("oldpd existe\n");
 		ft_free((*env)->oldpd);
-	}
 	if ((*env)->pwd)
 	{
 		(*env)->oldpd = ft_strdup((*env)->pwd);
@@ -46,11 +44,10 @@ int	go_to_home(t_list **env)
 	}
 	if (home)
 		(*env)->pwd = ft_strdup(home);
-	printf("fin go to home\n");
 	return (0);
 }
 
-int	go_to_oldpwd(t_list **env)
+int	go_to_oldpwd(t_list **env, int output)
 {
 	char	*temp;
 
@@ -61,40 +58,35 @@ int	go_to_oldpwd(t_list **env)
 	temp = (*env)->oldpd;
 	(*env)->oldpd = (*env)->pwd;
 	(*env)->pwd = temp;
+	pwd(*env, output);
 	return (0);
 }
 
 int	change_directory(char **arg, t_list **env)
 {
-	printf("debut de change dir\n");
 	if (chdir(arg[1]) == -1)
 		return (print_error_cd(arg[1]), 1);
-	printf("change dir ok\n");
 	if ((*env)->oldpd)
-	{
-		printf("free de old\n");
 		free((*env)->oldpd);
-	}
 	(*env)->oldpd = ft_strdup((*env)->pwd);
-	printf("strdup de old\n");
 	if ((*env)->pwd)
-	{
 		free((*env)->pwd);
-		printf("free de pwd\n");
-	}
-	printf("pwd est NULL\n");
 	(*env)->pwd = getcwd(NULL, 0);
-	printf("fin de change_directory\n");
 	return (0);
 }
 
-int	cd(char **arg, t_list **env)
+int	cd(char **arg, t_list **env, int output)
 {
+	struct stat	*buf;
+
+	buf = NULL;
+	if (output == -1 || fstat(output, buf) == -1)
+		output = 1;
 	if (!arg[1] || (!arg[2] && ft_strsrch(arg[1], "~")))
 		return (go_to_home(env));
 	else if (arg[2])
 		return (print_e(1, "cd", 0, "too many arguments"), 1);
 	if (ft_strsrch(arg[1], "-"))
-		return (go_to_oldpwd(env));
+		return (go_to_oldpwd(env, output));
 	return (change_directory(arg, env));
 }
