@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+         #
+#    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/03/10 15:50:40 by mel-bout         ###   ########.fr        #
+#    Updated: 2025/03/12 19:29:19 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,18 +54,6 @@ PASTEL_PURPLE	=	\033[38;5;183m
 PASTEL_BLUE		=	\033[38;5;111m
 COLOR_END		=	\033[0m
 
-#GRADIENT LOGO
-
-define gradient_logo
-@echo "A${PASTEL_PINK}"
-@echo "A${PASTEL_PURPLE}"
-@echo "A${PASTEL_BLUE}"
-@echo "A${PASTEL_BLUE}"
-@echo "A${PASTEL_PURPLE}"
-@echo "A${PASTEL_PINK}${COLOR_END}"
-@echo ""
-endef
-
 #SOURCES
 
 UTILS_FILES		=	utils utils2 utils3 list_utils
@@ -98,11 +86,8 @@ OBJSF			=	.cache_exists
 
 all: check
 
-check: display_logo ${NAME}
+check: ${NAME}
 	@echo "${BGREEN}\nEverything up to date${COLOR_END}";
-
-display_logo:
-			$(gradient_logo)
 
 ${NAME}: ${LIBFT} ${OBJS}
 			@${CC} ${OBJS} ${LIBFT} ${LDFLAGS} -o ${NAME} -lreadline

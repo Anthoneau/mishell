@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:16:09 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:50:22 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@ int	g_exit_code;
 int	get_name(t_data *d)
 {
 	set_signal_action(0);
+	if (d->env->env_c)
+		free(d->env->env_c);
 	d->env->env_c = get_env(d->env);
 	if (!d->env->env_c)
-		return (print_error(1, "malloc", 1, ""), 0);
+		return (print_e(1, "malloc", 1, ""), 0);
 	d->name = minishell_name(d);
 	if (!d->name)
-		return (free_array(d->env->env_c), print_error(1, "malloc", 1, ""), 0);
+		return (free_array(d->env->env_c), print_e(1, "malloc", 1, ""), 0);
 	return (1);
 }
 
@@ -49,7 +51,7 @@ int	do_minishell(t_data *d, int eof)
 		else if (!d->inpt)
 			eof = 1;
 		ft_free(d->inpt);
-		free_array(d->env->env_c);
+		// free_array(d->env->env_c);
 	}
 	free_list(d->env);
 	return (0);
@@ -69,7 +71,7 @@ int	main(int ac, char **av, char **env)
 	data.ast = NULL;
 	data.env = make_list(env);
 	if (!data.env)
-		return (print_error(1, "malloc", 1, NULL), 1);
+		return (print_e(1, "malloc", 1, NULL), 1);
 	g_exit_code = 0;
 	res = do_minishell(&data, 0);
 	if (g_exit_code != 0)

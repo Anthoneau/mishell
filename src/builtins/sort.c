@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/04 18:00:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:34:42 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	sort(t_tab **arr, int size)
 	int	cmp;
 	int	i;
 	int	j;
+	int	len;
 
 	i = size - 1;
 	while (i > 0)
@@ -33,7 +34,8 @@ void	sort(t_tab **arr, int size)
 		j = 0;
 		while (j < i)
 		{
-			cmp = ft_strncmp(arr[j]->key, arr[j + 1]->key, ft_strlen(arr[j]->key) + 1);
+			len = ft_strlen(arr[j]->key) + 1;
+			cmp = ft_strncmp(arr[j]->key, arr[j + 1]->key, len);
 			if (cmp > 0)
 				swap(&arr[j], &arr[j + 1]);
 			j++;

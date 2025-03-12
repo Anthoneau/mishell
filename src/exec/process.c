@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:21:50 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:52:26 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,15 +66,15 @@ void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 	if ((*cmd)->cmd[exec->i].arg[0] && is_builtin((*cmd)->cmd[exec->i].arg[0]))
 	{
 		free_array((*env)->env_c);
-		exec_builtins(exec, cmd, env);
+		builtins_child(exec, cmd, env);
 		exit(0);
 	}
 	else if (exec->path)
 		execve(exec->path, (*cmd)->cmd[exec->i].arg, get_env(*env));
 	if (exec->path)
-		print_error(0, (*cmd)->cmd[exec->i].arg[0], 0, "command not found");
+		print_e(0, (*cmd)->cmd[exec->i].arg[0], 0, "command not found");
 	else
-		print_error(1, (*cmd)->cmd[exec->i].arg[0], 0, "No such file or directory");
+		print_e(1, (*cmd)->cmd[exec->i].arg[0], 0, "No such file or directory");
 	ft_free(exec->path);
 	free_cmd(*cmd);
 	exit(127);

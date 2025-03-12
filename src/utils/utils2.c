@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:58:28 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 09:36:51 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:26:19 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	count_pipes(t_token *token)
 	return (i);
 }
 
-void	print_error(int shell_name, char *content, int memory, char *message)
+void	print_e(int shell_name, char *content, int memory, char *message)
 {
 	if (shell_name)
 		ft_putstr_fd("minishell: ", 2);

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:55:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/04 17:56:34 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:25:02 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 void	print_error_cd(char *name)
 {
-	print_error(1, "cd", 0, NULL);
+	print_e(1, "cd", 0, NULL);
 	if (errno == EACCES)
-		print_error(0, name, 0, "Permission denied");
+		print_e(0, name, 0, "Permission denied");
 	else if (errno == EIO)
-		print_error(0, name, 0, "Input/output error");
+		print_e(0, name, 0, "Input/output error");
 	else if (errno == ELOOP)
-		print_error(0, name, 0, "Too many levelsof symbolic links");
+		print_e(0, name, 0, "Too many levelsof symbolic links");
 	else if (errno == ENAMETOOLONG)
-		print_error(0, name, 0, "File name too long");
+		print_e(0, name, 0, "File name too long");
 	else if (errno == ENOENT)
-		print_error(0, name, 0, "No such file or directory");
+		print_e(0, name, 0, "No such file or directory");
 	else if (errno == ENOMEM)
-		print_error(0, name, 0, "Cannot allocate memory");
+		print_e(0, name, 0, "Cannot allocate memory");
 	else if (errno == ENOTDIR)
-		print_error(0, name, 0, "Not a directory");
+		print_e(0, name, 0, "Not a directory");
 }
 
 int	ft_strsrch(char	*str, char	*search)

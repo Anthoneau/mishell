@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:42:17 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 18:23:43 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:32:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ int	check_newline(char **arg)
 
 int	echo(t_cmd *cmd, int output)
 {
-	int	i;
-	int	newline;
-	struct stat *buf;
+	int			i;
+	int			newline;
+	struct stat	*buf;
 
 	buf = NULL;
 	if (output == -1 || fstat(output, buf) == -1)

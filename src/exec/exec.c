@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:19:50 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:47:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin *cmd)
 int	real_execution(t_exec *exec, t_cmdin **cmd, t_list **env)
 {
 	if ((*cmd)->num_of_cmds == 1 && is_builtin((*cmd)->cmd[0].arg[0]))
-		return (free_array((*env)->env_c), exec_builtins(exec, cmd, env));
+		return (exec_builtins(exec, cmd, env));
 	else
 	{
 		set_signal_action(2);
@@ -45,7 +45,7 @@ int	real_execution(t_exec *exec, t_cmdin **cmd, t_list **env)
 		if (exec->pid[exec->i_pid] == -1)
 		{
 			ft_free(exec->path);
-			print_error(1, "fork", 1, "");
+			print_e(1, "fork", 1, "");
 			return (0);
 		}
 		if (!exec->pid[exec->i_pid])
@@ -74,14 +74,12 @@ void	exec_cmds(t_cmdin *cmd, t_list **env)
 
 	exec = init_exec(*cmd);
 	if (!exec.pid)
-		return (print_error(1, "malloc", 1, ""));
+		return (print_e(1, "malloc", 1, ""));
 	while (exec.i < cmd->num_of_cmds)
 	{
 		exec.path = right_path(cmd->cmd[exec.i].arg[0], env);
-		// if (!exec.path)
-		// 	return (print_error(1, "malloc", 1, ""));
 		if (exec.i < cmd->num_of_cmds - 1 && pipe(exec.newpipefd) == -1)
-			return (ft_free(exec.path), print_error(1, "pipe", 1, ""));
+			return (ft_free(exec.path), print_e(1, "pipe", 1, ""));
 		if (!real_execution(&exec, &cmd, env))
 			return ;
 		parent(&exec, cmd);

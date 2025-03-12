@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/12 19:01:32 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:29:48 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	go_to_home(t_list **env)
 	printf("go to home\n");
 	home = get_path_cd(env, "HOME");
 	if (!home)
-		return (print_error(1, "cd", 0, "HOME not set"), 1);
+		return (print_e(1, "cd", 0, "HOME not set"), 1);
 	if (chdir(home) == -1)
 		return (print_error_cd(home), 1);
 	if ((*env)->oldpd)
@@ -55,7 +55,7 @@ int	go_to_oldpwd(t_list **env)
 	char	*temp;
 
 	if (!(*env)->oldpd || !get_path_cd(env, "OLDPWD"))
-		return (print_error(1, "cd", 0, "OLDPWD not set"), 1);
+		return (print_e(1, "cd", 0, "OLDPWD not set"), 1);
 	if (chdir((*env)->oldpd) == -1)
 		return (print_error_cd((*env)->oldpd), 1);
 	temp = (*env)->oldpd;
@@ -93,7 +93,7 @@ int	cd(char **arg, t_list **env)
 	if (!arg[1] || (!arg[2] && ft_strsrch(arg[1], "~")))
 		return (go_to_home(env));
 	else if (arg[2])
-		return (print_error(1, "cd", 0, "too many arguments"), 1);
+		return (print_e(1, "cd", 0, "too many arguments"), 1);
 	if (ft_strsrch(arg[1], "-"))
 		return (go_to_oldpwd(env));
 	return (change_directory(arg, env));

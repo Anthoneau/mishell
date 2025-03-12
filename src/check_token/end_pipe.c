@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:40:23 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:10:13 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:25:33 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,12 @@ char	*join_inpts(char *first_inpt, char *inpt)
 	{
 		temp = ft_strjoin(first_inpt, " ");
 		if (!temp)
-			return (print_error(1, "pipe", 1, ""), NULL);
+			return (print_e(1, "pipe", 1, ""), NULL);
 		res = ft_strjoin(temp, inpt);
 		free(temp);
 	}
 	if (!res)
-		return (print_error(1, "pipe", 1, ""), NULL);
+		return (print_e(1, "pipe", 1, ""), NULL);
 	return (res);
 }
 
@@ -48,7 +48,7 @@ int	get_inpt_content(int fd[2])
 		{
 			close(fd[1]);
 			close(fd[0]);
-			return (print_error(1, "malloc", 1, ""), -1);
+			return (print_e(1, "malloc", 1, ""), -1);
 		}
 		if (*inpt && !ft_isspace(inpt))
 		{
@@ -96,11 +96,11 @@ char	*get_inpt(void)
 	char		*res;
 
 	if (pipe(fd) == -1)
-		return (print_error(1, "pipe", 1, ""), NULL);
+		return (print_e(1, "pipe", 1, ""), NULL);
 	set_signal_action(2);
 	pid = fork();
 	if (pid == -1)
-		return (print_error(1, "pipe", 1, ""), NULL);
+		return (print_e(1, "pipe", 1, ""), NULL);
 	if (!pipe_child(pid, fd))
 		return (NULL);
 	set_signal_action(0);

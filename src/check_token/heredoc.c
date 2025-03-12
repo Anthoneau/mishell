@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 13:20:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:25:39 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	modify_inpt(char **inpt, char **env)
 
 void	print_eof(char *delimiter, int line)
 {
-	print_error(1, "warning", 0, NULL);
+	print_e(1, "warning", 0, NULL);
 	ft_putstr_fd("here-document at line ", 2);
 	ft_putnbr_fd(line, 2);
 	ft_putstr_fd(" delimited ", 2);
@@ -55,7 +55,7 @@ int	heredoc(char *delimiter, int expand, char **env, int fd[2])
 		if (!(ft_strncmp(delimiter, inpt, ft_strlen(delimiter) + 1)))
 			break ;
 		if (expand && !modify_inpt(&inpt, env))
-			return (print_error(1, "malloc", 1, ""), -1);
+			return (print_e(1, "malloc", 1, ""), -1);
 		ft_putendl_fd(inpt, fd[1]);
 		free(inpt);
 		line++;
@@ -99,11 +99,11 @@ int	do_heredoc(t_token *cur, char **env)
 
 	pid = 0;
 	if (pipe(fd) == -1)
-		return (print_error(1, "heredoc", 1, ""), 0);
+		return (print_e(1, "heredoc", 1, ""), 0);
 	set_signal_action(2);
 	pid = fork();
 	if (pid == -1)
-		return (print_error(1, "heredoc", 1, ""), 0);
+		return (print_e(1, "heredoc", 1, ""), 0);
 	if (!heredoc_child(pid, cur, env, fd))
 		return (0);
 	set_signal_action(0);

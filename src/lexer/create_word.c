@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 14:27:37 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/24 20:12:08 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:25:55 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	join_content(char *word, t_token **token, long *error)
 	if (!temp)
 	{
 		*error = -10;
-		return (print_error(1, "malloc", 1, ""));
+		return (print_e(1, "malloc", 1, ""));
 	}
 	free(current->content);
 	current->content = ft_strjoin(temp, word);
@@ -103,7 +103,7 @@ void	create_word(char *inpt, long *i, t_token **token, char **env)
 	else if (type == -1)
 		return ;
 	if (expandable && !modify_inpt(&word, env))
-		return (print_error(1, "malloc", 1, ""));
+		return (print_e(1, "malloc", 1, ""));
 	if (space)
 		join_content(word, token, i);
 	else

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:11:04 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:52:17 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,7 +174,7 @@ void	ft_strcat(char *src, char *dst);
 void	ft_strcat_expander(char *src, char *dst);
 int		count_lst(t_token *lst);
 int		count_pipes(t_token *token);
-void	print_error(int shell_name, char *content, int memory, char *message);
+void	print_e(int shell_name, char *content, int memory, char *message);
 int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
 t_free	get_to_free(char **name, t_token **token, t_ast **ast);
@@ -227,6 +227,7 @@ t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
 int		exit_builtin(char **arg, t_cmdin **cmd);
+int		builtins_child(t_exec *exc, t_cmdin **cmd, t_list **env);
 int		pwd(t_list *env, int output);
 int		cd(char **arg, t_list **env);
 void	print_error_cd(char *name);

@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:09 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/07 14:11:15 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:26:11 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,15 @@ void	free_cmd(t_cmdin *cmd)
 void	print_open_error(char *content)
 {
 	if (errno == ENOENT)
-		print_error(1, content, 0, "No such file or directory");
+		print_e(1, content, 0, "No such file or directory");
 	else if (errno == EISDIR)
-		print_error(1, content, 0, "Is a directory");
+		print_e(1, content, 0, "Is a directory");
 	else if (errno == EACCES)
-		print_error(1, content, 0, "Permission denied");
+		print_e(1, content, 0, "Permission denied");
 	else if (errno == EMFILE || errno == ENFILE)
-		print_error(1, NULL, 0, "Too many open files");
+		print_e(1, NULL, 0, "Too many open files");
 	else if (errno == EBUSY || errno == ETXTBSY)
-		print_error(1, content, 0, "Text file busy");
+		print_e(1, content, 0, "Text file busy");
 	else
-		print_error(1, NULL, 0, "Error opening file");
+		print_e(1, NULL, 0, "Error opening file");
 }
