@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 16:52:00 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:31:45 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -233,13 +233,14 @@ int		cd(char **arg, t_list **env, int output);
 void	print_error_cd(char *name);
 int		ft_strsrch(char	*str, char	*search);
 int		echo(t_cmd *cmd, int output);
-// int		call_env(t_list *list);
 int		call_env(t_list *list, int output);
 char	**get_env(t_list *list);
 int		export(t_list *list, char **arg);
 t_list	*make_list(char **env);
 void	sort(t_tab **arr, int size);
 int		unset(t_list *list, char **arg);
+t_node	*get_node(t_list *list, char *s);
+int		update_pwd(t_list **env);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);
