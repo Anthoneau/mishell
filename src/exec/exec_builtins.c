@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 16:52:09 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 19:24:19 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	do_builtins(t_cmd *cmd, t_list **env)
 	else if (!ft_strncmp(cmd->arg[0], "pwd", 4))
 		return (pwd(*env, cmd->fd_out));
 	else if (!ft_strncmp(cmd->arg[0], "export", 7))
-		return (export(*env, cmd->arg + 1));
+		return (export(*env, cmd->arg + 1, cmd->fd_out));
 	else if (!ft_strncmp(cmd->arg[0], "unset", 6))
 		return (unset(*env, cmd->arg + 1));
 	else if (!ft_strncmp(cmd->arg[0], "env", 4))
@@ -48,8 +48,7 @@ int	exec_builtins(t_exec *exc, t_cmdin **cmd, t_list **env)
 	{
 		ft_free(exc->pid);
 		ft_free(exc->path);
-		// free_list(*env);
-		exit_builtin((*cmd)->cmd[0].arg, cmd, *env);
+		exit_builtin((*cmd)->cmd[0].arg, cmd, *env, (*cmd)->cmd->fd_out);
 		g_exit_code = 1;
 		return (0);
 	}
@@ -65,7 +64,7 @@ int	builtins_child(t_exec *exc, t_cmdin **cmd, t_list **env)
 	if (!ft_strncmp((*cmd)->cmd[0].arg[0], "exit", 5))
 	{
 		ft_free(exc->path);
-		exit_builtin((*cmd)->cmd[0].arg, cmd, *env);
+		exit_builtin((*cmd)->cmd[0].arg, cmd, *env, (*cmd)->cmd->fd_out);
 		g_exit_code = 1;
 		return (0);
 	}

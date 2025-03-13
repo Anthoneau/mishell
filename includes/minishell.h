@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 18:37:24 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 19:07:14 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <errno.h>
 # include <signal.h>
 # include <stdbool.h>
-#include <sys/stat.h>
+# include <sys/stat.h>
 
 # define RED "\e[0;31m"
 # define GREEN "\e[0;32m"
@@ -227,7 +227,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
-int		exit_builtin(char **arg, t_cmdin **cmd, t_list *env);
+int		exit_builtin(char **arg, t_cmdin **cmd, t_list *env, int output);
 int		builtins_child(t_exec *exc, t_cmdin **cmd, t_list **env);
 int		pwd(t_list *env, int output);
 int		cd(char **arg, t_list **env, int output);
@@ -236,12 +236,22 @@ int		ft_strsrch(char	*str, char	*search);
 int		echo(t_cmd *cmd, int output);
 int		call_env(t_list *list, int output);
 char	**get_env(t_list *list);
-int		export(t_list *list, char **arg);
 t_list	*make_list(char **env);
 void	sort(t_tab **arr, int size);
 int		unset(t_list *list, char **arg);
 t_node	*get_node(t_list *list, char *s);
 int		update_pwd(t_list **env);
+//export
+int		export(t_list *list, char **arg, int output);
+char	*fill_export(t_node *list);
+void	export_add(t_list *list, t_tab *arr);
+char	*fill_value(char *str, bool button);
+t_node	*check_env(t_list *list, char *str);
+int		word_count(char **arg);
+void	free_struct(t_tab ***arr);
+void	print_export(t_list *list, int output);
+int		export_order(t_list *list, int output);
+int		check_key(t_tab *arr);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);
