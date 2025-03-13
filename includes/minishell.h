@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 17:31:45 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:31:13 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,6 +189,7 @@ void	free_list(t_list *env);
 char	*get_value(char *str, bool button);
 char	*fill_value(char *str, bool button);
 void	get_list(t_list *list, char *str);
+int		get_output(int output);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);

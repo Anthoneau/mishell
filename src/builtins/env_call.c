@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 19:17:33 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/12 19:31:59 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:31:53 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,8 @@
 int	call_env(t_list *list, int output)
 {
 	t_node		*ptr;
-	struct stat	*buf;
 
-	buf = NULL;
-	if (output == -1 || fstat(output, buf) == -1)
-		output = 1;
+	output = get_output(output);
 	ptr = list->head;
 	while (ptr != NULL)
 	{
