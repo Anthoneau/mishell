@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 20:07:30 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:55:57 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int	do_minishell(t_data *d, int eof)
 		ft_free(d->inpt);
 	}
 	free_list(d->env);
+	system("leaks minishell");
 	return (0);
 }
 
