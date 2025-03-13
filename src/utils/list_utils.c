@@ -69,7 +69,8 @@ void	free_list(t_list *env)
 	t_node	*next;
 
 	ptr = env->head;
-	next = ptr->next;
+	if (ptr && ptr->next)
+		next = ptr->next;
 	while (ptr)
 	{
 		if (ptr->key)
