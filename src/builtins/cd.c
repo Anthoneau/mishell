@@ -6,13 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/12 20:28:10 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:32:32 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-// int	add_value_oldpwd
 
 char	*get_path_cd(t_list **env, char *path)
 {
@@ -44,6 +42,7 @@ int	go_to_home(t_list **env)
 	}
 	if (home)
 		(*env)->pwd = ft_strdup(home);
+	update_pwd(env);
 	return (0);
 }
 
@@ -59,6 +58,7 @@ int	go_to_oldpwd(t_list **env, int output)
 	(*env)->oldpd = (*env)->pwd;
 	(*env)->pwd = temp;
 	pwd(*env, output);
+	update_pwd(env);
 	return (0);
 }
 
@@ -72,6 +72,7 @@ int	change_directory(char **arg, t_list **env)
 	if ((*env)->pwd)
 		free((*env)->pwd);
 	(*env)->pwd = getcwd(NULL, 0);
+	update_pwd(env);
 	return (0);
 }
 

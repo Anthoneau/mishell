@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:23:53 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 20:28:00 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:52:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ int	exec_builtins(t_exec *exc, t_cmdin **cmd, t_list **env)
 	{
 		ft_free(exc->pid);
 		ft_free(exc->path);
-		free_list(*env);
-		exit_builtin((*cmd)->cmd[0].arg, cmd);
+		// free_list(*env);
+		exit_builtin((*cmd)->cmd[0].arg, cmd, *env);
 		g_exit_code = 1;
 		return (0);
 	}
@@ -65,8 +65,7 @@ int	builtins_child(t_exec *exc, t_cmdin **cmd, t_list **env)
 	if (!ft_strncmp((*cmd)->cmd[0].arg[0], "exit", 5))
 	{
 		ft_free(exc->path);
-		// free_list(*env);
-		exit_builtin((*cmd)->cmd[0].arg, cmd);
+		exit_builtin((*cmd)->cmd[0].arg, cmd, *env);
 		g_exit_code = 1;
 		return (0);
 	}

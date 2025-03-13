@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 17:50:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/12 19:33:45 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:53:04 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,13 @@ int	list_len(t_list *list)
 	ptr = list->head;
 	while (ptr)
 	{
+		// printf("ptr->value : %s\n", ptr->value);
 		if (ptr->value != NULL)
 			i++;
-		ptr = ptr->next;
+		if (ptr->next)
+			ptr = ptr->next;
+		else
+			break ;
 	}
 	return (i);
 }

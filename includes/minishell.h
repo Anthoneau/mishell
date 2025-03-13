@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 17:29:09 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:44:08 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,14 +226,13 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
-int		exit_builtin(char **arg, t_cmdin **cmd);
+int		exit_builtin(char **arg, t_cmdin **cmd, t_list *env);
 int		builtins_child(t_exec *exc, t_cmdin **cmd, t_list **env);
 int		pwd(t_list *env, int output);
 int		cd(char **arg, t_list **env, int output);
 void	print_error_cd(char *name);
 int		ft_strsrch(char	*str, char	*search);
 int		echo(t_cmd *cmd, int output);
-// int		call_env(t_list *list);
 int		call_env(t_list *list, int output);
 char	**get_env(t_list *list);
 int		export(t_list *list, char **arg);
@@ -241,6 +240,7 @@ t_list	*make_list(char **env);
 void	sort(t_tab **arr, int size);
 int		unset(t_list *list, char **arg);
 t_node	*get_node(t_list *list, char *s);
+int		update_pwd(t_list **env);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);

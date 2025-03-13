@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 17:55:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:25:02 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 17:32:53 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,5 +46,30 @@ int	ft_strsrch(char	*str, char	*search)
 	}
 	if (str[i] != '\0')
 		return (0);
+	return (1);
+}
+
+int	update_pwd(t_list **env)
+{
+	t_node	*pwd;
+
+	pwd = get_node(*env, "PWD");
+	if (pwd)
+	{
+		if (pwd->value)
+			free(pwd->value);
+		pwd->value = ft_strdup(((*env)->pwd));
+		if (!pwd->value)
+			return (0);
+	}
+	pwd = get_node(*env, "OLDPWD");
+	if (pwd)
+	{
+		if (pwd->value)
+			free(pwd->value);
+		pwd->value = ft_strdup(((*env)->oldpd));
+		if (!pwd->value)
+			return (0);
+	}
 	return (1);
 }
