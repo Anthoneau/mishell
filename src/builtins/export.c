@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:02:27 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/10 17:59:39 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/13 16:56:42 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,12 +111,12 @@ t_node	*check_env(t_list *list, char *str)
 	return (NULL);
 }
 
-void	change_value(t_node *curr, t_tab *arr)
+int	change_value(t_node *curr, t_tab *arr)
 {
 	char	*tmp;
 
 	if (!arr->value)
-		return ;
+		return (0);
 	if (arr->lever == true)
 	{
 		if (curr->value)
@@ -129,7 +129,22 @@ void	change_value(t_node *curr, t_tab *arr)
 			curr->value = ft_strdup(arr->value);
 	}
 	else
-		curr->value = ft_strdup(arr->value);
+	{
+		if (curr->value)
+		{
+			free(curr->value);
+			curr->value = ft_strdup(arr->value);
+			if (!curr->value && arr->value)
+				return (1);
+		}
+		else
+		{
+			curr->value = ft_strdup(arr->value);
+			if (!curr->value && arr->value)
+				return (1);
+		}
+	}
+	return (0);
 }
 int	word_count(char **arg)
 {
@@ -155,7 +170,9 @@ void	free_struct(t_tab ***arr)
 			free((*arr)[i]);
 		i++;
 	}
-	free(arr);
+	if ((*arr))
+		free((*arr));
+	(*arr) = NULL;
 }
 int	tab_fill(t_tab ***arr, char **arg)
 {
@@ -165,7 +182,6 @@ int	tab_fill(t_tab ***arr, char **arg)
 
 	i = 0;
 	count = word_count(arg);
-	printf("%d\n", count);
 	(*arr) = malloc(sizeof(t_tab *) * (count + 1));
 	if (!(*arr))
 		return (1);
@@ -229,7 +245,6 @@ void	print_export(t_list *list)
 			i++;
 		}
 	}
-	// free_struct(&list->arr);
 }
 int	export_order(t_list *list)
 {
@@ -246,15 +261,18 @@ int	export_order(t_list *list)
 		list->arr[i] = malloc(sizeof(t_tab));
 		if (!list->arr[i])
 			return (1);
-		list->arr[i]->key = ft_strdup(curr->key); // protection
+		list->arr[i]->key = ft_strdup(curr->key);
 		if (!list->arr[i]->key)
 			return (free_struct(&list->arr), 1);
-		list->arr[i]->value = ft_strdup(curr->value); // protection
+		list->arr[i]->value = ft_strdup(curr->value);
+		if (!list->arr[i]->value && curr->value)
+			return (free_struct(&list->arr), 1);
 		i++;
 		curr = curr->next;
 	}
 	list->arr[i] = NULL;
 	print_export(list);
+	free_struct(&list->arr);
 	return (0);
 }
 
@@ -310,11 +328,13 @@ int	export(t_list *list, char **arg)
 				}
 				else
 				{
-					change_value(ptr, list->arr[i]);
+					if(change_value(ptr, list->arr[i]))
+						return (free_list(list), free_struct(&list->arr), 1);
 					i++;
 				}
 			}
 		}
+		free_struct(&list->arr);
 		return (0);
 	}
 	return (1);
