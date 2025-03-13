@@ -83,18 +83,6 @@ void	export_add(t_list *list, t_tab *arr)
 	if (list->head == NULL)
 		list->head = new_node;
 }
-// void	export_order(t_list *list)
-// {
-// 	char	**export;
-// 	int     i;
-
-// 	export = export_arr(list);
-// 	sort(export, list->size);
-// 	i = 0;
-// 	while (export[i])
-// 		printf("declare -x %s\n", export[i++]);
-// 	free_array(export);
-// }
 
 char	*fill_value(char *str, bool button)
 {
@@ -152,8 +140,24 @@ int	word_count(char **arg)
 		i++;
 	return (i);	
 }
+void	free_struct(t_tab ***arr)
+{
+	int	i;
 
-void	tab_fill(t_tab ***arr, char **arg)
+	i = 0;
+	while ((*arr)[i])
+	{
+		if ((*arr)[i]->key)
+			free((*arr)[i]->key);
+		if ((*arr)[i]->value)
+			free((*arr)[i]->value);
+		if ((*arr)[i])
+			free((*arr)[i]);
+		i++;
+	}
+	free(arr);
+}
+int	tab_fill(t_tab ***arr, char **arg)
 {
 	int	i;
 	int	count;
@@ -163,14 +167,18 @@ void	tab_fill(t_tab ***arr, char **arg)
 	count = word_count(arg);
 	printf("%d\n", count);
 	(*arr) = malloc(sizeof(t_tab *) * (count + 1));
-	if (!arr)
-		return ;
+	if (!(*arr))
+		return (1);
 	while (arg[i])
 	{
-		(*arr)[i] = malloc(sizeof(t_tab)); // protection
+		(*arr)[i] = malloc(sizeof(t_tab));
+		if (!(*arr)[i])
+			return (free_struct(arr), 1);
 		if (!ft_strchr(arg[i], '='))
 		{
-			(*arr)[i]->key = get_value(arg[i], false); // protection
+			(*arr)[i]->key = get_value(arg[i], false);
+			if (!(*arr)[i]->key)
+				return (free_struct(arr), 1);
 			(*arr)[i]->value = NULL;
 		}
 		else if (ft_isalpha(arg[i][0]) || arg[i][0] == '_')
@@ -181,47 +189,49 @@ void	tab_fill(t_tab ***arr, char **arg)
 				if (arg[i][len - 1] == '+')
 					(*arr)[i]->lever = true;
 			}
-			(*arr)[i]->key = get_value(arg[i], false); // protection
-			(*arr)[i]->value = get_value(arg[i], true); // protection
+			(*arr)[i]->key = get_value(arg[i], false);
+			if (!(*arr)[i]->key)
+				return (free_struct(arr), 1);
+			(*arr)[i]->value = get_value(arg[i], true);
+			if (!(*arr)[i]->value)
+				return (free_struct(arr), 1);
 		}
 		else
 		{
 			printf("minishell: export: `%s\': not a valid identifier\n", arg[i]);
 			(*arr)[i]->key = NULL;
-			(*arr)[i]->value = get_value(arg[i], true); // protection
+			(*arr)[i]->value = get_value(arg[i], true);
+			if (!(*arr)[i]->value)
+				return (free_struct(arr), 1);
 		}
 		i++;
 	}
 	(*arr)[i] = NULL;
-	//////////////////
-	i = 0;
-	while ((*arr)[i])
-	{
-		printf("<%s>  <%s>\n", (*arr)[i]->key, (*arr)[i]->value);
-		i++;
-	}
-	///////////////////
+	return (0);
 }
-void	print_export(t_tab **arr)
+
+void	print_export(t_list *list)
 {
 	int	i;
 
+	sort(list->arr, list->size);
 	i = 0;
-	while (arr[i])
+	while (list->arr[i])
 	{
-		if (!arr[i]->value)
+		if (!list->arr[i]->value)
 		{
-			printf("declare -x %s\n", arr[i]->key);
+			printf("declare -x %s\n", list->arr[i]->key);
 			i++;
 		}
 		else
 		{
-			printf("declare -x %s=\"%s\"\n", arr[i]->key, arr[i]->value);
+			printf("declare -x %s=\"%s\"\n", list->arr[i]->key, list->arr[i]->value);
 			i++;
 		}
 	}
+	// free_struct(&list->arr);
 }
-void	export_order(t_list *list)
+int	export_order(t_list *list)
 {
 	int	i;
 	t_node *curr;
@@ -230,23 +240,24 @@ void	export_order(t_list *list)
 	curr = list->head;
 	list->arr = malloc(sizeof(t_tab *) * (list->size + 1));
 	if (!list->arr)
-		return ;
+		return (1);
 	while (curr)
 	{
-		list->arr[i] = malloc(sizeof(t_tab)); // protection
+		list->arr[i] = malloc(sizeof(t_tab));
+		if (!list->arr[i])
+			return (1);
 		list->arr[i]->key = ft_strdup(curr->key); // protection
+		if (!list->arr[i]->key)
+			return (free_struct(&list->arr), 1);
 		list->arr[i]->value = ft_strdup(curr->value); // protection
 		i++;
 		curr = curr->next;
 	}
 	list->arr[i] = NULL;
-	sort(list->arr, list->size);
-	print_export(list->arr);
+	print_export(list);
+	return (0);
 }
-// void	check_export(t_list *s_list, t_tab ***arr)
-// {
-// 	if ()
-// }
+
 int	check_key(t_tab *arr)
 {
 	int	i;
@@ -269,12 +280,14 @@ int	export(t_list *list, char **arg)
 	i = 0;
 	if (arg[i] == NULL)
 	{
-		export_order(list);
+		if (export_order(list))
+			return (free_list(list), 1);
 		return (0);
 	}
 	else
 	{
-		tab_fill(&list->arr, arg);
+		if (tab_fill(&list->arr, arg))
+			return (free_list(list), 1);
 		while (list->arr[i])
 		{
 			if (!list->arr[i]->key)
@@ -302,19 +315,6 @@ int	export(t_list *list, char **arg)
 				}
 			}
 		}
-		// while(arg[i])
-		// {
-		// 	ptr = check_env(list, arg[i]);
-		// 	if (!ptr)
-		// 	{
-		// 		get_list(list, arg[i]);
-		// 		// if (!list->tail)
-		// 		// return (free_list(list), 1);
-		// 	}
-		// 	else
-		// 		change_value(ptr, arg[i]);
-		// 	i++;
-		// }
 		return (0);
 	}
 	return (1);
