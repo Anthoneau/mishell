@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/12 20:05:47 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:40:56 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,4 +88,20 @@ void	free_list(t_list *env)
 		free(env->oldpd);
 	free_tab_arr(env->arr);
 	free(env);
+}
+
+t_node	*get_node(t_list *list, char *s)
+{
+	t_node	*ptr;
+	int		cmp;
+
+	ptr = list->head;
+	while (ptr != NULL)
+	{
+		cmp = ft_strncmp(s, ptr->key, ft_strlen(s));
+		if (cmp == 0)
+			return (ptr);
+		ptr = ptr->next;
+	}
+	return (NULL);
 }

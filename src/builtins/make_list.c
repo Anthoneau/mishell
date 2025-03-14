@@ -6,27 +6,11 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/12 16:39:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:40:51 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_node	*get_node(t_list *list, char *s)
-{
-	t_node	*ptr;
-	int		cmp;
-
-	ptr = list->head;
-	while (ptr != NULL)
-	{
-		cmp = ft_strncmp(s, ptr->key, ft_strlen(s));
-		if (cmp == 0)
-			return (ptr);
-		ptr = ptr->next;
-	}
-	return (NULL);
-}
 
 char	*get_char(t_list *list, char *s)
 {

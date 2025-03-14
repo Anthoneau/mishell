@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:17:41 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 17:39:46 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 19:17:18 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,14 @@ static void	free_and_exit(t_list *env, t_cmdin **cmd, int n)
 	exit(n);
 }
 
-int	exit_builtin(char **arg, t_cmdin **cmd, t_list *env)
+int	exit_builtin(char **arg, t_cmdin **cmd, t_list *env, int output)
 {
 	extern int	g_exit_code;
 	__uint8_t	nbr;
 
-	ft_putstr_fd("exit\n", 1);
+	output = get_output(output);
+	fprintf(stderr, "output : %d\n", output);
+	ft_putstr_fd("exit\n", output);
 	if (!arg[1])
 		free_and_exit(env, cmd, g_exit_code);
 	if (!ft_isnum(arg[1]) && !arg[2])
@@ -38,6 +40,7 @@ int	exit_builtin(char **arg, t_cmdin **cmd, t_list *env)
 	if (arg[2])
 		return (print_e(1, "exit", 0, "too many arguments"), 1);
 	nbr = ft_atoi(arg[1]);
+	fprintf(stderr, "nbr : %d\n", nbr);
 	free_and_exit(env, cmd, nbr);
 	return (0);
 }

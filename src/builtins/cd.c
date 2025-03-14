@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/13 17:32:32 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:34:33 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,8 @@ int	go_to_oldpwd(t_list **env, int output)
 	temp = (*env)->oldpd;
 	(*env)->oldpd = (*env)->pwd;
 	(*env)->pwd = temp;
-	pwd(*env, output);
+	if ((*env)->pwd)
+		ft_putendl_fd((*env)->pwd, output);
 	update_pwd(env);
 	return (0);
 }
@@ -78,11 +79,7 @@ int	change_directory(char **arg, t_list **env)
 
 int	cd(char **arg, t_list **env, int output)
 {
-	struct stat	*buf;
-
-	buf = NULL;
-	if (output == -1 || fstat(output, buf) == -1)
-		output = 1;
+	output = get_output(output);
 	if (!arg[1] || (!arg[2] && ft_strsrch(arg[1], "~")))
 		return (go_to_home(env));
 	else if (arg[2])
