@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:56:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 19:01:09 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/14 17:23:34 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	check_key(t_tab *arr)
 	int	i;
 
 	i = 0;
+	if (ft_isdigit(arr->key[0]))
+		return (1);
 	while (arr->key[i])
 	{
 		if (!ft_isalnum(arr->key[i]) && !(arr->key[i] == '_'))
