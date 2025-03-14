@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/14 19:58:22 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/14 20:04:59 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,7 +255,7 @@ int		check_key(t_tab *arr);
 int		tab_fill(t_tab ***arr, char **arg);
 
 //EXEC
-void    ft_execve(char *path, char **arg, char **env);
+void	ft_execve(char *path, char **arg, char **env);
 int		get_cmds_inputs(t_ast **current, t_inout *fd);
 char	*right_path(char *content, t_list **env);
 t_cmdin	get_cmd_array(t_ast *ast);

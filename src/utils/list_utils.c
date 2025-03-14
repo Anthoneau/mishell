@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/27 18:48:51 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/13 18:40:56 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/14 20:02:21 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ t_node	*get_node(t_list *list, char *s)
 	ptr = list->head;
 	while (ptr != NULL)
 	{
-		cmp = ft_strncmp(s, ptr->key, ft_strlen(s));
+		cmp = ft_strncmp(s, ptr->key, ft_strlen(s) + 1);
 		if (cmp == 0)
 			return (ptr);
 		ptr = ptr->next;

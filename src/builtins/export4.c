@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/14 19:50:44 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/14 19:52:00 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/14 20:04:16 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	tab_fill(t_tab ***arr, char **arg)
 		if (!(*arr)[i])
 			return (free_struct(arr), 1);
 		if (yo(arr, i, arg))
-			return (free_struct(arr), 1); 
+			return (free_struct(arr), 1);
 		i++;
 	}
 	(*arr)[i] = NULL;
