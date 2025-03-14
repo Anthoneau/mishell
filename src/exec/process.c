@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 20:06:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/14 18:09:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 		exit(0);
 	}
 	else if (exec->path)
-		execve(exec->path, (*cmd)->cmd[exec->i].arg, get_env(*env));
+		ft_execve(exec->path, (*cmd)->cmd[exec->i].arg, get_env(*env));
 	if (exec->path)
 		print_e(0, (*cmd)->cmd[exec->i].arg[0], 0, "command not found");
 	else

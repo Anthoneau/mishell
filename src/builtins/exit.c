@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:17:41 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 19:17:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:10:57 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ int	exit_builtin(char **arg, t_cmdin **cmd, t_list *env, int output)
 	__uint8_t	nbr;
 
 	output = get_output(output);
-	fprintf(stderr, "output : %d\n", output);
 	ft_putstr_fd("exit\n", output);
 	if (!arg[1])
 		free_and_exit(env, cmd, g_exit_code);

@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/14 19:52:41 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:58:22 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,6 @@ void	free_ast(t_ast *ast);
 void	ft_strcat(char *src, char *dst);
 void	ft_strcat_expander(char *src, char *dst);
 int		count_lst(t_token *lst);
-int		count_pipes(t_token *token);
 void	print_e(int shell_name, char *content, int memory, char *message);
 int		is_delimitation(char c);
 char	**ft_arrdup(char **arr);
@@ -256,6 +255,7 @@ int		check_key(t_tab *arr);
 int		tab_fill(t_tab ***arr, char **arg);
 
 //EXEC
+void    ft_execve(char *path, char **arg, char **env);
 int		get_cmds_inputs(t_ast **current, t_inout *fd);
 char	*right_path(char *content, t_list **env);
 t_cmdin	get_cmd_array(t_ast *ast);

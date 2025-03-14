@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:58:28 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:26:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:02:41 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,23 +30,6 @@ void	ft_strcat_expander(char *src, char *dst)
 		j++;
 		i++;
 	}
-}
-
-int	count_pipes(t_token *token)
-{
-	int	i;
-
-	i = 0;
-	while (token)
-	{
-		if (token->type == PIPE)
-			i++;
-		if (token->next)
-			token = token->next;
-		else
-			break ;
-	}
-	return (i);
 }
 
 void	print_e(int shell_name, char *content, int memory, char *message)
@@ -98,4 +81,10 @@ t_free	get_to_free(char **name, t_token **token, t_ast **ast)
 	(void)ast;
 	to_free.ast = NULL;
 	return (to_free);
+}
+
+void	ft_execve(char *path, char **arg, char **env)
+{
+	execve(path, arg, env);
+	free_array(env);
 }
