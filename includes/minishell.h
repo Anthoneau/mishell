@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 19:07:14 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:52:41 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -241,6 +241,7 @@ void	sort(t_tab **arr, int size);
 int		unset(t_list *list, char **arg);
 t_node	*get_node(t_list *list, char *s);
 int		update_pwd(t_list **env);
+void	print_error_export(char *arg);
 //export
 int		export(t_list *list, char **arg, int output);
 char	*fill_export(t_node *list);
@@ -252,6 +253,7 @@ void	free_struct(t_tab ***arr);
 void	print_export(t_list *list, int output);
 int		export_order(t_list *list, int output);
 int		check_key(t_tab *arr);
+int		tab_fill(t_tab ***arr, char **arg);
 
 //EXEC
 int		get_cmds_inputs(t_ast **current, t_inout *fd);

@@ -6,7 +6,7 @@
 /*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:02:27 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/14 18:00:27 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/14 19:52:58 by mel-bout         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,62 +213,16 @@ void	print_error_export(char *arg)
 	ft_putstr_fd(arg, 2);
 	ft_putendl_fd("\': not a valid identifier", 2);
 }
-int	tab_fill(t_tab ***arr, char **arg)
+int	fill_arr(t_tab ***arr, int i, char **arg)
 {
-	int	i;
-	int	count;
-	int	len;
-
-	i = 0;
-	count = word_count(arg);
-	(*arr) = malloc(sizeof(t_tab *) * (count + 1));
-	if (!(*arr))
-		return (1);
-	while (arg[i])
-	{
-		(*arr)[i] = malloc(sizeof(t_tab));
-		(*arr)[i]->lever = false;
-		if (!(*arr)[i])
-			return (free_struct(arr), 1);
-		if (!ft_strchr(arg[i], '='))
-		{
-			(*arr)[i]->key = get_value(arg[i], false);
-			if (!(*arr)[i]->key)
-				return (free_struct(arr), 1);
-			(*arr)[i]->value = NULL;
-		}
-		else if (ft_isalpha(arg[i][0]) || arg[i][0] == '_')
-		{
-			if (ft_strchr(arg[i], '+'))
-			{
-				len = strllen(arg[i], '=');
-				if (arg[i][len - 1] == '+')
-					(*arr)[i]->lever = true;
-			}
-			(*arr)[i]->key = get_value(arg[i], false);
-			if (!(*arr)[i]->key)
-				return (free_struct(arr), 1);
-			(*arr)[i]->value = get_value(arg[i], true);
-			if (!(*arr)[i]->value)
-				return (free_struct(arr), 1);
-		}
-		else
-		{
-			print_error_export(arg[i]);
-			(*arr)[i]->key = NULL;
-			(*arr)[i]->value = get_value(arg[i], true);
-			if (!(*arr)[i]->value)
-				return (free_struct(arr), 1);
-		}
-		i++;
-	}
-	(*arr)[i] = NULL;
+	(*arr)[i]->key = get_value(arg[i], false);
+	if (!(*arr)[i]->key)
+		return (free_struct(arr), 1);
+	(*arr)[i]->value = get_value(arg[i], true);
+	if (!(*arr)[i]->value)
+		return (free_struct(arr), 1);
 	return (0);
 }
-
-
-
-
 
 int	do_export(t_list **list, int output, char **arg)
 {
