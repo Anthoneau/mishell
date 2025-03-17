@@ -3,31 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:17:41 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/14 15:14:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:43:08 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	exit_builtin(char **arg)
+static void	free_and_exit(t_cmdin **cmd, int n)
 {
-	extern int	exit_code;
-	__uint8_t		nbr;
+	free_cmd(*cmd);
+	rl_clear_history();
+	exit(n);
+}
 
+int	exit_builtin(char **arg, t_cmdin **cmd, int output, bool child)
+{
+	extern int	g_exit_code;
+	__uint8_t	nbr;
+
+	output = get_output(output);
+	if (!child)
+		ft_putstr_fd("exit\n", output);
 	if (!arg[1])
-		exit(exit_code);
-	if (!ft_isnum(arg[1]))
+		free_and_exit(cmd, g_exit_code);
+	if (!ft_isnum(arg[1]) && !arg[2])
 	{
-		print_error(1, "exit", NULL);
+		print_e(1, "exit", 0, NULL);
 		ft_putstr_fd(arg[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
-		return ;
+		free_and_exit(cmd, 2);
 	}
 	if (arg[2])
-		return (print_error(1, "exit", "too many arguments"));
+		return (print_e(1, "exit", 0, "too many arguments"), 1);
 	nbr = ft_atoi(arg[1]);
-	exit(nbr);
+	free_and_exit(cmd, nbr);
+	return (0);
 }

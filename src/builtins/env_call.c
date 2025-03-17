@@ -1,30 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstclear_bonus.c                                :+:      :+:    :+:   */
+/*   env_call.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/19 14:54:07 by agoldber          #+#    #+#             */
-/*   Updated: 2024/04/23 14:32:18 by agoldber         ###   ########.fr       */
+/*   Created: 2025/02/27 19:17:33 by mel-bout          #+#    #+#             */
+/*   Updated: 2025/03/13 18:31:53 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../../includes/minishell.h"
 
-void	ft_lstclear(t_list **lst, void (*del)(void *))
+int	call_env(t_list *list, int output)
 {
-	t_list	*actual;
-	t_list	*temp;
+	t_node		*ptr;
 
-	if (!lst || !del)
-		return ;
-	actual = *lst;
-	while (actual)
+	output = get_output(output);
+	ptr = list->head;
+	while (ptr != NULL)
 	{
-		temp = actual;
-		actual = actual->next;
-		ft_lstdelone(temp, del);
+		if (ptr->value != NULL)
+		{
+			ft_putstr_fd(ptr->key, output);
+			ft_putchar_fd('=', output);
+			ft_putendl_fd(ptr->value, output);
+		}
+		ptr = ptr->next;
 	}
-	*lst = NULL;
+	return (0);
 }

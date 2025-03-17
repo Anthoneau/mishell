@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:22:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 08:23:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/12 19:12:00 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,29 @@ char	*get_home(char **env)
 	return (env[i] + j);
 }
 
-char	*minishell_name(char **env)
+char	*minishell_name(t_data *data)
 {
 	char	*buf;
 	char	*home;
 	char	*res;
+	int		i;
 
-	buf = getcwd(NULL, 0);
+	buf = ft_strdup(data->env->pwd);
 	if (!buf)
 		return (NULL);
-	home = get_home(env);
+	home = get_home(data->env->env_c);
 	res = create_name(buf, home);
+	i = 0;
+	while (res[i])
+	{
+		if (res[i] == '~')
+		{
+			i++;
+			if (res[i] == '=')
+				res[i] = '/';
+		}
+		i++;
+	}
 	free(buf);
 	return (res);
 }

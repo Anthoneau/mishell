@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:16:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 11:51:44 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 12:56:02 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,21 @@ size_t	get_len(t_token *current)
 	return (len + 1);
 }
 
+int	word_copy(t_token **words, char ***res, int *i)
+{
+	if ((*words)->type == WORD && (*words)->content
+		&& (*words)->explored == 0 && !((*words)->prev
+			&& (*words)->prev->type >= R_INPUT))
+	{
+		(*res)[(*i)] = ft_strdup((*words)->content);
+		if (!(*res)[(*i)])
+			return (free_array((*res)), 0);
+		(*words)->explored = 1;
+		(*i)++;
+	}
+	return (1);
+}
+
 char	**get_word(t_token *current)
 {
 	char	**res;
@@ -50,16 +65,8 @@ char	**get_word(t_token *current)
 	i = 0;
 	while (words)
 	{
-		if (words->type == WORD && words->content
-			&& words->explored == 0 && !(words->prev
-				&& words->prev->type >= R_INPUT))
-		{
-			res[i] = ft_strdup(words->content);
-			if (!res[i])
-				return (free_array(res), NULL);
-			words->explored = 1;
-			i++;
-		}
+		if (!word_copy(&words, &res, &i))
+			return (NULL);
 		if (words->next && words->next->type != PIPE)
 			words = words->next;
 		else

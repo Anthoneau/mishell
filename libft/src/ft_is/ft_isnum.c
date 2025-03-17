@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 15:10:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/14 15:11:18 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/14 15:31:59 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@ int	ft_isnum(char *str)
 	i = 0;
 	while (str[i])
 	{
+		if ((str[i] == '-' || str[i] == '+') && str[i++]
+			&& str[i] >= '0' && str[i] <= '9')
+			continue ;
 		if (str[i] < '0' || str[i] > '9')
 			return (0);
 		i++;

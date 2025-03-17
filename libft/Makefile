@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+         #
+#    By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/07/27 09:39:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/02/14 15:11:59 by agoldber         ###   ########.fr        #
+#    Updated: 2025/02/24 19:53:58 by mel-bout         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,10 +49,6 @@ FTSTR		=	ft_split ft_strchr ft_strdup ft_striteri ft_strjoin \
 				ft_strlcat ft_strlcpy ft_strlen ft_strmapi ft_strncmp \
 				ft_strnstr ft_strrchr ft_strtrim ft_substr
 
-FTLST_DIR	=	ft_lst/
-FTLST		=	ft_lstadd_back ft_lstadd_front ft_lstclear ft_lstdelone \
-				ft_lstiter ft_lstlast ft_lstmap ft_lstnew ft_lstsize
-
 FTPRINTF_DIR=	ft_printf/
 FTPRINTF	=	display ft_printf hexa_transfo print_string
 
@@ -67,7 +63,6 @@ SRC_FILES+=${addprefix ${FTMEM_DIR},${FTMEM}}
 SRC_FILES+=${addprefix ${FTPUT_DIR},${FTPUT}}
 SRC_FILES+=${addprefix ${FTTO_DIR},${FTTO}}
 SRC_FILES+=${addprefix ${FTSTR_DIR},${FTSTR}}
-SRC_FILES+=${addprefix ${FTLST_DIR},${FTLST}}
 SRC_FILES+=${addprefix ${FTPRINTF_DIR},${FTPRINTF}}
 SRC_FILES+=${addprefix ${GNL_DIR}, ${GNL}}
 SRC_FILES+=${addprefix ${FTADD_DIR}, ${FTADD}}

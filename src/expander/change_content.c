@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:31:01 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/11 10:31:19 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/02/25 13:23:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,13 +103,13 @@ char	*change_content(char *content, int start, int end, char **env)
 	return (new);
 }
 
-char	*change_exit_code(char *content, int start, int end)
+char	*change_g_exit_code(char *content, int start, int end)
 {
 	char		*new;
 	char		*value;
-	extern int	exit_code;
+	extern int	g_exit_code;
 
-	value = ft_itoa(exit_code);
+	value = ft_itoa(g_exit_code);
 	if (!value)
 		return (NULL);
 	new = copy_in_new(content, value, start, end);

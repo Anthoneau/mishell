@@ -6,7 +6,7 @@
 /*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/10 10:29:11 by agoldber          #+#    #+#             */
-/*   Updated: 2024/06/04 14:27:42 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/06 16:48:52 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*ft_strdup(const char *s1)
 	char	*dest;
 	int		i;
 
+	if (!s1)
+		return (NULL);
 	dest = malloc((ft_strlen(s1) + 1) * sizeof(char));
 	if (!dest)
 		return (NULL);
