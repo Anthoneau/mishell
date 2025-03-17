@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:56:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/14 17:23:34 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:36:18 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,9 @@ void	print_export(t_list *list, int output)
 		{
 			ft_putstr_fd("declare -x ", output);
 			ft_putstr_fd(list->arr[i]->key, output);
-			ft_putchar_fd('=', output);
-			ft_putendl_fd(list->arr[i]->value, output);
+			ft_putstr_fd("=\"", output);
+			ft_putstr_fd(list->arr[i]->value, output);
+			ft_putendl_fd("\"", output);
 			i++;
 		}
 	}

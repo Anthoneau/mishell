@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:09 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/13 18:30:53 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/17 16:05:24 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,10 @@ int	get_output(int output)
 {
 	int	fd;
 
+	if (output == -1)
+		return (1);
 	fd = dup(output);
-	if (output == -1 || fd == -1)
+	if (fd == -1)
 		output = 1;
 	else
 		close(fd);

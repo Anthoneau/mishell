@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/14 20:04:59 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/17 14:41:27 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,7 +226,7 @@ t_ast	*redir_node(t_token **tokens, t_token *current, int *error);
 t_ast	*word_node(t_token *current, int *error);
 
 //BUILTINS
-int		exit_builtin(char **arg, t_cmdin **cmd, t_list *env, int output);
+int		exit_builtin(char **arg, t_cmdin **cmd, int output, bool child);
 int		builtins_child(t_exec *exc, t_cmdin **cmd, t_list **env);
 int		pwd(t_list *env, int output);
 int		cd(char **arg, t_list **env, int output);

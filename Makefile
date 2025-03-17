@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+         #
+#    By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/03/14 19:53:28 by mel-bout         ###   ########.fr        #
+#    Updated: 2025/03/17 16:16:00 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ EXEC_DIR		=	exec/
 SRCS_DIR 		=	src/
 OBJS_DIR		=	obj/
 CC				=	cc
-C_FLAGS			=	-g -Wall -Werror -Wextra -I${INCLUDES}
+C_FLAGS			=	-Wall -Werror -Wextra -I${INCLUDES}
 LIBFT			=	libft.a
 RM				=	rm -rf
 MAKEFLAGS		+=	--no-print-directory
