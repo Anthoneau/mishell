@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 15:47:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:25:39 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:54:54 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,11 @@ int	do_heredoc(t_token *cur, char **env)
 
 	pid = 0;
 	if (pipe(fd) == -1)
-		return (print_e(1, "heredoc", 1, ""), 0);
+		return (print_e(1, "heredoc", 1, NULL), 0);
 	set_signal_action(2);
 	pid = fork();
 	if (pid == -1)
-		return (print_e(1, "heredoc", 1, ""), 0);
+		return (print_e(1, "heredoc", 1, NULL), 0);
 	if (!heredoc_child(pid, cur, env, fd))
 		return (0);
 	set_signal_action(0);

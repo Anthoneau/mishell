@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 17:15:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/14 18:09:40 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 19:33:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ void	fdin_fdout(t_exec *exec, t_cmdin *cmd)
 
 void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 {
+	int	nbr;
+
 	if ((*cmd)->num_of_cmds > 1)
 		pipe_redirection(exec, *cmd);
 	fdin_fdout(exec, *cmd);
@@ -66,17 +68,14 @@ void	child_process(t_exec *exec, t_cmdin **cmd, t_list **env)
 	if ((*cmd)->cmd[exec->i].arg[0] && is_builtin((*cmd)->cmd[exec->i].arg[0]))
 	{
 		builtins_child(exec, cmd, env);
+		free_in_child(exec, cmd, env);
 		exit(0);
 	}
-	else if (exec->path)
+	else if (access((*cmd)->cmd[exec->i].arg[0], X_OK) == 0 || exec->path)
 		ft_execve(exec->path, (*cmd)->cmd[exec->i].arg, get_env(*env));
-	if (exec->path)
-		print_e(0, (*cmd)->cmd[exec->i].arg[0], 0, "command not found");
-	else
-		print_e(1, (*cmd)->cmd[exec->i].arg[0], 0, "No such file or directory");
-	ft_free(exec->path);
-	free_cmd(*cmd);
-	exit(127);
+	nbr = get_exit_code((*cmd)->cmd[exec->i].arg[0]);
+	free_in_child(exec, cmd, env);
+	exit(nbr);
 }
 
 void	parent(t_exec *exec, t_cmdin *cmd)

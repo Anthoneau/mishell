@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 20:31:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/17 13:47:01 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 19:51:22 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ t_ast	*find_new_current(t_ast *node)
 int	get_cmds_inputs(t_ast **current, t_inout *fd)
 {
 	*fd = get_fd(*current);
-	if (fd->infile == -2 || fd->outfile == -2)
-		return (0);
 	(*current)->done = 1;
 	(*current) = find_new_current(*current);
 	if (!*current)

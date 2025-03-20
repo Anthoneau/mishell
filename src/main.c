@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/17 14:03:25 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:54:47 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ int	get_name(t_data *d)
 		return (print_e(1, "malloc", 1, ""), 0);
 	d->name = minishell_name(d);
 	if (!d->name)
-		return (free_array(d->env->env_c), print_e(1, "malloc", 1, ""), 0);
+	{
+		free_array(d->env->env_c);
+		return (free_list(d->env), print_e(1, "malloc", 1, ""), 0);
+	}
 	return (1);
 }
 
@@ -37,7 +40,7 @@ int	do_minishell(t_data *d, int eof)
 		if (d->inpt && *d->inpt && !ft_isspace(d->inpt))
 		{
 			d->token = lexer(d->inpt, d->env->env_c);
-			if (d->token && check_token(&d->token, &d->inpt, d->env->env_c))
+			if (d->token && check_token(&d->token, &d->inpt, &d->env))
 			{
 				d->ast = create_ast(&d->token, NULL, 0, &d->error);
 				free_token(&d->token);
@@ -69,7 +72,7 @@ int	main(int ac, char **av, char **env)
 	data.ast = NULL;
 	data.env = make_list(env);
 	if (!data.env)
-		return (print_e(1, "malloc", 1, NULL), 1);
+		return (print_e(1, "malloc", 1, ""), 1);
 	g_exit_code = 0;
 	res = do_minishell(&data, 0);
 	if (g_exit_code != 0)

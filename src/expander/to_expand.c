@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   to_expand.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/10 14:19:12 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 11:59:35 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,9 @@ void	transform_content(char **content, int *pos, char **env)
 			|| ((*content)[end] == '\\' && (*content)[end + 1] == '$'))
 			break ;
 		end++;
+		if ((*content)[end - 1] && (((*content)[end - 1] >= '0'
+			&& (*content)[end - 1] <= '9') || (*content)[end - 1] == '?'))
+			break ;
 	}
 	if (is_in_env((*content), env, (size_t)(end - start), start))
 		(*content) = change_content(*content, start, end, env);

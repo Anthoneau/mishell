@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:02:57 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/14 15:07:09 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:56:41 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ int	unset(t_list *list, char **arg)
 	i = 0;
 	while (arg[i])
 	{
+		if (!ft_strncmp(arg[i], "_", 2))
+		{
+			i++;
+			continue ;
+		}
 		ptr = get_node(list, arg[i]);
 		if (ptr)
 			do_unset(list, ptr);

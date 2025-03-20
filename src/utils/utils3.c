@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:59:09 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/17 16:05:24 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:12:14 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,9 @@ void	free_cmd(t_cmdin *cmd)
 
 void	print_open_error(char *content)
 {
+	extern int	g_exit_code;
+
+	g_exit_code = 1;
 	if (errno == ENOENT)
 		print_e(1, content, 0, "No such file or directory");
 	else if (errno == EISDIR)

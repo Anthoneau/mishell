@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/17 16:46:12 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:38:32 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,6 +135,7 @@ typedef struct s_list
 	char	*pwd;
 	char	*oldpd;
 	t_tab	**arr;
+	int		error;
 	int		size;
 }	t_list;
 
@@ -187,8 +188,12 @@ int		strllen(char *s, char c);
 void	free_list(t_list *env);
 char	*get_value(char *str, bool button);
 char	*fill_value(char *str, bool button);
-void	get_list(t_list *list, char *str);
+int		get_list(t_list *list, char *str);
 int		get_output(int output);
+int		fill_shell_value(t_node *ptr, char *c);
+t_list	*env_i(t_list *list);
+void	free_in_child(t_exec *exec, t_cmdin **cmd, t_list **env);
+int		get_exit_code(char *cmd);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
@@ -202,8 +207,8 @@ char	*space_or_meta_char_delimitation(char *inpt, long *flag);
 char	*word_in_delimitation(char *inpt, char c, long *flag);
 
 //CHECK TOKEN
-int		check_token(t_token **token, char **inpt, char **env);
-int		end_pipe_handler(t_token **lst_tok, char **frst_inpt, char **env);
+int		check_token(t_token **token, char **inpt, t_list **env);
+int		end_pipe(t_token **cur, char **frst_inpt, t_list **env, t_token **t);
 int		do_heredoc(t_token *cur, char **env);
 int		modify_inpt(char **inpt, char **env);
 int		heredoc(char *delimiter, int expandble, char **env, int fd[2]);
@@ -232,6 +237,7 @@ int		pwd(t_list *env, int output);
 int		cd(char **arg, t_list **env, int output);
 void	print_error_cd(char *name);
 int		ft_strsrch(char	*str, char	*search);
+int		go_to_home(t_list **env);
 int		echo(t_cmd *cmd, int output);
 int		call_env(t_list *list, int output);
 char	**get_env(t_list *list);
@@ -241,6 +247,10 @@ int		unset(t_list *list, char **arg);
 t_node	*get_node(t_list *list, char *s);
 int		update_pwd(t_list **env);
 void	print_error_export(char *arg);
+int		init_shelvl(t_list *list);
+int		init_path(t_list *list);
+char	*get_char(t_list *list, char *s);
+
 //export
 int		export(t_list *list, char **arg, int output);
 char	*fill_export(t_node *list);
@@ -252,13 +262,14 @@ void	free_struct(t_tab ***arr);
 void	print_export(t_list *list, int output);
 int		export_order(t_list *list, int output);
 int		check_key(t_tab *arr);
-int		tab_fill(t_tab ***arr, char **arg);
+int		tab_fill(t_tab ***arr, char **arg, t_list *list);
 
 //EXEC
 void	ft_execve(char *path, char **arg, char **env);
 int		get_cmds_inputs(t_ast **current, t_inout *fd);
 char	*right_path(char *content, t_list **env);
 t_cmdin	get_cmd_array(t_ast *ast);
+void	argument_checker(t_cmdin *cmd);
 int		is_builtin(char *content);
 int		do_builtins(t_cmd *cmd, t_list **env);
 int		exec_builtins(t_exec *exc, t_cmdin **cmd, t_list **env);

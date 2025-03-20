@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 11:42:17 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/17 16:14:49 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:17:09 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,28 @@
 int	check_newline(char **arg)
 {
 	int	i;
+	int	j;
+	int	begin;
 
-	i = 0;
-	if (arg[1][i] == '-')
+	i = 1;
+	begin = 1;
+	while (arg[i])
 	{
-		i++;
-		while (arg[1][i])
+		j = 0;
+		if (arg[1][0] == '-' && arg[i][j] == '-')
 		{
-			if (arg[1][i] != 'n')
-				return (1);
-			i++;
+			j++;
+			while (arg[i][j])
+			{
+				if (arg[i][j] != 'n')
+					return (begin);
+				j++;
+			}
+			begin++;
 		}
-		return (0);
+		i++;
 	}
-	return (1);
+	return (begin);
 }
 
 int	echo(t_cmd *cmd, int output)
@@ -36,14 +44,13 @@ int	echo(t_cmd *cmd, int output)
 	int			i;
 	int			newline;
 
+	if (output == -2)
+		return (1);
 	output = get_output(output);
 	if (!cmd->arg[1])
 		return (ft_putchar_fd('\n', output), 0);
 	newline = check_newline(cmd->arg);
-	if (newline == 0)
-		i = 2;
-	else
-		i = 1;
+	i = newline;
 	while (cmd->arg[i])
 	{
 		ft_putstr_fd(cmd->arg[i], output);

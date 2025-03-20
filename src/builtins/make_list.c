@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   make_list.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 22:08:02 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/14 15:50:58 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:36:33 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,19 @@ char	*get_value(char *str, bool button)
 	return (s);
 }
 
-void	get_list(t_list *list, char *str)
+int	get_list(t_list *list, char *str)
 {
 	t_node	*new_node;
 
 	new_node = malloc(sizeof(t_node));
 	if (!new_node)
-		return ;
+		return (1);
 	new_node->key = fill_value(str, false);
 	if (!new_node->key)
-		return (free(new_node));
+		return (free(new_node), 1);
 	new_node->value = fill_value(str, true);
 	if (!new_node->value)
-		return (free(new_node->key), free(new_node));
+		return (free(new_node->key), free(new_node), 1);
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	if (list->tail != NULL)
@@ -74,6 +74,7 @@ void	get_list(t_list *list, char *str)
 	list->size++;
 	if (list->head == NULL)
 		list->head = new_node;
+	return (0);
 }
 
 void	init_list(t_list *list)
@@ -83,6 +84,7 @@ void	init_list(t_list *list)
 	list->pwd = NULL;
 	list->oldpd = NULL;
 	list->arr = NULL;
+	list->error = 0;
 	list->size = 0;
 }
 
@@ -95,6 +97,8 @@ t_list	*make_list(char **env)
 	if (!list)
 		return (NULL);
 	init_list(list);
+	if (!env || !*env)
+		return (env_i(list));
 	i = 0;
 	while (env[i])
 	{
@@ -103,9 +107,9 @@ t_list	*make_list(char **env)
 			return (free_list(list), NULL);
 		i++;
 	}
-	list->pwd = get_char(list, "PWD");
-	if (!list->pwd)
+	if (init_path(list))
 		return (free_list(list), NULL);
-	list->oldpd = get_char(list, "OLDPWD");
+	if (init_shelvl(list))
+		return (free_list(list), NULL);
 	return (list);
 }

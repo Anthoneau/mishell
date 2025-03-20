@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:58:28 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/14 19:02:41 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:44:28 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,8 @@ t_free	get_to_free(char **name, t_token **token, t_ast **ast)
 
 void	ft_execve(char *path, char **arg, char **env)
 {
+	if (!path && arg[0][0] == '/')
+		path = ft_strdup(arg[0]);
 	execve(path, arg, env);
 	free_array(env);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mel-bout <mel-bout@student.42.fr>          +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 16:02:27 by mel-bout          #+#    #+#             */
-/*   Updated: 2025/03/14 20:03:33 by mel-bout         ###   ########.fr       */
+/*   Updated: 2025/03/20 14:48:52 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,9 @@ int	fill_arr(t_tab ***arr, int i, char **arg)
 
 int	do_export(t_list **list, int output, char **arg)
 {
+	(*list)->error = 0;
 	if (arg[0] == NULL && export_order(*list, output))
-		return (free_list((*list)), 1);
+		return (1);
 	return (0);
 }
 
@@ -73,9 +74,7 @@ int	export(t_list *list, char **arg, int output)
 
 	output = get_output(output);
 	i = 0;
-	if (do_export(&list, output, arg))
-		return (1);
-	if (tab_fill(&list->arr, arg))
+	if (do_export(&list, output, arg) || tab_fill(&list->arr, arg, list))
 		return (free_list(list), 1);
 	while (list->arr[i])
 	{
@@ -83,7 +82,7 @@ int	export(t_list *list, char **arg, int output)
 		{
 			ptr = check_env(list, list->arr[i]->key);
 			if (!ptr && check_key(list->arr[i]))
-				print_error_export(arg[i]);
+				return (print_error_export(arg[i]), 1);
 			else if (!ptr)
 				export_add(list, list->arr[i]);
 			else if (change_value(ptr, list->arr[i]))
@@ -91,6 +90,7 @@ int	export(t_list *list, char **arg, int output)
 		}
 		i++;
 	}
-	free_struct(&list->arr);
-	return (0);
+	if (list->error)
+		return (free_struct(&list->arr), 1);
+	return (free_struct(&list->arr), 0);
 }

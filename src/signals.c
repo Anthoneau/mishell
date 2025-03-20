@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   signals.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 17:36:32 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/25 13:57:53 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/18 14:38:22 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,14 @@
 
 void	handle_sigint(int sig)
 {
+	extern int	g_exit_code;
+
 	(void)sig;
 	rl_on_new_line();
 	ft_putchar_fd('\n', 1);
 	rl_replace_line("", 0);
 	rl_redisplay();
+	g_exit_code = 130;
 }
 
 void	ignore_signal(int sig)

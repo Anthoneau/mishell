@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_name.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:22:54 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/12 19:12:00 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/18 17:22:03 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ char	*create_name(char *pwd, char *home)
 	int		i;
 
 	i = 0;
+	if (!pwd || !home)
+		return (NULL);
 	while (pwd[i] == home[i])
 		i++;
 	temp = ft_strjoin("~", pwd + i);
@@ -45,10 +47,34 @@ char	*get_home(char **env)
 			break ;
 		i++;
 	}
+	if (!env[i])
+		return (NULL);
 	while (env[i][j] != '=')
 		j++;
 	j++;
 	return (env[i] + j);
+}
+
+char	*no_home(char *buf)
+{
+	char	*res;
+	int		i;
+
+	if (!buf)
+		return (NULL);
+	res = malloc(sizeof(char) * ft_strlen(buf) + 3);
+	i = 0;
+	while (buf[i])
+	{
+		res[i] = buf[i];
+		i++;
+	}
+	res[i] = '$';
+	i++;
+	res[i] = ' ';
+	i++;
+	res[i] = '\0';
+	return (free(buf), res);
 }
 
 char	*minishell_name(t_data *data)
@@ -63,6 +89,9 @@ char	*minishell_name(t_data *data)
 		return (NULL);
 	home = get_home(data->env->env_c);
 	res = create_name(buf, home);
+	if (!res || !home)
+		return (ft_free(res), ft_free(home), no_home(buf));
+	free(buf);
 	i = 0;
 	while (res[i])
 	{
@@ -74,6 +103,5 @@ char	*minishell_name(t_data *data)
 		}
 		i++;
 	}
-	free(buf);
 	return (res);
 }

@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/27 12:35:06 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/17 16:15:15 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/20 13:48:05 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ void	wait_cmds(int builtin, pid_t *pid, int i_pid, t_cmdin *cmd)
 	j = 0;
 	if (!builtin)
 	{
-		g_exit_code = 130;
 		while (j < i_pid)
 		{
 			waitpid(pid[j], &status, 0);
-			if (WIFSIGNALED(status))
+			if (WIFSIGNALED(status) && (WTERMSIG(status) == 2
+					|| WTERMSIG(status) == 3))
 				return (signal_g_exit_code(status, cmd));
 			j++;
 		}
@@ -102,6 +102,7 @@ void	exec(t_ast *ast, t_list **env)
 		return ;
 	if (!cmd.cmd->arg)
 		return (free(cmd.cmd));
+	argument_checker(&cmd);
 	exec_cmds(&cmd, env);
 	free_cmd(&cmd);
 }

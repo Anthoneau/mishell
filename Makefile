@@ -6,7 +6,7 @@
 #    By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/03/17 16:16:00 by agoldber         ###   ########.fr        #
+#    Updated: 2025/03/20 14:06:42 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ EXEC_DIR		=	exec/
 SRCS_DIR 		=	src/
 OBJS_DIR		=	obj/
 CC				=	cc
-C_FLAGS			=	-Wall -Werror -Wextra -I${INCLUDES}
+C_FLAGS			=	-g -Wall -Werror -Wextra -I${INCLUDES}
 LIBFT			=	libft.a
 RM				=	rm -rf
 MAKEFLAGS		+=	--no-print-directory
@@ -56,12 +56,12 @@ COLOR_END		=	\033[0m
 
 #SOURCES
 
-UTILS_FILES		=	utils utils2 utils3 list_utils
+UTILS_FILES		=	utils utils2 utils3 utils4 utils5 list_utils
 LEXER_FILES		=	lexer create_word word which_token
 CHECK_TKN_FILES	=	check_token end_pipe heredoc
 EXPANDER_FILES	=	to_expand change_content expander_utils
 PARSER_FILES	=	create_ast redir word ast_utils
-BUILTINS_FILES	=	exit echo env_call make_list sort unset pwd cd cd_utils get_env export export2 export3 export4
+BUILTINS_FILES	=	exit echo env_call make_list sort unset pwd cd cd_utils get_env export export2 export3 export4 shell_lvl
 EXEC_FILES		=	exec path get_cmd exec_builtins process get_cmd_input
 
 UTILS			=	${addprefix ${UTILS_DIR}, ${UTILS_FILES}}
