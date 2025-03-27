@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/24 16:21:22 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/06 14:45:38 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:18:25 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ char	*right_path(char *content, t_list **env)
 	int		i;
 
 	full_path = NULL;
-	if (!content)
+	if (!content || contains_space(content))
 		return (NULL);
 	arr = get_arr(content, env);
 	if (!arr.arr1 || !arr.arr2)

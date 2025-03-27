@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:52:51 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/19 11:54:47 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/25 14:06:58 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@ int	get_name(t_data *d)
 	if (!d->env->env_c)
 		return (print_e(1, "malloc", 1, ""), 0);
 	d->name = minishell_name(d);
+	free_array(d->env->env_c);
 	if (!d->name)
-	{
-		free_array(d->env->env_c);
 		return (free_list(d->env), print_e(1, "malloc", 1, ""), 0);
-	}
+	d->inpt = readline(d->name);
+	free(d->name);
 	return (1);
 }
 
@@ -35,10 +35,9 @@ int	do_minishell(t_data *d, int eof)
 	{
 		if (!get_name(d))
 			return (1);
-		d->inpt = readline(d->name);
-		free(d->name);
 		if (d->inpt && *d->inpt && !ft_isspace(d->inpt))
 		{
+			d->env->env_c = get_env(d->env);
 			d->token = lexer(d->inpt, d->env->env_c);
 			if (d->token && check_token(&d->token, &d->inpt, &d->env))
 			{
@@ -53,7 +52,6 @@ int	do_minishell(t_data *d, int eof)
 			eof = 1;
 		ft_free(d->inpt);
 	}
-	free_array(d->env->env_c);
 	free_list(d->env);
 	return (0);
 }

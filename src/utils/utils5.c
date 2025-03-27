@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:54:05 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/20 14:18:34 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:17:40 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,18 @@ void	argument_checker(t_cmdin *cmd)
 		i++;
 	}
 	remove_empty(cmd);
+}
+
+int	contains_space(char *content)
+{
+	int	i;
+
+	i = 0;
+	while (content[i])
+	{
+		if (content[i] == ' ')
+			return (1);
+		i++;
+	}
+	return (0);
 }

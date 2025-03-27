@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 17:31:19 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/19 11:55:10 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/25 15:30:59 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	init_token_var(t_token *token, int type, t_token *curr, t_token **lst)
 	}
 	else
 		token->type = type;
+	token->second_type = type;
 	token->next = NULL;
 	token->prev = NULL;
 	token->explored = 0;
@@ -101,11 +102,11 @@ t_token	*lexer(char *inpt, char **env)
 	if (!env)
 		return (NULL);
 	if (!inpt || !check_quote(inpt))
-		return (print_e(1, "quote", 0, "error"), NULL);
+		return (print_e(1, "quote", 0, "error"), free_array(env), NULL);
 	while (inpt[i])
 	{
 		if (i < 0)
-			return (free_token(&token), NULL);
+			return (free_token(&token), free_array(env), NULL);
 		while (inpt[i] == ' ')
 			i++;
 		if (inpt[i] == '|')

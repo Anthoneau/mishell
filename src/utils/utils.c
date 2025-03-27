@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: agoldber <agoldber@student.s19.be>         +#+  +:+       +#+        */
+/*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 16:11:18 by agoldber          #+#    #+#             */
-/*   Updated: 2025/02/26 09:41:21 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/25 13:27:24 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	free_token(t_token **token)
 	t_token	*current;
 	t_token	*to_free;
 
-	if (!*token)
+	if (!token || !*token)
 		return ;
 	current = *token;
 	while (current)
@@ -27,16 +27,15 @@ void	free_token(t_token **token)
 			current = current->next;
 		else
 			break ;
+		if (to_free->content)
+			free(to_free->content);
 		if (to_free)
-		{
-			if (to_free->content)
-				free(to_free->content);
 			free(to_free);
-		}
 	}
-	if (to_free->content)
-		free(to_free->content);
-	free(to_free);
+	if (current->content)
+		free(current->content);
+	if (current)
+		free(current);
 	token = NULL;
 }
 

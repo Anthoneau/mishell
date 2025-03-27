@@ -6,7 +6,7 @@
 #    By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/06/24 14:47:13 by agoldber          #+#    #+#              #
-#    Updated: 2025/03/20 14:06:42 by agoldber         ###   ########.fr        #
+#    Updated: 2025/03/25 13:51:00 by agoldber         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,7 +58,7 @@ COLOR_END		=	\033[0m
 
 UTILS_FILES		=	utils utils2 utils3 utils4 utils5 list_utils
 LEXER_FILES		=	lexer create_word word which_token
-CHECK_TKN_FILES	=	check_token end_pipe heredoc
+CHECK_TKN_FILES	=	check_token end_pipe heredoc error_token
 EXPANDER_FILES	=	to_expand change_content expander_utils
 PARSER_FILES	=	create_ast redir word ast_utils
 BUILTINS_FILES	=	exit echo env_call make_list sort unset pwd cd cd_utils get_env export export2 export3 export4 shell_lvl

@@ -6,121 +6,53 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 15:10:55 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/19 11:54:20 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/26 15:20:15 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	print_syntax_error(char *c)
+void	check_token_free(t_token **t, t_list **e, int free_t)
 {
-	ft_putstr_fd("minishell: ", 2);
-	ft_putstr_fd("syntax error near unexpected token", 2);
-	ft_putstr_fd(" `", 2);
-	ft_putstr_fd(c, 2);
-	ft_putendl_fd("'", 2);
+	free_array((*e)->env_c);
+	if (free_t)
+		free_token(t);
 }
 
-void	solo_handler(t_token *current)
+int	error_checker(t_token *cur)
 {
-	if (current->type != PIPE && current->type != PIPE2
-		&& current->type != AND && current->type != AND2
-		&& current->type != DOT && current->type != DOT2)
-		print_syntax_error("newline");
-	else if (current->type == PIPE)
-		print_syntax_error("|");
-	else if (current->type == PIPE2)
-		print_syntax_error("||");
-	else if (current->type == AND)
-		print_syntax_error("&");
-	else if (current->type == AND2)
-		print_syntax_error("&&");
-	else if (current->type == DOT)
-		print_syntax_error(";");
-	else if (current->type == DOT2)
-		print_syntax_error(";;");
+	if (cur->next && ((cur->type != WORD && cur->type != PIPE
+				&& cur->next->type != WORD) || (cur->type == PIPE
+				&& cur->next->type == PIPE)))
+		return (error_h(cur), 0);
+	if (cur->type != WORD && cur->type != PIPE && !cur->next)
+		return (solo_h(cur), 0);
+	return (1);
 }
 
-void	error_handler(t_token *current)
-{
-	if (current->next->type == R_INPUT)
-		print_syntax_error("<");
-	else if (current->next->type == R_INPUT_TRUC)
-		print_syntax_error("<>");
-	else if (current->next->type == R_TRUNC)
-		print_syntax_error(">");
-	else if (current->next->type == R_TRUNC_NOCLOBBER)
-		print_syntax_error(">|");
-	else if (current->next->type == R_APPEND)
-		print_syntax_error(">>");
-	else if (current->next->type == R_HEREDOC)
-		print_syntax_error("<<");
-	else if (current->next->type == PIPE)
-		print_syntax_error("|");
-	else if (current->next->type == PIPE2)
-		print_syntax_error("||");
-	else if (current->next->type == AND)
-		print_syntax_error("&");
-	else if (current->next->type == AND2)
-		print_syntax_error("&&");
-	else if (current->next->type == DOT)
-		print_syntax_error(";");
-	else if (current->next->type == DOT2)
-		print_syntax_error(";;");
-}
-
-int	forbidden_token(t_token **token)
-{
-	t_token	*current;
-
-	current = *token;
-	while (current)
-	{
-		if (current->type == R_INPUT_TRUC)
-			return (print_e(1, NULL, 0, "unknown token `<>'"), 1);
-		if (current->type == PIPE2)
-			return (print_e(1, NULL, 0, "unknown token `||'"), 1);
-		if (current->type == AND)
-			return (print_e(1, NULL, 0, "unknown token `&'"), 1);
-		if (current->type == AND2)
-			return (print_e(1, NULL, 0, "unknown token `&&'"), 1);
-		if (current->type == DOT)
-			return (print_e(1, NULL, 0, "unknown token `;'"), 1);
-		if (current->type == DOT2)
-			return (print_e(1, NULL, 0, "unknown token `;;'"), 1);
-		if (current->next)
-			current = current->next;
-		else
-			break ;
-	}
-	return (0);
-}
-
-int	check_token(t_token **token, char **inpt, t_list **env)
+int	check_token(t_token **t, char **inpt, t_list **e)
 {
 	t_token	*cur;
 
-	cur = *token;
+	cur = *t;
 	if (cur->type != WORD && !cur->next)
-		return (free_array((*env)->env_c), solo_handler(cur), 0);
+		return (solo_h(cur), check_token_free(t, e, 1), 0);
+	if (cur->type == PIPE && cur->next && cur->next->type != PIPE)
+		return (print_syntax_error("|"), check_token_free(t, e, 1), 0);
 	while (cur)
 	{
-		if (cur->next && ((cur->type != WORD && cur->type != PIPE
-					&& cur->next->type != WORD) || (cur->type == PIPE
-					&& cur->next->type == PIPE)))
-			return (free_array((*env)->env_c), error_handler(cur), 0);
-		if (cur->type != WORD && cur->type != PIPE && !cur->next)
-			return (free_array((*env)->env_c), solo_handler(cur), 0);
-		if (cur->type == R_HEREDOC && !do_heredoc(cur, (*env)->env_c))
-			return (free_array((*env)->env_c), 0);
+		if (!error_checker(cur))
+			return (check_token_free(t, e, 1), 0);
+		if (cur->type == R_HEREDOC && !do_heredoc(cur, (*e)->env_c))
+			return (check_token_free(t, e, 1), 0);
 		if (cur->next)
 			cur = cur->next;
-		else if (cur->type == PIPE && !end_pipe(&cur, inpt, env, token))
-			return (free_array((*env)->env_c), print_e(1, "malloc", 1, ""), 0);
+		else if (cur->type == PIPE && !end_pipe(&cur, inpt, e, t))
+			return (check_token_free(t, e, 1), print_e(1, "malloc", 1, ""), 0);
 		else
 			break ;
 	}
-	if (forbidden_token(token))
-		return (free_array((*env)->env_c), 0);
-	return (free_array((*env)->env_c), 1);
+	if (forbidden_token(t))
+		return (check_token_free(t, e, 1), 0);
+	return (check_token_free(t, e, 0), 1);
 }

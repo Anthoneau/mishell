@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:50:31 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/20 14:38:32 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:18:02 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ typedef struct s_token
 	char			*content;
 	int				expand;
 	int				type;
+	int				second_type;
 	int				explored;
 	int				error;
 	int				fd;
@@ -194,6 +195,7 @@ int		fill_shell_value(t_node *ptr, char *c);
 t_list	*env_i(t_list *list);
 void	free_in_child(t_exec *exec, t_cmdin **cmd, t_list **env);
 int		get_exit_code(char *cmd);
+int		contains_space(char *content);
 
 //LEXER
 t_token	*lexer(char *inpt, char **env);
@@ -212,6 +214,11 @@ int		end_pipe(t_token **cur, char **frst_inpt, t_list **env, t_token **t);
 int		do_heredoc(t_token *cur, char **env);
 int		modify_inpt(char **inpt, char **env);
 int		heredoc(char *delimiter, int expandble, char **env, int fd[2]);
+void	print_syntax_error(char *c);
+void	solo_h(t_token *current);
+void	error_h(t_token *current);
+int		forbidden_token(t_token **token);
+void	print_eof(char *delimiter, int line);
 
 //EXPANDER
 int		expander(t_token **tokens, char **env);
@@ -280,11 +287,5 @@ void	exec(t_ast *ast, t_list **env);
 //SIGNAL
 void	signal_g_exit_code(int status, t_cmdin *cmd);
 void	set_signal_action(int mode);
-
-//DISPLAY
-void	display_token(t_token **token);
-void	display_node_ast(t_ast *ast, int i);
-void	draw_ast(t_ast *node, int depth);
-void	display_cmds(t_cmdin cmd);
 
 #endif

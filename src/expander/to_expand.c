@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 14:33:34 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/19 11:59:35 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/25 16:26:39 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,32 +37,33 @@ char	*supp_content(char *content, int start, int end)
 	return (new);
 }
 
-void	transform_content(char **content, int *pos, char **env)
+void	transform_content(char **c, int *pos, char **env)
 {
 	int	start;
 	int	end;
 
 	start = *pos;
 	end = start;
-	while ((*content)[end])
+	while ((*c)[end])
 	{
-		if ((*content)[end] == ' ' || (*content)[end] == '|'
-			|| (*content)[end] == '<' || (*content)[end] == '>'
-			|| (*content)[end] == '$' || (*content)[end] == '\''
-			|| (*content)[end] == '"' || (*content)[end] == '#'
-			|| ((*content)[end] == '\\' && (*content)[end + 1] == '$'))
+		if ((*c)[end] == ' ' || (*c)[end] == '|' || (*c)[end] == '='
+			|| (*c)[end] == '<' || (*c)[end] == '>' || (*c)[end] == '/'
+			|| (*c)[end] == '$' || (*c)[end] == '\'' || (*c)[end] == '.'
+			|| (*c)[end] == '"' || (*c)[end] == '#' || (*c)[end] == ','
+			|| (*c)[end] == ':' || (*c)[end] == '%'
+			|| ((*c)[end] == '\\' && (*c)[end + 1] == '$'))
 			break ;
 		end++;
-		if ((*content)[end - 1] && (((*content)[end - 1] >= '0'
-			&& (*content)[end - 1] <= '9') || (*content)[end - 1] == '?'))
+		if ((*c)[end - 1] && (((*c)[end - 1] >= '0'
+			&& (*c)[end - 1] <= '9') || (*c)[end - 1] == '?'))
 			break ;
 	}
-	if (is_in_env((*content), env, (size_t)(end - start), start))
-		(*content) = change_content(*content, start, end, env);
-	else if ((*content)[start] == '?')
-		(*content) = change_g_exit_code(*content, start, end);
+	if (is_in_env((*c), env, (size_t)(end - start), start))
+		(*c) = change_content(*c, start, end, env);
+	else if ((*c)[start] == '?')
+		(*c) = change_g_exit_code(*c, start, end);
 	else
-		(*content) = supp_content(*content, start, end);
+		(*c) = supp_content(*c, start, end);
 }
 
 void	to_expand(char **content, char **env)

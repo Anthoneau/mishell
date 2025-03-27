@@ -6,7 +6,7 @@
 /*   By: agoldber < agoldber@student.s19.be >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 12:58:28 by agoldber          #+#    #+#             */
-/*   Updated: 2025/03/19 18:44:28 by agoldber         ###   ########.fr       */
+/*   Updated: 2025/03/26 16:18:43 by agoldber         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char	**ft_arrdup(char **arr)
 	i = 0;
 	while (arr[i])
 		i++;
-	dest = malloc((i + 1) * sizeof(char *));
+	dest = ft_calloc((i + 1), sizeof(char *));
 	if (!dest)
 		return (NULL);
 	i = 0;
